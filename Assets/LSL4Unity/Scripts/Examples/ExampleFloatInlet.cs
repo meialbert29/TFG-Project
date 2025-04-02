@@ -171,26 +171,6 @@ namespace Assets.LSL4Unity.Scripts.Examples
             return (value - min) / (max - min);
         }
 
-        //private double CalculateConcentrationScore(double delta, double theta, double alpha, double beta, double gamma)
-        //{
-        //    double[] values = { delta, theta, alpha, beta, gamma };
-        //    double minVal = values.Min();
-        //    double maxVal = values.Max();
-
-        //    double deltaNorm = Normalize(delta, minVal, maxVal);
-        //    double thetaNorm = Normalize(theta, minVal, maxVal);
-        //    double alphaNorm = Normalize(alpha, minVal, maxVal);
-        //    double betaNorm = Normalize(beta, minVal, maxVal);
-        //    double gammaNorm = Normalize(gamma, minVal, maxVal);
-
-        //    double wBeta = 1.5;
-        //    double wGamma = 2.0;
-        //    double wDelta = 1.0;
-
-        //    double score = (wBeta * betaNorm + wGamma * gammaNorm) - (wDelta * deltaNorm);
-        //    return Math.Max(0, Math.Min(100, score * 100));
-        //}
-
         private void CalculateConcentrationScore(string wave)
         {
             switch (wave)
