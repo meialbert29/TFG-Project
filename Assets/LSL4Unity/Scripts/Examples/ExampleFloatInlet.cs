@@ -27,11 +27,13 @@ namespace Assets.LSL4Unity.Scripts.Examples
         private double actualScore = 0;
 
         private Queue<string> waveBuffer = new Queue<string>(); // Almacena las últimas 5 ondas
-        private string lastWaveType = ""; // Última onda registrada
+        public string lastWaveType = ""; // Última onda registrada
         private bool waveChanged = false; // Indica si ha habido un cambio de onda
         private float timeSinceLastScore = 0f; // Tiempo desde la última puntuación
         private float scoreInterval = 10f; // Intervalo de tiempo para sumar puntos
         private float points = 0f;
+
+        public VegetationBehaviour vegetationBehaviour;
 
         protected override void Process(float[] newSample, double timeStamp)
         {
@@ -79,6 +81,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
                             pointsText.enabled = true;
                             points = 2;
                             actualScore += points; // Si cambia de onda y se mantiene, sumar más puntos
+                            
                         }
                         waveChanged = true;
                         timeSinceLastScore = 0f; // Reiniciar el contador de tiempo
@@ -88,6 +91,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
                         timeSinceLastScore += Time.deltaTime;
                         if (timeSinceLastScore >= scoreInterval)
                         {
+                            //vegetationBehaviour.MorphingProcess();
                             pointsText.enabled = true;
                             points = 20; // Sumar puntos si la onda se mantiene cada 10 segundos
                             actualScore += points;
@@ -104,9 +108,9 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
                 lastWaveType = waveType; // Actualizar última onda detectada
 
-                Debug.Log($"Got {newSample.Length} samples at {timeStamp}, " +
-                          $"Dominant Frequency: {dominantFrequency} Hz, Wave Type: {waveType}, " +
-                          $"Score: {actualScore}");
+                //Debug.Log($"Got {newSample.Length} samples at {timeStamp}, " +
+                //          $"Dominant Frequency: {dominantFrequency} Hz, Wave Type: {waveType}, " +
+                //          $"Score: {actualScore}");
 
                 ChangeObjectColor(waveType);
                 showState(waveType, dominantFrequency);
