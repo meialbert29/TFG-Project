@@ -1,4 +1,4 @@
-using Assets.LSL4Unity.Scripts.Examples;
+ï»¿using Assets.LSL4Unity.Scripts.Examples;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +13,7 @@ public class VegetationBehaviour : MonoBehaviour
     // Variables para onda
     private string currentWave;  // Almacena la onda actual
     private float waveConsistencyTimer = 0f;  // Contador para la consistencia de la onda
-    private const float waveConsistencyDuration = 10f;  // Duración para verificar la consistencia de la onda en segundos
+    private const float waveConsistencyDuration = 5f;  // DuraciÃ³n para verificar la consistencia de la onda en segundos
     private bool isWaveConsistent = false;  // Bandera para saber si la onda ha sido consistente
 
     //COLORS
@@ -40,9 +40,9 @@ public class VegetationBehaviour : MonoBehaviour
     float latestLeavesVisibility;
 
     public Renderer currentLeaves;
+    public Renderer nextLeaves;
     public Material currentLeaves_Mat;
-    public Renderer latestLeaves;
-    public Material latestLeaves_Mat;
+    public Material nextLeaves_Mat;
 
     //PROGRESS
     private float transitionProgress = 0f;
@@ -82,6 +82,7 @@ public class VegetationBehaviour : MonoBehaviour
 
             radio = 7f;
         }
+
         else if (vegetationType == "Plant")
         {
             startMesh = Resources.Load<Mesh>("Meshes/Plants/NeutralPlant");
@@ -103,25 +104,26 @@ public class VegetationBehaviour : MonoBehaviour
         morphedMesh.normals = startMesh.normals;
         morphedMesh.uv = startMesh.uv;
 
-        if (currentLeaves != null && currentLeaves_Mat != null)
+        if (currentLeaves != null)
         {
+            currentLeaves_Mat = currentLeaves.material;
             // Asegurar que las hojas usan el material transparente desde el inicio
-            currentLeaves.material.color = currentLeaves_Mat.color;
             SetTransparentMode(currentLeaves.material);
         }
-        if (latestLeaves != null && latestLeaves_Mat != null)
+        if (nextLeaves != null)
         {
+            nextLeaves_Mat = nextLeaves.material;
+            color = nextLeaves_Mat.color;
             // Asegurar que las hojas siguientes son transparentes
-            //latestLeavesRenderer.isVisible = false;
-            latestLeaves.material.color = currentLeaves.material.color;
-            latestLeaves.enabled = false;
+            nextLeaves.enabled = true;
         }
-
+        
         //neighbourVegetation = new List<VegetationBehaviour>();
         //FindNeighbours();
     }
 
-    private bool MorphingStarted = false;
+    public Color color;
+
     void Update()
     {
         HandleWaveConsistency();
@@ -132,8 +134,8 @@ public class VegetationBehaviour : MonoBehaviour
 
     private void HandleWaveConsistency()
     {
-        // Suponiendo que `currentWave` es el tipo de onda que estás monitoreando, y que lo puedes obtener de alguna fuente
-        string newWave = GetCurrentWave();  // Necesitas implementar este método para obtener la onda actual.
+        // Suponiendo que `currentWave` es el tipo de onda que estÃ¡s monitoreando, y que lo puedes obtener de alguna fuente
+        string newWave = GetCurrentWave();  // Necesitas implementar este mÃ©todo para obtener la onda actual.
 
         if (newWave == currentWave)
         {
@@ -158,11 +160,11 @@ public class VegetationBehaviour : MonoBehaviour
 
     }
 
-    private void StartRandomMorphing()
-    {
-        isMorphing = true;
-        MorphingProcess();
-    }
+    //private void StartRandomMorphing()
+    //{
+    //    isMorphing = true;
+    //    MorphingProcess();
+    //}
 
     public void MorphingProcess()
     {
@@ -176,16 +178,15 @@ public class VegetationBehaviour : MonoBehaviour
         }
 
         MorphMeshes(startMesh, targetMesh, transitionProgress);
-        //vegetationRenderer.material.color = Color.Lerp(startColor, endColor, transitionProgress);
         
-        float currentLeavesVisibility = Mathf.Lerp(1f, 0f, transitionProgress);
+        currentLeavesVisibility = Mathf.Lerp(1f, 0f, transitionProgress);
         SetLeavesVisibility(currentLeavesVisibility);
 
         if(transitionProgress >= 0.5f)
         {
-            latestLeaves.enabled = true;
-            float latestLeavesVisibility = Mathf.Lerp(0f, 1f, transitionProgress);
-            latestLeaves.material.color = Color.Lerp(currentLeaves_Mat.color, latestLeaves_Mat.color, transitionProgress);
+            nextLeaves.enabled = true;
+            latestLeavesVisibility = Mathf.Lerp(0f, 1f, transitionProgress);
+            nextLeaves.material.color = Color.Lerp(currentLeaves_Mat.color, color, transitionProgress);
             SetLatestLeavesVisibility(latestLeavesVisibility);
         }
     }
@@ -240,7 +241,7 @@ public class VegetationBehaviour : MonoBehaviour
 
     private string GetCurrentWave()
     {
-        // Aquí es donde obtienes el tipo de onda actual, puede ser de tu sistema de EEG o de otra fuente
+        // AquÃ­ es donde obtienes el tipo de onda actual, puede ser de tu sistema de EEG o de otra fuente
         return eeg_script.lastWaveType;
     }
    
@@ -250,8 +251,6 @@ public class VegetationBehaviour : MonoBehaviour
         {
             case "Delta":
                 targetMesh = Resources.Load<Mesh>("Meshes/Tree Trunk/SadTree");
-                latestLeaves = Resources.Load<Renderer>("Meshes/Tree Leaves/winterLeaves");
-                latestLeaves_Mat = Resources.Load<Material>("Materials/Leaves Materials/WinterLeaves_Mat");
                 break;
             case "Theta":
                 targetMesh = Resources.Load<Mesh>("Meshes/Tree Trunk/SadTree");
@@ -264,8 +263,6 @@ public class VegetationBehaviour : MonoBehaviour
                 break;
             case "Gamma":
                 targetMesh = Resources.Load<Mesh>("Meshes/Tree Trunk/NeutralTree");
-                latestLeaves = Resources.Load<Renderer>("Meshes/Tree Leaves/summerLeaves");
-                latestLeaves_Mat = Resources.Load<Material>("Materials/Leaves Materials/SummerLeaves_Mat");
                 break;
         }
     }
@@ -281,11 +278,11 @@ public class VegetationBehaviour : MonoBehaviour
     }
     private void SetLatestLeavesVisibility(float visibility)
     {
-        if (currentLeaves != null)
+        if (nextLeaves != null)
         {
-            Color color = latestLeaves.material.color;
+            Color color = nextLeaves.material.color;
             color.a = visibility; // Ajusta la transparencia
-            latestLeaves.material.color = color;
+            nextLeaves.material.color = color;
         }
     }
     private void SetTransparentMode(Material material)

@@ -27,7 +27,8 @@ Material:
   m_ValidKeywords:
   - _ALPHAPREMULTIPLY_ON
   - _SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _ALPHABLEND_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -132,8 +133,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.21176472, g: 0.7294118, b: 0.23137257, a: 1}
-    - _Color: {r: 0.2117647, g: 0.7294118, b: 0.23137254, a: 1}
+    - _BaseColor: {r: 0.0408803, g: 0.51899993, b: 0.07838773, a: 1}
+    - _Color: {r: 0.04088027, g: 0.5189999, b: 0.078387715, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
