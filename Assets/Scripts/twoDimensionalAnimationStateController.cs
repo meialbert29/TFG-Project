@@ -17,6 +17,7 @@ public class twoDimensionalAnimationStateController : MonoBehaviour
     public float deceleration = 2.0f;
     public float maximumWalkVelocity = 0.5f;
     public float maximumRunVelocity = 2.0f;
+    public float maximumRotationVelocity = 250f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -52,18 +53,16 @@ public class twoDimensionalAnimationStateController : MonoBehaviour
 
         changeVelocity(forwardPressed, leftPressed, rightPressed, runPressed, currentMaxVelocity);
         lockOrResetVelocity(forwardPressed, leftPressed, rightPressed, runPressed, currentMaxVelocity);
-        RotateCamera();
+        changeRotation(leftPressed, rightPressed, runPressed, maximumRotationVelocity);
 
         // set parameters to the local variable values
         animator.SetFloat("Velocity Z", velocityZ);
         animator.SetFloat("Velocity X", velocityX);
 
-        Vector3 move = new Vector3(velocityX, 0, velocityZ);
-        characterController.Move(move * Time.deltaTime);
-
+        transform.Translate(0, 0, velocityZ * Time.deltaTime * currentMaxVelocity);
     }
 
-    // handle accelerationd and deceleration
+    // handle acceleration and deceleration
     private void changeVelocity(bool forwardPressed, bool leftPressed, bool rightPressed, bool runPressed, float currentMaxVelocity)
     {
         // if player presses W, increase velocity in z direction
@@ -189,14 +188,23 @@ public class twoDimensionalAnimationStateController : MonoBehaviour
         }
     }
 
-    void RotateCamera()
+    private void changeRotation(bool leftPressed, bool rightPressed, bool runPressed, float maximumRotationVelocity)
     {
-        float horizontalRotation = Input.GetAxis("Mouse X") * mouseSensitivity;
-        transform.Rotate(0, horizontalRotation, 0);
+        float rotationDirection = 0f;
 
-        verticalRotation -= Input.GetAxis("Mouse Y") * mouseSensitivity;
-        verticalRotation = Mathf.Clamp(verticalRotation, -90f, 90f);
+        if (leftPressed)
+        {
+            rotationDirection = -1f;
+        }
+        else if (rightPressed)
+        {
+            rotationDirection = 1f;
+        }
 
-        cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+        if (rotationDirection != 0f)
+        {
+            float rotationAmount = rotationDirection * maximumRotationVelocity * Time.deltaTime;
+            transform.Rotate(0, rotationAmount, 0);
+        }
     }
 }
