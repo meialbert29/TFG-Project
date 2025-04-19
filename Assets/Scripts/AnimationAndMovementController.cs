@@ -81,6 +81,11 @@ public class AnimationAndMovementController : MonoBehaviour
         _initialJumpVelocity = (2 * _maxJumpHeight) / timeToApex;
     }
 
+    void handleGravity()
+    {
+
+    }
+
     void handleJump()
     {
         if (!_isJumping && _characterController.isGrounded && _isJumpPressed)
@@ -96,65 +101,7 @@ public class AnimationAndMovementController : MonoBehaviour
             _isJumping = false;
         }
     }
-
-    void handleGravity()
-    {
-        bool isFalling = _currentMovement.y <= 0.0f || !_isJumpPressed;
-        float fallMultiplier = 2.0f;
-
-        // apply proper gravity depending on if the character is grounded or not
-        if (_characterController.isGrounded)
-        {
-            if (_isJumpAnimating)
-            {
-                _animator.SetBool(_isJumpingHash, false);
-                _isJumpAnimating = false;
-            }
-
-            _currentMovement.y = _groundedGravity;
-            _currentRunMovement.y = _groundedGravity;
-        }
-        else if (isFalling)
-        {
-            float previousYVelocity = _currentMovement.y;
-            float newYVelocity = _currentMovement.y + (_gravity * fallMultiplier * Time.deltaTime);
-            float nextYVelocity = Mathf.Max((previousYVelocity + newYVelocity) * 0.5f, -20.0f);
-            _currentMovement.y = nextYVelocity;
-            _currentRunMovement.y = nextYVelocity;
-        }
-        else
-        {
-            float previousYVelocity = _currentMovement.y;
-            float newYVelocity = _currentMovement.y + (_gravity * Time.deltaTime);
-            float nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f;
-            _currentMovement.y = nextYVelocity;
-            _currentRunMovement.y = nextYVelocity;
-        }
-    }
-
-    void onJump(InputAction.CallbackContext context)
-    {
-        _isJumpPressed = context.ReadValueAsButton();
-    }
-
-    void onRun(InputAction.CallbackContext context)
-    {
-        _isRunPressed = context.ReadValueAsButton();
-    }
-
-    void handleRotation()
-    {
-        float turnSpeed = _rotationFactorPerFrame * Time.deltaTime;
-
-        if (_isTurningLeft)
-        {
-            transform.Rotate(0, -turnSpeed * 10, 0);
-        }
-        else if (_isTurningRight)
-        {
-            transform.Rotate(0, turnSpeed * 10, 0);
-        }
-    }
+   
     void onMovementInput(InputAction.CallbackContext context)
     {
         _currentMovementInput = context.ReadValue<Vector2>();
@@ -165,6 +112,15 @@ public class AnimationAndMovementController : MonoBehaviour
         _isMovingBackward = _currentMovementInput.y < 0;
 
         _isMovementPressed = _isTurningLeft || _isTurningRight || _isMovingForward || _isMovingBackward;
+    }
+    void onJump(InputAction.CallbackContext context)
+    {
+        _isJumpPressed = context.ReadValueAsButton();
+    }
+
+    void onRun(InputAction.CallbackContext context)
+    {
+        _isRunPressed = context.ReadValueAsButton();
     }
 
     void handleAnimation()
@@ -222,6 +178,20 @@ public class AnimationAndMovementController : MonoBehaviour
         else if (!_isMovementPressed && isRotatingRight)
         {
             _animator.SetBool(_isTurningRightHash, false);
+        }
+    }
+
+    void handleRotation()
+    {
+        float turnSpeed = _rotationFactorPerFrame * Time.deltaTime;
+
+        if (_isTurningLeft)
+        {
+            transform.Rotate(0, -turnSpeed * 10, 0);
+        }
+        else if (_isTurningRight)
+        {
+            transform.Rotate(0, turnSpeed * 10, 0);
         }
     }
 
