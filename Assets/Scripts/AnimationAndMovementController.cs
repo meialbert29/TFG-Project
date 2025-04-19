@@ -4,215 +4,224 @@ using UnityEngine.InputSystem;
 public class AnimationAndMovementController : MonoBehaviour
 {
     // declare reference variables
-    PlayerInput playerInput;
-    CharacterController characterController;
-    Animator animator;
+    PlayerInput _playerInput;
+    CharacterController _characterController;
+    Animator _animator;
 
     // variables to store optimized setter/getter parameters IDs
-    int isWalkingHash;
-    int isRunningHash;
-    int isJumpingHash;
-    int isWalkingBackwardHash;
+    int _isWalkingHash;
+    int _isWalkingBackwardHash;
+    int _isTurningLeftHash;
+    int _isTurningRightHash;
+
+    int _isRunningHash;
+    int _isJumpingHash;
 
     // variables to store player input values
-    Vector2 currentMovementInput;
-    Vector3 currentMovement;
-    Vector3 currentRunMovement;
-    bool isMovementPressed;
-    bool isRunPressed;
-    bool isTurningLeft;
-    bool isTurningRight;
-    bool isMovingForward;
-    bool isMovingBackward;
+    Vector2 _currentMovementInput;
+    Vector3 _currentMovement;
+    Vector3 _currentRunMovement;
+    bool _isMovementPressed;
+    bool _isRunPressed;
+    bool _isTurningLeft;
+    bool _isTurningRight;
+    bool _isMovingForward;
+    bool _isMovingBackward;
 
     // constants
-    float rotationFactorPerFrame = 15.0f;
-    float runMultiplier = 3.0f;
-    int zero = 0;
-    public float turnSpeed = 100f; // grados por segundo
+    float _rotationFactorPerFrame = 15.0f;
+    float _runMultiplier = 3.0f;
+    int _zero = 0;
 
     //gravity variables
-    float gravity = -9.8f;
-    float groundedGravity = -0.5f;
+    float _gravity = -9.8f;
+    float _groundedGravity = -0.5f;
 
     // jumpling variables
-    bool isJumpPressed = false;
-    float initialJumpVelocity;
-    float maxJumpHeight = 4.0f;
-    float maxJumpTime = 0.75f;
-    bool isJumping = false;
-    bool isJumpAnimating = false;
+    bool _isJumpPressed = false;
+    float _initialJumpVelocity;
+    float _maxJumpHeight = 4.0f;
+    float _maxJumpTime = 0.75f;
+    bool _isJumping = false;
+    bool _isJumpAnimating = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
-        playerInput = new PlayerInput();
-        characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
+        _playerInput = new PlayerInput();
+        _characterController = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
 
-        isWalkingHash = Animator.StringToHash("isWalking");
-        isRunningHash = Animator.StringToHash("isRunning");
-        isJumpingHash = Animator.StringToHash("isJumping");
-        isWalkingBackwardHash = Animator.StringToHash("isWalkingBackward");
+        _isWalkingHash = Animator.StringToHash("isWalking");
+        _isWalkingBackwardHash = Animator.StringToHash("isWalkingBackward");
+        _isTurningLeftHash = Animator.StringToHash("isTurningLeft");
+        _isTurningRightHash = Animator.StringToHash("isTurningRight");
+
+        _isRunningHash = Animator.StringToHash("isRunning");
+        _isJumpingHash = Animator.StringToHash("isJumping");
 
         // reads when the buttons are pressed or not
-        playerInput.CharacterControls.Move.started += onMovementInput;
-        playerInput.CharacterControls.Move.canceled += onMovementInput;
-        playerInput.CharacterControls.Move.performed += onMovementInput;
+        _playerInput.CharacterControls.Move.started += onMovementInput;
+        _playerInput.CharacterControls.Move.canceled += onMovementInput;
+        _playerInput.CharacterControls.Move.performed += onMovementInput;
 
-        playerInput.CharacterControls.Run.started += onRun;
-        playerInput.CharacterControls.Run.canceled += onRun;
+        _playerInput.CharacterControls.Run.started += onRun;
+        _playerInput.CharacterControls.Run.canceled += onRun;
 
-        playerInput.CharacterControls.Jump.started += onJump;
-        playerInput.CharacterControls.Jump.canceled += onJump;
+        _playerInput.CharacterControls.Jump.started += onJump;
+        _playerInput.CharacterControls.Jump.canceled += onJump;
 
         setupJumpVariables();
     }
 
     void setupJumpVariables()
     {
-        float timeToApex = maxJumpTime / 2;
-        gravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
-        initialJumpVelocity = (2 * maxJumpHeight) / timeToApex;
+        float timeToApex = _maxJumpTime / 2;
+        _gravity = (-2 * _maxJumpHeight) / Mathf.Pow(timeToApex, 2);
+        _initialJumpVelocity = (2 * _maxJumpHeight) / timeToApex;
     }
 
     void handleJump()
     {
-        if (!isJumping && characterController.isGrounded && isJumpPressed)
+        if (!_isJumping && _characterController.isGrounded && _isJumpPressed)
         {
-            animator.SetBool(isJumpingHash, true);
-            isJumpAnimating = true;
-            isJumping = true;
-            currentMovement.y = initialJumpVelocity * 0.5f;
-            currentRunMovement.y = initialJumpVelocity * 0.5f;
+            _animator.SetBool(_isJumpingHash, true);
+            _isJumpAnimating = true;
+            _isJumping = true;
+            _currentMovement.y = _initialJumpVelocity * 0.5f;
+            _currentRunMovement.y = _initialJumpVelocity * 0.5f;
         }
-        else if(!isJumpPressed && characterController.isGrounded)
+        else if(!_isJumpPressed && _characterController.isGrounded)
         {
-            isJumping = false;
-        }
-    }
-
-    void onJump(InputAction.CallbackContext context)
-    {
-        isJumpPressed = context.ReadValueAsButton();
-
-    }
-
-    void onRun(InputAction.CallbackContext context)
-    {
-        isRunPressed = context.ReadValueAsButton();
-    }
-
-    void handleRotation()
-    {
-        //Vector3 positionToLookAt;
-        //// the change in position the character should point to
-        //positionToLookAt.x = currentMovement.x;
-        //positionToLookAt.y = 0.0f;
-        //positionToLookAt.z = 0.0f;
-
-        //// the current rotation of the character
-        //Quaternion currentRotation = transform.rotation;
-
-        //if (isMovementPressed)
-        //{
-        //    // creates a new rotation based on where the player is currently pressing
-        //    Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
-        //    // rotate the character to face the positionToLookAt
-        //    transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, rotationFactorPerFrame * Time.deltaTime);
-        //}
-
-        float rotationThisFrame = turnSpeed * Time.deltaTime;
-
-        if (isTurningLeft)
-        {
-            transform.Rotate(0, -rotationThisFrame, 0);
-        }
-        else if (isTurningRight)
-        {
-            transform.Rotate(0, rotationThisFrame, 0);
-        }
-    }
-    void onMovementInput(InputAction.CallbackContext context)
-    {
-        currentMovementInput = context.ReadValue<Vector2>();
-        currentMovement.x = currentMovementInput.x;
-        currentMovement.z = currentMovementInput.y;
-        currentMovement.x = currentMovementInput.x * runMultiplier;
-        currentMovement.z = currentMovementInput.y * runMultiplier;
-        
-        isTurningLeft = currentMovementInput.x < 0;
-        isTurningRight = currentMovementInput.x > 0;
-        isMovingForward = currentMovementInput.y > 0;
-        isMovingBackward = currentMovementInput.y < 0;
-
-        isMovementPressed = currentMovementInput.x != zero || currentMovementInput.y != zero || isTurningLeft || isTurningRight;
-    }
-
-    void handleAnimation()
-    {
-        bool isWalking = animator.GetBool(isWalkingHash);
-        bool isRunning = animator.GetBool(isRunningHash);
-        bool isWalkingBackward = animator.GetBool(isWalkingBackwardHash);
-
-        if ((isMovementPressed && isMovingForward) && !isWalking)
-        {
-            animator.SetBool(isWalkingHash, true);
-        }
-        else if(!isMovementPressed && isWalking)
-        {
-            animator.SetBool(isWalkingHash, false);
-        }
-        if((isMovementPressed && isRunPressed) && !isRunning)
-        {
-            animator.SetBool(isRunningHash, true);
-        }
-        else if((!isMovementPressed || !isRunPressed) && isRunning)
-        {
-            animator.SetBool(isRunningHash, false);
-        }
-        if((isMovementPressed && isMovingBackward) && !isWalkingBackward)
-        {
-            animator.SetBool(isWalkingBackwardHash, true);
-        }
-        else if(!isMovementPressed && isWalkingBackward)
-        {
-            animator.SetBool(isWalkingBackwardHash, false);
+            _isJumping = false;
         }
     }
 
     void handleGravity()
     {
-        bool isFalling = currentMovement.y <= 0.0f || !isJumpPressed;
+        bool isFalling = _currentMovement.y <= 0.0f || !_isJumpPressed;
         float fallMultiplier = 2.0f;
 
         // apply proper gravity depending on if the character is grounded or not
-        if (characterController.isGrounded)
+        if (_characterController.isGrounded)
         {
-            if (isJumpAnimating)
+            if (_isJumpAnimating)
             {
-                animator.SetBool(isJumpingHash, false);
-                isJumpAnimating = false;
+                _animator.SetBool(_isJumpingHash, false);
+                _isJumpAnimating = false;
             }
-            
-            currentMovement.y = groundedGravity;
-            currentRunMovement.y = groundedGravity;
+
+            _currentMovement.y = _groundedGravity;
+            _currentRunMovement.y = _groundedGravity;
         }
         else if (isFalling)
         {
-            float previousYVelocity = currentMovement.y;
-            float newYVelocity = currentMovement.y + (gravity * fallMultiplier * Time.deltaTime);
+            float previousYVelocity = _currentMovement.y;
+            float newYVelocity = _currentMovement.y + (_gravity * fallMultiplier * Time.deltaTime);
             float nextYVelocity = Mathf.Max((previousYVelocity + newYVelocity) * 0.5f, -20.0f);
-            currentMovement.y = nextYVelocity;
-            currentRunMovement.y = nextYVelocity;
+            _currentMovement.y = nextYVelocity;
+            _currentRunMovement.y = nextYVelocity;
         }
         else
         {
-            float previousYVelocity = currentMovement.y;
-            float newYVelocity = currentMovement.y + (gravity * Time.deltaTime);
+            float previousYVelocity = _currentMovement.y;
+            float newYVelocity = _currentMovement.y + (_gravity * Time.deltaTime);
             float nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f;
-            currentMovement.y = nextYVelocity;
-            currentRunMovement.y = nextYVelocity;
+            _currentMovement.y = nextYVelocity;
+            _currentRunMovement.y = nextYVelocity;
+        }
+    }
+
+    void onJump(InputAction.CallbackContext context)
+    {
+        _isJumpPressed = context.ReadValueAsButton();
+    }
+
+    void onRun(InputAction.CallbackContext context)
+    {
+        _isRunPressed = context.ReadValueAsButton();
+    }
+
+    void handleRotation()
+    {
+        float turnSpeed = _rotationFactorPerFrame * Time.deltaTime;
+
+        if (_isTurningLeft)
+        {
+            transform.Rotate(0, -turnSpeed * 10, 0);
+        }
+        else if (_isTurningRight)
+        {
+            transform.Rotate(0, turnSpeed * 10, 0);
+        }
+    }
+    void onMovementInput(InputAction.CallbackContext context)
+    {
+        _currentMovementInput = context.ReadValue<Vector2>();
+
+        _isTurningLeft = _currentMovementInput.x < 0;
+        _isTurningRight = _currentMovementInput.x > 0;
+        _isMovingForward = _currentMovementInput.y > 0;
+        _isMovingBackward = _currentMovementInput.y < 0;
+
+        _isMovementPressed = _isTurningLeft || _isTurningRight || _isMovingForward || _isMovingBackward;
+    }
+
+    void handleAnimation()
+    {
+        bool isWalking = _animator.GetBool(_isWalkingHash);
+        bool isWalkingBackward = _animator.GetBool(_isWalkingBackwardHash);
+        bool isRotatingLeft = _animator.GetBool(_isTurningLeftHash);
+        bool isRotatingRight = _animator.GetBool(_isTurningRightHash);
+        bool isRunning = _animator.GetBool(_isRunningHash);
+
+        // check if player is moving forward
+        if ((_isMovementPressed && _isMovingForward) && !isWalking)
+        {
+            _animator.SetBool(_isWalkingHash, true);
+        }
+        // check if player is not moving forward
+        else if (!_isMovementPressed && isWalking)
+        {
+            _animator.SetBool(_isWalkingHash, false);
+        }
+        // check if player is running
+        if ((_isMovementPressed && _isRunPressed) && !isRunning)
+        {
+            _animator.SetBool(_isRunningHash, true);
+        }
+        // check if player stop pressing run key
+        else if ((!_isMovementPressed || !_isRunPressed) && isRunning)
+        {
+            _animator.SetBool(_isRunningHash, false);
+        }
+        // check if the player is walking backward
+        if((_isMovementPressed && _isMovingBackward) && !isWalking)
+        {
+            _animator.SetBool(_isWalkingBackwardHash, true);
+        }
+        // check if player is not moving backward
+        else if (!_isMovementPressed && isWalkingBackward)
+        {
+            _animator.SetBool(_isWalkingBackwardHash, false);
+        }
+        // Turning left animation
+        if ((_isMovementPressed && _isTurningLeft) && !isRotatingLeft)
+        {
+            _animator.SetBool(_isTurningLeftHash, true);
+        }
+        else if(!_isMovementPressed && isRotatingLeft)
+        {
+            _animator.SetBool(_isTurningLeftHash, false);
+        }
+        // Turning right animation
+        if ((_isMovementPressed && _isTurningRight) && !isRotatingRight)
+        {
+            _animator.SetBool(_isTurningRightHash, true);
+        }
+        else if (!_isMovementPressed && isRotatingRight)
+        {
+            _animator.SetBool(_isTurningRightHash, false);
         }
     }
 
@@ -222,25 +231,20 @@ public class AnimationAndMovementController : MonoBehaviour
         handleRotation();
         handleAnimation();
 
-        if (isMovingForward)
+        Vector3 moveDirection = Vector3.zero;
+
+        if (_isMovingForward)
         {
-            Vector3 moveDirection = transform.forward;
-            characterController.Move(moveDirection * Time.deltaTime * (isRunPressed ? runMultiplier : 1f));
+            moveDirection = transform.forward;
         }
-        else if(isMovingBackward)
+        else if (_isMovingBackward)
         {
-            Vector3 moveDirection = transform.forward;
-            characterController.Move( -moveDirection * Time.deltaTime);
+            moveDirection = -transform.forward;
         }
 
-        if (isRunPressed)
-        {
-            characterController.Move(currentRunMovement * Time.deltaTime);
-        }
-        else
-        {
-            characterController.Move(currentMovement * Time.deltaTime);
-        }
+        Vector3 finalMovement = _isRunPressed ? moveDirection * _runMultiplier : moveDirection;
+        finalMovement.y = _currentMovement.y;
+        _characterController.Move(finalMovement * Time.deltaTime);
 
         handleGravity();
         handleJump();
@@ -248,11 +252,11 @@ public class AnimationAndMovementController : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInput.CharacterControls.Enable();
+        _playerInput.CharacterControls.Enable();
     }
 
     private void OnDisable()
     {
-        playerInput.CharacterControls.Disable();
+        _playerInput.CharacterControls.Disable();
     }
 }
