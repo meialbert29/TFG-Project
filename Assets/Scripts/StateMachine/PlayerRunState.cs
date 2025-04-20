@@ -7,17 +7,18 @@ public class PlayerRunState : PlayerBaseState
 
     public override void EnterState()
     {
-        _ctx.Animator.SetBool(_ctx.IsWalkingHash, false);
-        _ctx.Animator.SetBool(_ctx.IsRunningHash, false);
+        Ctx.Animator.SetBool(Ctx.IsWalkingHash, true);
+        Ctx.Animator.SetBool(Ctx.IsRunningHash, true);
     }
     public override void UpdateState()
     {
         CheckSwitchStates();
 
-        if (_ctx.IsMovingForward)
-        {
-            _ctx.MoveDirection = _ctx.CurrentMovementInput;
-        }
+        Vector3 _appliedMovement = Vector3.zero;
+
+        _appliedMovement = Ctx.Transform.forward * Ctx.RunMultiplier;
+
+        Ctx.CharacterController.Move(_appliedMovement * Time.deltaTime);
     }
     public override void ExitState()
     {
@@ -29,13 +30,13 @@ public class PlayerRunState : PlayerBaseState
     }
     public override void CheckSwitchStates()
     {
-        if (!_ctx.IsMovementPressed)
+        if (!Ctx.IsMovementPressed)
         {
-            SwitchState(_factory.Idle());
+            SwitchState(Factory.Idle());
         }
-        else if (_ctx.IsMovementPressed && !_ctx.IsRunPressed)
+        else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed)
         {
-            SwitchState(_factory.Walk());
+            SwitchState(Factory.Walk());
         }
     }
 }

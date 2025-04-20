@@ -8,13 +8,14 @@ public class PlayerGroundedState : PlayerBaseState
     public PlayerGroundedState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
     : base(currentContext, playerStateFactory)
     {
+        IsRootState = true;
         InitializeSubState();
     }
 
     public override void EnterState()
     {
-        _ctx.CurrentMovementY = _ctx.GroundedGravity;
-        _ctx.CurrentRunMovementY = _ctx.GroundedGravity;
+        Ctx.CurrentMovementY = Ctx.GroundedGravity;
+        Ctx.AppliedMovementY = Ctx.GroundedGravity;
     }
     public override void UpdateState()
     {
@@ -26,25 +27,32 @@ public class PlayerGroundedState : PlayerBaseState
     }
     public override void InitializeSubState()
     {
-        if (!_ctx.IsMovementPressed && !_ctx.IsRunPressed)
+        // character doesn't move or run
+        if (!Ctx.IsMovementPressed && !Ctx.IsRunPressed)
         {
-            SetSubState(_factory.Idle());
+            SetSubState(Factory.Idle());
         }
-        else if (_ctx.IsMovementPressed && !_ctx.IsRunPressed)
+        // character move
+        else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed)
         {
-            SetSubState(_factory.Walk());
+            SetSubState(Factory.Walk());
         }
-        else if(_ctx.IsMovementPressed && _ctx.IsRunPressed)
+        // character run
+        else if(Ctx.IsMovementPressed && Ctx.IsRunPressed)
         {
-            SetSubState(_factory.Run());
+            SetSubState(Factory.Run());
+        }
+        else if(Ctx.IsMovementPressed && Ctx.IsTurningLeft)
+        {
+            SetSubState(Factory.Rotate());
         }
     }
     public override void CheckSwitchStates()
     {
         // if the player is grounded and jump is pressed -> switch to jump state
-        if (_ctx.IsJumpPressed && !_ctx.RequireNewJumpPress)
+        if (Ctx.IsJumpPressed && !Ctx.RequireNewJumpPress)
         {
-            SwitchState(_factory.Jump());
+            SwitchState(Factory.Jump());
         }
     }
 }

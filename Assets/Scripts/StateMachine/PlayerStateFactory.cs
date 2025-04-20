@@ -29,4 +29,8 @@ public class PlayerStateFactory
     {
         return new PlayerGroundedState(_context, this);
     }
+    public PlayerBaseState Rotate()
+    {
+        return new PlayerRotateState(_context, this);
+    }
 }

@@ -20,7 +20,7 @@ public class AnimationAndMovementController : MonoBehaviour
     // variables to store player input values
     Vector2 _currentMovementInput;
     Vector3 _currentMovement;
-    Vector3 _currentRunMovement;
+    Vector3 _appliedMovement;
     bool _isMovementPressed;
     bool _isRunPressed;
     bool _isTurningLeft;
@@ -83,6 +83,32 @@ public class AnimationAndMovementController : MonoBehaviour
 
     void handleGravity()
     {
+        bool isFalling = _currentMovement.y <= 0.0f || ! _isJumpPressed;
+        float fallMultiplier = 2.0f;
+
+        if (!_characterController.isGrounded)
+        {
+            if (_isJumpAnimating)
+            {
+                _animator.SetBool(_isJumpingHash, false);
+                _isJumpAnimating = false;
+            }
+
+            _currentMovement.y = _groundedGravity;
+            _appliedMovement.y = _groundedGravity;
+        }
+        else if (isFalling)
+        {
+            float previousYVelocity = _currentMovement.y;
+            _currentMovement.y = _currentMovement.y + (_gravity * fallMultiplier * Time.deltaTime);
+            _appliedMovement.y = Mathf.Max((previousYVelocity + _currentMovement.y) * 0.5f, -20.0f);
+        }
+        else
+        {
+            float previousYVelocity = _currentMovement.y;
+            _currentMovement.y = _currentMovement.y + (_gravity * Time.deltaTime);
+            _appliedMovement.y = (previousYVelocity + _currentMovement.y) * 0.5f;
+        }
 
     }
 
@@ -94,7 +120,6 @@ public class AnimationAndMovementController : MonoBehaviour
             _isJumpAnimating = true;
             _isJumping = true;
             _currentMovement.y = _initialJumpVelocity * 0.5f;
-            _currentRunMovement.y = _initialJumpVelocity * 0.5f;
         }
         else if(!_isJumpPressed && _characterController.isGrounded)
         {
@@ -201,20 +226,17 @@ public class AnimationAndMovementController : MonoBehaviour
         handleRotation();
         handleAnimation();
 
-        Vector3 moveDirection = Vector3.zero;
+        _appliedMovement = Vector3.zero;
 
         if (_isMovingForward)
         {
-            moveDirection = transform.forward;
+            _appliedMovement = transform.forward * (_isRunPressed ? _runMultiplier : 1.0f); ;
         }
         else if (_isMovingBackward)
         {
-            moveDirection = -transform.forward;
+            _appliedMovement = -transform.forward;
         }
-
-        Vector3 finalMovement = _isRunPressed ? moveDirection * _runMultiplier : moveDirection;
-        finalMovement.y = _currentMovement.y;
-        _characterController.Move(finalMovement * Time.deltaTime);
+        _characterController.Move(_appliedMovement * Time.deltaTime);
 
         handleGravity();
         handleJump();

@@ -20,7 +20,7 @@ public class PlayerStateMachine : MonoBehaviour
     // variables to store player input values
     Vector2 _currentMovementInput;
     Vector3 _currentMovement;
-    Vector3 _currentRunMovement;
+    Vector3 _appliedMovement;
     bool _isMovementPressed;
     bool _isRunPressed;
     bool _isTurningLeft;
@@ -32,8 +32,6 @@ public class PlayerStateMachine : MonoBehaviour
     float _rotationFactorPerFrame = 15.0f;
     float _runMultiplier = 3.0f;
     int _zero = 0;
-    Vector3 _moveDirection;
-    Vector3 _finalMovement;
 
     //gravity variables
     float _gravity = -9.8f;
@@ -56,13 +54,16 @@ public class PlayerStateMachine : MonoBehaviour
     public Animator Animator { get { return _animator; } }
     public CharacterController CharacterController { get { return _characterController; } set{ _characterController = value; } }
     public Vector2 CurrentMovementInput { get { return _currentMovementInput; } }
+    public Transform Transform { get { return transform; } }
 
     public bool IsJumpPressed {  get { return _isJumpPressed; } }
     public int IsJumpingHash { get { return _isJumpingHash; } }
     public bool RequireNewJumpPress { get { return  _requireNewJumpPress; } set { _requireNewJumpPress = value; } }
     public bool isJumping { get { return _isJumping; } set { _isJumping = value; } }
     public float CurrentMovementY { get { return _currentMovement.y; } set { _currentMovement.y = value; } }
-    public float CurrentRunMovementY { get { return _currentRunMovement.y; } set { _currentRunMovement.y = value; } }
+    public float AppliedMovementX { get { return _appliedMovement.x; } set { _appliedMovement.x = value; } }
+    public float AppliedMovementY { get { return _appliedMovement.y; } set { _appliedMovement.y = value; } }
+    public float AppliedMovementZ { get { return _appliedMovement.z; } set { _appliedMovement.z = value; } }
     public float InitialJumpVelocity { get { return _initialJumpVelocity; } set { _initialJumpVelocity = value; } }
     public float GroundedGravity { get { return _groundedGravity; } set { _groundedGravity = value; } }
     public float Gravity { get { return _gravity; } set { _gravity = value; } }
@@ -80,8 +81,9 @@ public class PlayerStateMachine : MonoBehaviour
     public int IsTurningRightHash { get { return _isTurningRightHash; } set { _isTurningRightHash = value; } }
     public int IsRunningHash { get { return _isRunningHash; } set { _isRunningHash = value; } }
     public float RunMultiplier { get { return _runMultiplier; } }
-    public Vector3 MoveDirection { get { return _moveDirection; } set { _moveDirection = value; } }
-    public Vector3 FinalMovement { get { return _finalMovement; } set { _finalMovement = value; } }
+
+
+/********************************************************************************************************************/
 
     private void Awake()
     {
@@ -133,11 +135,9 @@ public class PlayerStateMachine : MonoBehaviour
     void Update()
     {
         handleRotation();
-        _currentState.UpdateState();
+        _currentState.UpdateStates();
 
-        _finalMovement = _isRunPressed ? _moveDirection * _runMultiplier : _moveDirection;
-        _finalMovement.y = _currentMovement.y;
-        _characterController.Move(_finalMovement * Time.deltaTime);
+        _characterController.Move(_appliedMovement * Time.deltaTime);
     }
 
     void handleRotation()
