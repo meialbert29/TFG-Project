@@ -7,8 +7,18 @@ public class PlayerWalkState : PlayerBaseState
 
     public override void EnterState()
     {
-        Ctx.Animator.SetBool(Ctx.IsWalkingHash, true);
+        if (Ctx.IsMovingForward)
+        {
+            Ctx.Animator.SetBool(Ctx.IsWalkingHash, true);
+            Ctx.Animator.SetBool(Ctx.IsWalkingBackwardHash, false);
+        }
+        else
+        {
+            Ctx.Animator.SetBool(Ctx.IsWalkingHash, false);
+            Ctx.Animator.SetBool(Ctx.IsWalkingBackwardHash, true);
+        }
         Ctx.Animator.SetBool(Ctx.IsRunningHash, false);
+
     }
     public override void UpdateState()
     {
@@ -41,7 +51,8 @@ public class PlayerWalkState : PlayerBaseState
         {
             SwitchState(Factory.Idle());
         }
-        else if (Ctx.IsMovementPressed && Ctx.IsRunPressed)
+
+        else if ((Ctx.IsMovementPressed && Ctx.IsRunPressed) && !Ctx.IsMovingBackward)
         {
             SwitchState(Factory.Run());
         }

@@ -49,7 +49,7 @@ public abstract class PlayerBaseState
             // switch current state of context
             _ctx.CurrentState = newState;
         }
-        else if(_currentSubState != null)
+        else if(_currentSuperState != null)
         {
             _currentSuperState.SetSubState(newState);
         }

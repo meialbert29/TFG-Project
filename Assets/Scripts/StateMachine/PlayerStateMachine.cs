@@ -158,10 +158,29 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _currentMovementInput = context.ReadValue<Vector2>();
 
-        _isTurningLeft = _currentMovementInput.x < 0;
-        _isTurningRight = _currentMovementInput.x > 0;
-        _isMovingForward = _currentMovementInput.y > 0;
-        _isMovingBackward = _currentMovementInput.y < 0;
+        _isTurningLeft = false;
+        _isTurningRight = false;
+        _isMovingForward = false;
+        _isMovingBackward = false;
+
+        // luego evaluamos el nuevo input
+        if (_currentMovementInput.x < 0)
+        {
+            _isTurningLeft = true;
+        }
+        else if (_currentMovementInput.x > 0)
+        {
+            _isTurningRight = true;
+        }
+
+        if (_currentMovementInput.y > 0)
+        {
+            _isMovingForward = true;
+        }
+        else if (_currentMovementInput.y < 0)
+        {
+            _isMovingBackward = true;
+        }
 
         _isMovementPressed = _isTurningLeft || _isTurningRight || _isMovingForward || _isMovingBackward;
     }

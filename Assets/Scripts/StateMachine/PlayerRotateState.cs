@@ -7,8 +7,24 @@ public class PlayerRotateState : PlayerBaseState
 
     public override void EnterState()
     {
-        Ctx.Animator.SetBool(Ctx.IsTurningLeftHash, false);
-        Ctx.Animator.SetBool(Ctx.IsTurningRightHash, false);
+        Debug.Log("Entering");
+        Ctx.Animator.SetBool(Ctx.IsWalkingHash, false);
+        Ctx.Animator.SetBool(Ctx.IsRunningHash, false);
+
+
+        if (Ctx.IsTurningLeft)
+        {
+            Ctx.Animator.SetBool(Ctx.IsTurningLeftHash, true);
+            Ctx.Animator.SetBool(Ctx.IsTurningRightHash, false);
+        }
+        else
+        {
+            Ctx.Animator.SetBool(Ctx.IsTurningLeftHash, false);
+            Ctx.Animator.SetBool(Ctx.IsTurningRightHash, true);
+        }
+
+        Ctx.AppliedMovementX = 0;
+        Ctx.AppliedMovementZ = 0;
     }
     public override void UpdateState()
     {
@@ -16,7 +32,8 @@ public class PlayerRotateState : PlayerBaseState
     }
     public override void ExitState()
     {
-
+        Ctx.Animator.SetBool(Ctx.IsTurningLeftHash, false);
+        Ctx.Animator.SetBool(Ctx.IsTurningRightHash, false);
     }
     public override void InitializeSubState()
     {
@@ -24,17 +41,21 @@ public class PlayerRotateState : PlayerBaseState
     }
     public override void CheckSwitchStates()
     {
-        if (!Ctx.IsMovementPressed)
+        if (!Ctx.IsTurningLeft && !Ctx.IsTurningRight)
         {
-            SetSubState(Factory.Idle());
+            if (!Ctx.IsMovementPressed)
+            {
+                SwitchState(Factory.Idle());
+            }
+            else
+            {
+                SwitchState(Factory.Walk());
+            }
         }
-        if (Ctx.IsMovementPressed && Ctx.IsRunPressed)
+        else if(Ctx.IsMovementPressed && Ctx.IsRunPressed)
         {
-            SetSubState(Factory.Run());
+            SwitchState(Factory.Run());
         }
-        else if (Ctx.IsMovementPressed)
-        {
-            SetSubState(Factory.Walk());
-        }
+        
     }
 }

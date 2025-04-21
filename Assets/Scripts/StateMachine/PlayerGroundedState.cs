@@ -42,7 +42,7 @@ public class PlayerGroundedState : PlayerBaseState
         {
             SetSubState(Factory.Run());
         }
-        else if(Ctx.IsMovementPressed && Ctx.IsTurningLeft)
+        else if(Ctx.IsMovementPressed && (Ctx.IsTurningLeft || Ctx.IsTurningRight))
         {
             SetSubState(Factory.Rotate());
         }
