@@ -1778,10 +1778,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -283.9999084472656,
-            "y": 318.0,
-            "width": 128.00006103515626,
-            "height": 34.0
+            "x": -303.3333740234375,
+            "y": 311.3333435058594,
+            "width": 128.6667022705078,
+            "height": 36.0
         }
     },
     "m_Slots": [
@@ -2346,8 +2346,8 @@
     "m_ObjectId": "8d5bfd6afa6d48fc86dd7ccab61b3765",
     "m_Title": "Vertex Animation",
     "m_Position": {
-        "x": -1185.0001220703125,
-        "y": -513.9999389648438
+        "x": -1185.333251953125,
+        "y": -513.3333129882813
     }
 }
 
@@ -2606,7 +2606,7 @@
         "r": 0.2006942182779312,
         "g": 0.7735849022865295,
         "b": 0.2407965213060379,
-        "a": 0.0
+        "a": 1.0
     },
     "isMainColor": false,
     "m_ColorMode": 0
@@ -3134,8 +3134,8 @@
     "m_ObjectId": "c2c93f1c496d42348f458d527d6395c5",
     "m_Title": "Color",
     "m_Position": {
-        "x": -309.0001220703125,
-        "y": 114.00000762939453
+        "x": -328.6665954589844,
+        "y": 114.6666488647461
     }
 }
 
@@ -3187,7 +3187,7 @@
         "m_Id": "77dd6867130044dd93aaa5c569c2c230"
     },
     "m_AllowMaterialOverride": false,
-    "m_SurfaceType": 0,
+    "m_SurfaceType": 1,
     "m_ZTestMode": 4,
     "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
@@ -3224,8 +3224,8 @@
     "m_ObjectId": "ca4a0156847b455387c1dafc1fc49463",
     "m_Title": "UV Offset",
     "m_Position": {
-        "x": -2173.0,
-        "y": -340.99993896484377
+        "x": -2173.333251953125,
+        "y": -340.6666259765625
     }
 }
 
@@ -3316,7 +3316,7 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "",
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"583384d1cbeba6442b5fb61ce2a129c0\",\"type\":3}}",
         "m_Guid": ""
     },
     "isMainTexture": false,
@@ -3974,10 +3974,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -125.99991607666016,
-            "y": 291.0,
-            "width": 182.99990844726563,
-            "height": 249.0
+            "x": -125.33334350585938,
+            "y": 293.33331298828127,
+            "width": 184.66668701171876,
+            "height": 252.00006103515626
         }
     },
     "m_Slots": [
@@ -4043,8 +4043,8 @@
     "m_ObjectId": "f2d75b2268134748ba4571e71acc4552",
     "m_Title": "UV Animation",
     "m_Position": {
-        "x": -1151.0,
-        "y": 9.000064849853516
+        "x": -1151.33349609375,
+        "y": 9.33333969116211
     }
 }
 
@@ -4188,7 +4188,7 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
-    "m_Value": 0.5,
+    "m_Value": 0.0,
     "m_FloatType": 1,
     "m_RangeValues": {
         "x": 0.0,

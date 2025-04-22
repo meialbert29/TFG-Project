@@ -36,10 +36,11 @@ public class VegetationBehaviour : MonoBehaviour
     private Mesh morphedMesh;
 
     //Leaves
+    public Shader _leavesShader;
     float currentLeavesVisibility;
     float latestLeavesVisibility;
 
-    //public Renderer currentLeaves;
+    public Renderer currentLeaves;
     //public Renderer nextLeaves;
     //public Material currentLeaves_Mat;
     //public Material nextLeaves_Mat;
@@ -77,8 +78,8 @@ public class VegetationBehaviour : MonoBehaviour
 
         if (vegetationType == "Tree")
         {
-            startMesh = Resources.Load<Mesh>("Models/Normal Tree/NormalTrunk_LOD0");
-            targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTrunk_LOD0");
+            startMesh = Resources.Load<Mesh>("Models/Normal Tree/NormalTrunk");
+            targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTrunk");
 
             radio = 7f;
         }
@@ -104,25 +105,23 @@ public class VegetationBehaviour : MonoBehaviour
         morphedMesh.normals = startMesh.normals;
         morphedMesh.uv = startMesh.uv;
 
-        //if (currentLeaves != null)
-        //{
-        //    currentLeaves_Mat = currentLeaves.material;
-        //    // Asegurar que las hojas usan el material transparente desde el inicio
-        //    SetTransparentMode(currentLeaves.material);
-        //}
+        if (currentLeaves != null)
+        {
+            // Asegurar que las hojas usan el material transparente desde el inicio
+            SetTransparentMode(currentLeaves.material);
+            Color currentLeaves_MatInstance = currentLeaves.material.color;
+        }
         //if (nextLeaves != null)
         //{
         //    nextLeaves_Mat = nextLeaves.material;
-        //    color = nextLeaves_Mat.color;
+        //color = currentLeaves.material.color;
         //    // Asegurar que las hojas siguientes son transparentes
         //    nextLeaves.enabled = true;
         //}
-        
+
         //neighbourVegetation = new List<VegetationBehaviour>();
         //FindNeighbours();
     }
-
-    public Color color;
 
     void Update()
     {
@@ -160,12 +159,6 @@ public class VegetationBehaviour : MonoBehaviour
 
     }
 
-    //private void StartRandomMorphing()
-    //{
-    //    isMorphing = true;
-    //    MorphingProcess();
-    //}
-
     public void MorphingProcess()
     {
         transitionProgress += Time.deltaTime / transitionDuration;
@@ -178,11 +171,13 @@ public class VegetationBehaviour : MonoBehaviour
         }
 
         MorphMeshes(startMesh, targetMesh, transitionProgress);
-        
+
         //currentLeavesVisibility = Mathf.Lerp(1f, 0f, transitionProgress);
         //SetLeavesVisibility(currentLeavesVisibility);
 
-        //if(transitionProgress >= 0.5f)
+        currentLeaves.enabled = false;
+
+        //if (transitionProgress >= 0.5f)
         //{
         //    nextLeaves.enabled = true;
         //    latestLeavesVisibility = Mathf.Lerp(0f, 1f, transitionProgress);
@@ -191,12 +186,8 @@ public class VegetationBehaviour : MonoBehaviour
         //}
     }
 
-    
-
     void MorphMeshes(Mesh fromMesh, Mesh toMesh, float t)
     {
-        Debug.Log("Start mesh " + fromMesh.vertexCount);
-        Debug.Log("Target mesh " + toMesh.vertexCount);
         if (fromMesh.vertexCount != toMesh.vertexCount)
         {
             Debug.LogError("Meshes do not have the same number of vertices.");
@@ -271,15 +262,16 @@ public class VegetationBehaviour : MonoBehaviour
         }
     }
 
-    //private void SetLeavesVisibility(float visibility)
-    //{
-    //    if (currentLeaves != null)
-    //    {
-    //        Color color = currentLeaves.material.color;
-    //        color.a = visibility; // Ajusta la transparencia
-    //        currentLeaves.material.color = color;
-    //    }
-    //}
+    private void SetLeavesVisibility(float visibility)
+    {
+        if (currentLeaves != null)
+        {
+            Color color = currentLeaves.material.color; 
+            color.a = visibility; // Ajusta la transparencia
+            currentLeaves.material.color = color;
+            Debug.Log("alpha: " + color.a);
+        }
+    }
     //private void SetLatestLeavesVisibility(float visibility)
     //{
     //    if (nextLeaves != null)
@@ -289,6 +281,7 @@ public class VegetationBehaviour : MonoBehaviour
     //        nextLeaves.material.color = color;
     //    }
     //}
+
     private void SetTransparentMode(Material material)
     {
         if (material != null)
