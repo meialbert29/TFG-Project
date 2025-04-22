@@ -2346,7 +2346,7 @@
     "m_ObjectId": "8d5bfd6afa6d48fc86dd7ccab61b3765",
     "m_Title": "Vertex Animation",
     "m_Position": {
-        "x": -1185.3331298828125,
+        "x": -1185.3333740234375,
         "y": -513.3333129882813
     }
 }
@@ -3134,8 +3134,8 @@
     "m_ObjectId": "c2c93f1c496d42348f458d527d6395c5",
     "m_Title": "Color",
     "m_Position": {
-        "x": -328.66668701171877,
-        "y": 114.66668701171875
+        "x": -328.6666564941406,
+        "y": 114.66667175292969
     }
 }
 
@@ -3225,7 +3225,7 @@
     "m_Title": "UV Offset",
     "m_Position": {
         "x": -2173.333251953125,
-        "y": -340.6666564941406
+        "y": -340.66668701171877
     }
 }
 
@@ -4010,7 +4010,7 @@
         "tex2d"
     ],
     "m_Precision": 0,
-    "m_PreviewExpanded": false,
+    "m_PreviewExpanded": true,
     "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
     "m_CustomColors": {
@@ -4043,8 +4043,8 @@
     "m_ObjectId": "f2d75b2268134748ba4571e71acc4552",
     "m_Title": "UV Animation",
     "m_Position": {
-        "x": -1152.0,
-        "y": 12.000003814697266
+        "x": -1152.000244140625,
+        "y": 12.000011444091797
     }
 }
 
