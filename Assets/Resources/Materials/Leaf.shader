@@ -47,7 +47,7 @@ Shader "Unlit/Leaf"
                 return o;
             }
 
-             fixed4 _Color;
+            fixed4 _Color;
 
             fixed4 frag (v2f i) : SV_Target
             {
