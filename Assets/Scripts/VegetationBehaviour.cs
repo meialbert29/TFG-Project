@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class VegetationBehaviour : MonoBehaviour
 {
@@ -36,7 +37,7 @@ public class VegetationBehaviour : MonoBehaviour
     private Mesh morphedMesh;
 
     //Leaves
-    public Shader _leavesShader;
+    public VisualEffect visualEffect;
     float currentLeavesVisibility;
     float latestLeavesVisibility;
 
