@@ -17,52 +17,38 @@ public class VegetationBehaviour : MonoBehaviour
     private const float waveConsistencyDuration = 5f;  // Duración para verificar la consistencia de la onda en segundos
     private bool isWaveConsistent = false;  // Bandera para saber si la onda ha sido consistente
 
-    //COLORS
-    private Color angry = new Color(0.282353f, 0.1019515f, 0.03921569f, 1f);
-    private Color sad = new Color(0.0392157f, 0.1106551f, 0.1137255f, 1f);
-    private Color happy = new Color(0.0392157f, 0.212f, 0.04367118f, 0.5f);
-    private Color stress = new Color(0.2544924f, 0.03921569f, 0.282353f, 1f);
-    private Color anxiety = new Color(0.07797226f, 0.0392157f, 0.1137255f, 1f);
-    public Color neutral;
-    private Color startColor;
-    private Color endColor;
-
     //MESHES
-    public string actualState;
-    public string latestState;
-    public string actualMesh;
-    public MeshFilter meshFilter;
+    private string actualState;
+    private string latestState;
+    private string actualMesh;
+    private MeshFilter meshFilter;
     private Mesh startMesh;
     private Mesh targetMesh;
     private Mesh morphedMesh;
 
     //Leaves
-    public VisualEffect visualEffect;
+    private VFXController vfx;
     float currentLeavesVisibility;
     float latestLeavesVisibility;
 
-    public Renderer currentLeaves;
-    //public Renderer nextLeaves;
-    //public Material currentLeaves_Mat;
-    //public Material nextLeaves_Mat;
-
     //PROGRESS
     private float transitionProgress = 0f;
-    public float transitionDuration = 3f;
+    private float transitionDuration = 3f;
 
     //BOOLS
-    public bool isMorphing = false;
-    public bool alreadyChanged = false;
-    public bool firstTime = true;
+    private bool isMorphing = false;
+    private bool alreadyChanged = false;
+    private bool firstTime = true;
     private bool isTransitioning = false;
 
     //OTHERS
     public List<VegetationBehaviour> neighbourVegetation;
-    private float radio;
-    public string vegetationType;
+    //private float radio;
+    private string vegetationType;
 
     void Start()
     {
+        // find scripts
         //playerFindsClosest = FindAnyObjectByType<PlayerFindsClosest>();
         //if (playerFindsClosest == null) Debug.Log("PlayerFindsClosest Script not found");
 
@@ -72,17 +58,23 @@ public class VegetationBehaviour : MonoBehaviour
         eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
         if (eeg_script == null) Debug.Log("EEG Script not found");
 
-        vegetationRenderer = GetComponent<Renderer>();
-        vegetationType = gameObject.tag;  // Make sure to tag the objects as "Tree" or "Plant" in Unity
+        vfx = GetComponentInChildren<VFXController>();
+        if (vfx == null) Debug.Log("VFX Graph not found");
+        else Debug.Log("VFX found");
 
-        //neutral = vegetationRenderer.material.color;
+        meshFilter = GetComponentInChildren<MeshFilter>();
+        if (vfx == null) Debug.Log("Mesh filter not found");
+        else Debug.Log("Mesh filter found: " + meshFilter);
+
+        vegetationRenderer = GetComponent<Renderer>();
+        vegetationType = gameObject.tag;
 
         if (vegetationType == "Tree")
         {
-            startMesh = Resources.Load<Mesh>("Models/Normal Tree/NormalTrunk");
-            targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTrunk");
+            startMesh = Resources.Load<Mesh>("Models/NormalTrunk");
+            targetMesh = Resources.Load<Mesh>("Models/SadTrunk");
 
-            radio = 7f;
+            //radio = 7f;
         }
 
         else if (vegetationType == "Plant")
@@ -90,7 +82,7 @@ public class VegetationBehaviour : MonoBehaviour
             startMesh = Resources.Load<Mesh>("Meshes/Plants/NeutralPlant");
             targetMesh = Resources.Load<Mesh>("Meshes/Plants/NeutralPlant");
 
-            radio = 5f;
+            //radio = 5f;
         }
 
         if (startMesh == null || targetMesh == null)
@@ -99,26 +91,13 @@ public class VegetationBehaviour : MonoBehaviour
             return;
         }
 
+        // initialize morph mesh attributes
         morphedMesh = new Mesh();
         meshFilter.mesh = startMesh;
         morphedMesh.vertices = startMesh.vertices;
         morphedMesh.triangles = startMesh.triangles;
         morphedMesh.normals = startMesh.normals;
         morphedMesh.uv = startMesh.uv;
-
-        if (currentLeaves != null)
-        {
-            // Asegurar que las hojas usan el material transparente desde el inicio
-            SetTransparentMode(currentLeaves.material);
-            Color currentLeaves_MatInstance = currentLeaves.material.color;
-        }
-        //if (nextLeaves != null)
-        //{
-        //    nextLeaves_Mat = nextLeaves.material;
-        //color = currentLeaves.material.color;
-        //    // Asegurar que las hojas siguientes son transparentes
-        //    nextLeaves.enabled = true;
-        //}
 
         //neighbourVegetation = new List<VegetationBehaviour>();
         //FindNeighbours();
@@ -127,15 +106,17 @@ public class VegetationBehaviour : MonoBehaviour
     void Update()
     {
         HandleWaveConsistency();
-
-        if(isMorphing)
+        if (isMorphing){
+            vfx.fall = true;
             MorphingProcess();
+        }
+           
     }
 
     private void HandleWaveConsistency()
     {
-        // Suponiendo que `currentWave` es el tipo de onda que estás monitoreando, y que lo puedes obtener de alguna fuente
-        string newWave = GetCurrentWave();  // Necesitas implementar este método para obtener la onda actual.
+        // get current wave
+        string newWave = GetCurrentWave();
 
         if (newWave == currentWave)
         {
@@ -157,34 +138,58 @@ public class VegetationBehaviour : MonoBehaviour
 
             MorphingByWave(currentWave);
         }
+    }
 
+    private string GetCurrentWave()
+    {
+        // Aquí es donde obtienes el tipo de onda actual, puede ser de tu sistema de EEG o de otra fuente
+        return eeg_script.lastWaveType;
+    }
+
+    private void MorphingByWave(string wave)
+    {
+        switch (wave)
+        {
+            case "Delta":
+                targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
+                break;
+            case "Theta":
+                targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
+                break;
+            case "Alpha":
+                targetMesh = Resources.Load<Mesh>("Models/Tree Trunk/SadTree");
+                break;
+            case "Beta":
+                targetMesh = Resources.Load<Mesh>("Models/Meshes/Tree Trunk/SadTree");
+                break;
+            case "Gamma":
+                targetMesh = Resources.Load<Mesh>("Models/Meshes/Tree Trunk/NeutralTree");
+                break;
+        }
     }
 
     public void MorphingProcess()
     {
+        // add time to transitionProgress
         transitionProgress += Time.deltaTime / transitionDuration;
+
+        if (transitionProgress >= 0.5f)
+        {
+            vfx.isSad = true;
+            vfx.changeMood();
+        }
 
         if (transitionProgress > 1f)
         {
             transitionProgress = 1f;
             startMesh = targetMesh;
             isMorphing = false;
+            vfx.fall = false;
+
+            Debug.Log("Transition finished");
         }
 
         MorphMeshes(startMesh, targetMesh, transitionProgress);
-
-        //currentLeavesVisibility = Mathf.Lerp(1f, 0f, transitionProgress);
-        //SetLeavesVisibility(currentLeavesVisibility);
-
-        currentLeaves.enabled = false;
-
-        //if (transitionProgress >= 0.5f)
-        //{
-        //    nextLeaves.enabled = true;
-        //    latestLeavesVisibility = Mathf.Lerp(0f, 1f, transitionProgress);
-        //    nextLeaves.material.color = Color.Lerp(currentLeaves_Mat.color, color, transitionProgress);
-        //    SetLatestLeavesVisibility(latestLeavesVisibility);
-        //}
     }
 
     void MorphMeshes(Mesh fromMesh, Mesh toMesh, float t)
@@ -235,70 +240,7 @@ public class VegetationBehaviour : MonoBehaviour
         isMorphing = true;  // Esto activa el morphing
     }
 
-    private string GetCurrentWave()
-    {
-        // Aquí es donde obtienes el tipo de onda actual, puede ser de tu sistema de EEG o de otra fuente
-        return eeg_script.lastWaveType;
-    }
-   
-    private void MorphingByWave(string wave)
-    {
-        switch (wave)
-        {
-            case "Delta":
-                targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
-                break;
-            case "Theta":
-                targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
-                break;
-            case "Alpha":
-                targetMesh = Resources.Load<Mesh>("Models/Tree Trunk/SadTree");
-                break;
-            case "Beta":
-                targetMesh = Resources.Load<Mesh>("Models/Meshes/Tree Trunk/SadTree");
-                break;
-            case "Gamma":
-                targetMesh = Resources.Load<Mesh>("Models/Meshes/Tree Trunk/NeutralTree");
-                break;
-        }
-    }
 
-    private void SetLeavesVisibility(float visibility)
-    {
-        if (currentLeaves != null)
-        {
-            Color color = currentLeaves.material.color; 
-            color.a = visibility; // Ajusta la transparencia
-            currentLeaves.material.color = color;
-            Debug.Log("alpha: " + color.a);
-        }
-    }
-    //private void SetLatestLeavesVisibility(float visibility)
-    //{
-    //    if (nextLeaves != null)
-    //    {
-    //        Color color = nextLeaves.material.color;
-    //        color.a = visibility; // Ajusta la transparencia
-    //        nextLeaves.material.color = color;
-    //    }
-    //}
-
-    private void SetTransparentMode(Material material)
-    {
-        if (material != null)
-        {
-            material.SetOverrideTag("RenderType", "Transparent");
-            material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-
-            material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            material.SetInt("_ZWrite", 0);
-
-            material.EnableKeyword("_ALPHABLEND_ON");
-            material.DisableKeyword("_ALPHATEST_ON");
-            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-        }
-    }
     private void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.Keypad1))
@@ -313,7 +255,6 @@ public class VegetationBehaviour : MonoBehaviour
 
             alreadyChanged = false;
             firstTime = false;
-            endColor = sad;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))
@@ -328,7 +269,6 @@ public class VegetationBehaviour : MonoBehaviour
 
             alreadyChanged = false;
             firstTime = false;
-            endColor = neutral;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad3))
@@ -343,7 +283,6 @@ public class VegetationBehaviour : MonoBehaviour
 
             alreadyChanged = false;
             firstTime = false;
-            endColor = happy;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad4))
@@ -358,7 +297,6 @@ public class VegetationBehaviour : MonoBehaviour
 
             alreadyChanged = false;
             firstTime = false;
-            endColor = angry;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad5))
@@ -373,7 +311,6 @@ public class VegetationBehaviour : MonoBehaviour
 
             alreadyChanged = false;
             firstTime = false;
-            endColor = anxiety;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad6))
@@ -388,7 +325,6 @@ public class VegetationBehaviour : MonoBehaviour
 
             alreadyChanged = false;
             firstTime = false;
-            endColor = stress;
         }
     }
 
