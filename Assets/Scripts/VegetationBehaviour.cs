@@ -7,15 +7,14 @@ using UnityEngine.VFX;
 public class VegetationBehaviour : MonoBehaviour
 {
     private Renderer vegetationRenderer;
-    //private environmentcontroller environmentcontroller;
-    //private playerfindsclosest playerfindsclosest;
     private ExampleFloatInlet eeg_script;
 
     // Variables para onda
-    private string currentWave;  // Almacena la onda actual
-    private float waveConsistencyTimer = 0f;  // Contador para la consistencia de la onda
-    private const float waveConsistencyDuration = 5f;  // Duración para verificar la consistencia de la onda en segundos
-    private bool isWaveConsistent = false;  // Bandera para saber si la onda ha sido consistente
+    private string currentWave;
+    private float waveConsistencyTimer = 0f;
+    private const float waveConsistencyDuration = 3f;
+    private bool isWaveConsistent = false;
+    private string lastWaveThatTriggeredMorph = ""; // ✅ Añadido
 
     //MESHES
     private string actualState;
@@ -43,28 +42,22 @@ public class VegetationBehaviour : MonoBehaviour
 
     //OTHERS
     public List<VegetationBehaviour> neighbourVegetation;
-    //private float radio;
     private string vegetationType;
+
+    public string mood;
 
     void Start()
     {
-        // find scripts
-        //playerFindsClosest = FindAnyObjectByType<PlayerFindsClosest>();
-        //if (playerFindsClosest == null) Debug.Log("PlayerFindsClosest Script not found");
-
-        //environmentController = FindAnyObjectByType<EnvironmentController>();
-        //if (environmentController == null) Debug.Log("EnvironmentController Script not found");
-
         eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
         if (eeg_script == null) Debug.Log("EEG Script not found");
+        else Debug.Log("EEG Script found");
 
         vfx = GetComponentInChildren<VFXController>();
         if (vfx == null) Debug.Log("VFX Graph not found");
-        else Debug.Log("VFX found");
+        else Debug.Log("VFX Controller Script found");
 
         meshFilter = GetComponentInChildren<MeshFilter>();
         if (vfx == null) Debug.Log("Mesh filter not found");
-        else Debug.Log("Mesh filter found: " + meshFilter);
 
         vegetationRenderer = GetComponent<Renderer>();
         vegetationType = gameObject.tag;
@@ -73,16 +66,11 @@ public class VegetationBehaviour : MonoBehaviour
         {
             startMesh = Resources.Load<Mesh>("Models/NormalTrunk");
             targetMesh = Resources.Load<Mesh>("Models/SadTrunk");
-
-            //radio = 7f;
         }
-
         else if (vegetationType == "Plant")
         {
             startMesh = Resources.Load<Mesh>("Meshes/Plants/NeutralPlant");
             targetMesh = Resources.Load<Mesh>("Meshes/Plants/NeutralPlant");
-
-            //radio = 5f;
         }
 
         if (startMesh == null || targetMesh == null)
@@ -91,7 +79,6 @@ public class VegetationBehaviour : MonoBehaviour
             return;
         }
 
-        // initialize morph mesh attributes
         morphedMesh = new Mesh();
         meshFilter.mesh = startMesh;
         morphedMesh.vertices = startMesh.vertices;
@@ -99,50 +86,55 @@ public class VegetationBehaviour : MonoBehaviour
         morphedMesh.normals = startMesh.normals;
         morphedMesh.uv = startMesh.uv;
 
-        //neighbourVegetation = new List<VegetationBehaviour>();
-        //FindNeighbours();
+        mood = "neutral";
     }
 
     void Update()
     {
         HandleWaveConsistency();
-        if (isMorphing){
+        HandleInput();
+        if (isMorphing)
+        {
             vfx.fall = true;
             MorphingProcess();
         }
-           
     }
 
     private void HandleWaveConsistency()
     {
-        // get current wave
         string newWave = GetCurrentWave();
 
         if (newWave == currentWave)
         {
             waveConsistencyTimer += Time.deltaTime;
 
-            // Si la onda ha sido consistente durante 10 segundos, activamos el morphing
             if (waveConsistencyTimer >= waveConsistencyDuration && !isWaveConsistent)
             {
-                Debug.Log("Wave consistent");
                 isWaveConsistent = true;
-                isMorphing = true;
+
+                if (newWave != lastWaveThatTriggeredMorph) // ✅ Añadido
+                {
+                    Debug.Log("Wave consistent and different from last morph: " + newWave);
+                    lastWaveThatTriggeredMorph = newWave; // ✅ Añadido
+                    isMorphing = true;
+                }
+                //else
+                //{
+                //    Debug.Log("Wave is consistent but same as last one, skipping morph."); // ✅ Añadido
+                //}
             }
         }
         else
         {
-            waveConsistencyTimer = 0f;  // Reiniciamos el contador si la onda cambia
-            isWaveConsistent = false;  // La onda no es consistente
-            currentWave = newWave;  // Actualizamos la onda actual
-
+            waveConsistencyTimer = 0f;
+            isWaveConsistent = false;
+            currentWave = newWave;
             MorphingByWave(currentWave);
         }
     }
 
     private string GetCurrentWave()
     {
-        // Aquí es donde obtienes el tipo de onda actual, puede ser de tu sistema de EEG o de otra fuente
         return eeg_script.lastWaveType;
     }
 
@@ -151,7 +143,8 @@ public class VegetationBehaviour : MonoBehaviour
         switch (wave)
         {
             case "Delta":
-                targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
+                targetMesh = Resources.Load<Mesh>("Models/SadTrunk");
+                mood = "sad";
                 break;
             case "Theta":
                 targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
@@ -163,25 +156,24 @@ public class VegetationBehaviour : MonoBehaviour
                 targetMesh = Resources.Load<Mesh>("Models/Meshes/Tree Trunk/SadTree");
                 break;
             case "Gamma":
-                targetMesh = Resources.Load<Mesh>("Models/Meshes/Tree Trunk/NeutralTree");
+                targetMesh = Resources.Load<Mesh>("Models/StressedTrunk");
+                mood = "stressed";
                 break;
         }
     }
 
     public void MorphingProcess()
     {
-        // add time to transitionProgress
         transitionProgress += Time.deltaTime / transitionDuration;
 
-        if (transitionProgress >= 0.5f)
+        if (transitionProgress >= 0.3f)
         {
-            vfx.isSad = true;
             vfx.changeMood();
         }
 
         if (transitionProgress > 1f)
         {
-            transitionProgress = 1f;
+            transitionProgress = 0f;
             startMesh = targetMesh;
             isMorphing = false;
             vfx.fall = false;
@@ -224,10 +216,6 @@ public class VegetationBehaviour : MonoBehaviour
 
         if (vegetationType == "Tree")
             path = "Meshes/Tree Trunk/";
-        //else if (vegetationType == "Plant")
-        //    path = "Meshes/Plants/";
-        //else if (vegetationType == "Bush")
-        //    path = "Meshes/Bushes/";
 
         targetMesh = Resources.Load<Mesh>($"{path}{meshName}");
         transitionProgress = 0f;
@@ -235,54 +223,28 @@ public class VegetationBehaviour : MonoBehaviour
 
     private void StartMorphing()
     {
-        // Inicia el morphing solo si la onda ha sido consistente durante 10 segundos
         Debug.Log("Onda consistente durante 10 segundos. Activando morphing.");
-        isMorphing = true;  // Esto activa el morphing
+        isMorphing = true;
     }
-
 
     private void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
-            actualState = "sad";
-            if (vegetationType == "Plant")
-                actualMesh = "SadPlant";
-            else if (vegetationType == "Tree")
-                actualMesh = "SadTree";
-            else if (vegetationType == "Bush")
-                actualMesh = "SadBush";
-
-            alreadyChanged = false;
-            firstTime = false;
+            mood = "sad";
+            isMorphing = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
-            actualState = "neutral";
-            if (vegetationType == "Plant")
-                actualMesh = "NeutralPlant";
-            else if (vegetationType == "Tree")
-                actualMesh = "NeutralTree";
-            else if (vegetationType == "Bush")
-                actualMesh = "NeutralBush";
-
-            alreadyChanged = false;
-            firstTime = false;
+            mood = "stressed";
+            isMorphing = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad3))
         {
-            actualState = "happy";
-            if (vegetationType == "Plant")
-                actualMesh = "HappyPlant";
-            else if (vegetationType == "Tree")
-                actualMesh = "HappyTree";
-            else if (vegetationType == "Bush")
-                actualMesh = "HappyBush";
-
-            alreadyChanged = false;
-            firstTime = false;
+            mood = "neutral";
+            isMorphing = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad4))
@@ -328,22 +290,6 @@ public class VegetationBehaviour : MonoBehaviour
         }
     }
 
-    //private void FindNeighbours()
-    //{
-    //    float distance;
-    //    foreach (VegetationBehaviour vb in playerFindsClosest.allVegetation)
-    //    {
-    //        if (vb != this)
-    //        {
-    //            distance = Vector3.Distance(this.transform.position, vb.transform.position);
-    //            if (distance < radio)
-    //            {
-    //                neighbourVegetation.Add(vb); //Add closest vegetation to list
-    //            }
-    //        }
-    //    }
-    //}
-
     public void MorphNeighbours(VegetationBehaviour vegetationMorphing)
     {
         alreadyChanged = false;
@@ -367,12 +313,15 @@ public class VegetationBehaviour : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
 
-        // Initializes the interpolation of the neighbours
         foreach (VegetationBehaviour neighbour in neighbourVegetation)
         {
-
             if (!neighbour.alreadyChanged)
                 neighbour.MorphNeighbours(neighbour);
         }
+    }
+
+    public float GetTransitionProgress()
+    {
+        return transitionProgress;
     }
 }
