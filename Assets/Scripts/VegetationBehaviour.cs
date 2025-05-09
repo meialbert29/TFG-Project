@@ -52,11 +52,11 @@ public class VegetationBehaviour : MonoBehaviour
         if (eeg_script == null) Debug.Log("EEG Script not found");
         else Debug.Log("EEG Script found");
 
-        vfx = GetComponentInChildren<VFXController>();
+        vfx = FindAnyObjectByType<VFXController>();
         if (vfx == null) Debug.Log("VFX Graph not found");
         else Debug.Log("VFX Controller Script found");
 
-        meshFilter = GetComponentInChildren<MeshFilter>();
+        meshFilter = FindAnyObjectByType<MeshFilter>();
         if (vfx == null) Debug.Log("Mesh filter not found");
 
         vegetationRenderer = GetComponent<Renderer>();
