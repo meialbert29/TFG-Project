@@ -1939,7 +1939,7 @@ MonoBehaviour:
   scoreText: {fileID: 823025528}
   pointsText: {fileID: 714827067}
   lastWaveType: 
-  vegetationBehaviour: {fileID: 0}
+  vegetationBehaviour: {fileID: 2142089609}
 --- !u!114 &2142089609 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3872894233638934197, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
