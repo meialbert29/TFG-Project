@@ -46,59 +46,56 @@ public class VegetationBehaviour : MonoBehaviour
 
     public string mood;
 
-    //void Start()
-    //{
-    //    eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
-    //    if (eeg_script == null) Debug.Log("EEG Script not found");
-    //    else Debug.Log("EEG Script found");
+    void Start()
+    {
+        // find objects
+        eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
+        if (eeg_script == null) Debug.Log("EEG Script not found");
 
-    //    vfx = FindAnyObjectByType<VFXController>();
-    //    if (vfx == null) Debug.Log("VFX Graph not found");
-    //    else Debug.Log("VFX Controller Script found");
+        vfx = transform.GetComponent<VFXController>();
+        if (vfx == null) Debug.Log("VFX Graph not found");
 
-    //    meshFilter = FindAnyObjectByType<MeshFilter>();
-    //    if (vfx == null) Debug.Log("Mesh filter not found");
+        // get mesh object
+        Transform trunkMesh = transform.GetChild(3);
+        meshFilter = trunkMesh.GetComponent<MeshFilter>();
 
-    //    vegetationRenderer = GetComponent<Renderer>();
-    //    vegetationType = gameObject.tag;
+        // get object tag
+        vegetationType = gameObject.tag;
 
-    //    if (vegetationType == "Tree")
-    //    {
-    //        startMesh = Resources.Load<Mesh>("Models/NormalTrunk");
-    //        targetMesh = Resources.Load<Mesh>("Models/SadTrunk");
-    //    }
-    //    else if (vegetationType == "Plant")
-    //    {
-    //        startMesh = Resources.Load<Mesh>("Meshes/Plants/NeutralPlant");
-    //        targetMesh = Resources.Load<Mesh>("Meshes/Plants/NeutralPlant");
-    //    }
+        // check if the object is in the Vegetation Layer
+        if (gameObject.layer == LayerMask.NameToLayer("Vegetation"))
+        {
+            startMesh = meshFilter.mesh;
+            targetMesh = Resources.Load<Mesh>("Models/SadTrunk");
+        }
 
-    //    if (startMesh == null || targetMesh == null)
-    //    {
-    //        Debug.LogError("Meshes were not loaded correctly. Please check the path.");
-    //        return;
-    //    }
+        if (startMesh == null || targetMesh == null)
+        {
+            
+            Debug.LogError("Meshes were not loaded correctly. Please check the path.");
+            return;
+        }
 
-    //    morphedMesh = new Mesh();
-    //    meshFilter.mesh = startMesh;
-    //    morphedMesh.vertices = startMesh.vertices;
-    //    morphedMesh.triangles = startMesh.triangles;
-    //    morphedMesh.normals = startMesh.normals;
-    //    morphedMesh.uv = startMesh.uv;
+        morphedMesh = new Mesh();
+        meshFilter.mesh = startMesh;
+        morphedMesh.vertices = startMesh.vertices;
+        morphedMesh.triangles = startMesh.triangles;
+        morphedMesh.normals = startMesh.normals;
+        morphedMesh.uv = startMesh.uv;
 
-    //    mood = "neutral";
-    //}
+        mood = "neutral";
+    }
 
-    //void Update()
-    //{
-    //    HandleWaveConsistency();
-    //    HandleInput();
-    //    if (isMorphing)
-    //    {
-    //        vfx.fall = true;
-    //        MorphingProcess();
-    //    }
-    //}
+    void Update()
+    {
+        HandleWaveConsistency();
+        HandleInput();
+        if (isMorphing)
+        {
+            vfx.fall = true;
+            MorphingProcess();
+        }
+    }
 
     private void HandleWaveConsistency()
     {
@@ -214,7 +211,7 @@ public class VegetationBehaviour : MonoBehaviour
         startMesh = meshFilter.mesh;
         string path = "";
 
-        if (vegetationType == "Tree")
+        if (gameObject.layer == LayerMask.NameToLayer("Vegetation"))
             path = "Meshes/Tree Trunk/";
 
         targetMesh = Resources.Load<Mesh>($"{path}{meshName}");
@@ -223,7 +220,7 @@ public class VegetationBehaviour : MonoBehaviour
 
     private void StartMorphing()
     {
-        Debug.Log("Onda consistente durante 10 segundos. Activando morphing.");
+        Debug.Log($"Onda consistente durante {waveConsistencyDuration} segundos. Activando morphing.");
         isMorphing = true;
     }
 

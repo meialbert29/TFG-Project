@@ -18,24 +18,9 @@ public class TreeSpawner : MonoBehaviour
 
     void Start()
     {
-        //SpawnTrees();
+        SpawnTrees();
 
-        float xPos = Random.Range(0, terrain.terrainData.size.x);
-        float zPos = Random.Range(0, terrain.terrainData.size.z);
-
-        // Ajusta la posición al mundo
-        float worldX = terrain.transform.position.x + xPos;
-        float worldZ = terrain.transform.position.z + zPos;
-        float worldY = terrain.SampleHeight(new Vector3(worldX, 0, worldZ)) + terrain.transform.position.y;
-
-        Vector3 spawnPosition = new Vector3(worldX, worldY, worldZ);
-
-        spawnedTree = Instantiate(treePrefab, spawnPosition, Quaternion.identity);
-        spawnedTree.transform.localScale = Vector3.one; // Asegura escala correcta
-
-        spawnedTree.name = "treeInstance";
-
-        AnalyzeLODGroup(spawnedTree);
+        //AnalyzeLODGroup(spawnedTree);
     }
 
     void SpawnTrees()
@@ -81,59 +66,11 @@ public class TreeSpawner : MonoBehaviour
                 Quaternion treeRotation = Quaternion.identity;
                 VegetationBehaviour treeInstance = Instantiate(treePrefab, position, treeRotation);
 
-                // Asegura la escala correcta (útil si el prefab tiene escala guardada diferente)
-                treeInstance.transform.localScale = Vector3.one;
-
-                Debug.Log("Escala del objeto: " + treeInstance.transform.localScale);
+                //// Asegura la escala correcta (útil si el prefab tiene escala guardada diferente)
+                //treeInstance.transform.localScale = Vector3.one;
             }
         }
 
     }
 
-    void AnalyzeLODGroup(VegetationBehaviour tree)
-    {
-        LODGroup lodGroup = tree.GetComponent<LODGroup>();
-        if (lodGroup == null)
-        {
-            Debug.Log("Este objeto no tiene un LODGroup.");
-            return;
-        }
-
-        LOD[] lods = lodGroup.GetLODs();
-        for (int i = 0; i < lods.Length; i++)
-        {
-            Debug.Log($"--- LOD {i} ---");
-
-            foreach (Renderer renderer in lods[i].renderers)
-            {
-                if (renderer == null)
-                {
-                    Debug.LogWarning($"LOD {i}: renderer nulo");
-                    continue;
-                }
-
-                Mesh mesh = null;
-
-                if (renderer is MeshRenderer)
-                {
-                    MeshFilter mf = renderer.GetComponent<MeshFilter>();
-                    if (mf != null)
-                        mesh = mf.sharedMesh;
-                }
-                else if (renderer is SkinnedMeshRenderer skinned)
-                {
-                    mesh = skinned.sharedMesh;
-                }
-
-                if (mesh != null)
-                {
-                    Debug.Log($"LOD {i}: Mesh encontrada: '{mesh.name}' en objeto '{renderer.gameObject.name}'");
-                }
-                else
-                {
-                    Debug.Log($"LOD {i}: Sin malla en renderer '{renderer.gameObject.name}'");
-                }
-            }
-        }
-    }
 }

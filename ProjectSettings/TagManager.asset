@@ -5,7 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Tree
-  - Leave
+  - Trunk
+  - Grass
+  - Leaves
   layers:
   - Default
   - TransparentFX
@@ -14,7 +16,7 @@ TagManager:
   - Water
   - UI
   - Terrain
-  - 
+  - Vegetation
   - 
   - 
   - 

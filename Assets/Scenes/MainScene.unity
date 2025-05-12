@@ -378,7 +378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrain: {fileID: 1293693951}
   treePrefab: {fileID: 2142089609}
-  treeCount: 1
+  treeCount: 2
   minDistanceBetweenTrees: 2
 --- !u!1 &280647103
 GameObject:
@@ -1350,11 +1350,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893149684}
   m_CullTransparentMesh: 1
---- !u!2083052967 &959898334 stripped
-VisualEffect:
-  m_CorrespondingSourceObject: {fileID: 479461186301065613, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-  m_PrefabInstance: {fileID: 5436625519947743579}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1033251413 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7486606147769629928, guid: fc798f839f16e164bb4d800e08659b9d, type: 3}
@@ -1945,98 +1940,17 @@ MonoBehaviour:
   pointsText: {fileID: 714827067}
   lastWaveType: 
   vegetationBehaviour: {fileID: 0}
---- !u!1 &2142089607 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 39377792717815700, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-  m_PrefabInstance: {fileID: 5436625519947743579}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2142089609 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3872894233638934197, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
   m_PrefabInstance: {fileID: 5436625519947743579}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2142089607}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27b1c94d86fb2334181ee460b3ae8d3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2142089612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2142089607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 766eee0cc199af24b9414e3076be2e03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vfx: {fileID: 959898334}
-  leavesGradient:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
-  blendGradient:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
-  fall: 0
-  vegetation: {fileID: 2142089609}
-  moodIndex: 0
 --- !u!1001 &1877570282030221457
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2089,6 +2003,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrassPlant
       objectReference: {fileID: 0}
+    - target: {fileID: 5757769693513246508, guid: 481c23496fcccfa4bb183d7d45c64cb1, type: 3}
+      propertyPath: m_TagString
+      value: Grass
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2105,6 +2023,18 @@ PrefabInstance:
     - target: {fileID: 39377792717815700, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
       propertyPath: m_Name
       value: TreeLOD
+      objectReference: {fileID: 0}
+    - target: {fileID: 39377792717815700, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 556596967808536655, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 556596967808536655, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_TagString
+      value: Tree
       objectReference: {fileID: 0}
     - target: {fileID: 1145244503612077232, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2146,13 +2076,58 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1571797350248839432, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1571797350248839432, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_TagString
+      value: Leaves
+      objectReference: {fileID: 0}
+    - target: {fileID: 3120163394777682509, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3120163394777682509, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_TagString
+      value: Leaves
+      objectReference: {fileID: 0}
+    - target: {fileID: 3758410179644402439, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3758410179644402439, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_TagString
+      value: Leaves
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297587928734116836, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297587928734116836, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_TagString
+      value: Tree
+      objectReference: {fileID: 0}
+    - target: {fileID: 4973845897873975726, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4973845897873975726, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_TagString
+      value: Tree
+      objectReference: {fileID: 0}
+    - target: {fileID: 6663145759300079745, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6663145759300079745, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
+      propertyPath: m_TagString
+      value: Trunk
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 39377792717815700, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      insertIndex: 2
-      addedObject: {fileID: 2142089612}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
@@ -2170,5 +2145,5 @@ SceneRoots:
   - {fileID: 1293693952}
   - {fileID: 1877570282030221457}
   - {fileID: 510944708}
-  - {fileID: 148518318}
   - {fileID: 5436625519947743579}
+  - {fileID: 148518318}

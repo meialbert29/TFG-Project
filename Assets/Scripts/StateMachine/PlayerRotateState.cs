@@ -7,7 +7,6 @@ public class PlayerRotateState : PlayerBaseState
 
     public override void EnterState()
     {
-        Debug.Log("Entering");
         Ctx.Animator.SetBool(Ctx.IsWalkingHash, false);
         Ctx.Animator.SetBool(Ctx.IsRunningHash, false);
 
