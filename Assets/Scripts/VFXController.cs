@@ -115,7 +115,7 @@ public class VFXController : MonoBehaviour
             previousMoodType = moodType;
         }
 
-        updateGradientOverTime(keys, keysBlend, vegetation.GetTransitionProgress());
+        updateGradientOverTime(keys, keysBlend, vegetation.getTransitionProgress());
     }
 
     private void updateGradientOverTime(GradientColorKey[] keys, GradientColorKey[] keysBlend, float progress)

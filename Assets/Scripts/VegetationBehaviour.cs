@@ -8,6 +8,7 @@ public class VegetationBehaviour : MonoBehaviour
 {
     private Renderer vegetationRenderer;
     private ExampleFloatInlet eeg_script;
+    private LeavesController leavesController;
 
     // Variables para onda
     private string currentWave;
@@ -55,8 +56,11 @@ public class VegetationBehaviour : MonoBehaviour
         vfx = transform.GetComponent<VFXController>();
         if (vfx == null) Debug.Log("VFX Graph not found");
 
+        leavesController = transform.GetComponent<LeavesController>();
+        if (leavesController == null) Debug.Log("leaves Controller not found");
+
         // get mesh object
-        Transform trunkMesh = transform.GetChild(3);
+        Transform trunkMesh = transform.GetChild(1);
         meshFilter = trunkMesh.GetComponent<MeshFilter>();
 
         // get object tag
@@ -65,8 +69,8 @@ public class VegetationBehaviour : MonoBehaviour
         // check if the object is in the Vegetation Layer
         if (gameObject.layer == LayerMask.NameToLayer("Vegetation"))
         {
-            startMesh = meshFilter.mesh;
-            targetMesh = Resources.Load<Mesh>("Models/SadTrunk");
+            startMesh = Resources.Load<Mesh>("Models/Trunks/Trunk");
+            targetMesh = Resources.Load<Mesh>("Models/Trunks/SadTrunk");
         }
 
         if (startMesh == null || targetMesh == null)
@@ -140,7 +144,7 @@ public class VegetationBehaviour : MonoBehaviour
         switch (wave)
         {
             case "Delta":
-                targetMesh = Resources.Load<Mesh>("Models/SadTrunk");
+                targetMesh = Resources.Load<Mesh>("Models/Trunks/SadTrunk");
                 mood = "sad";
                 break;
             case "Theta":
@@ -153,7 +157,7 @@ public class VegetationBehaviour : MonoBehaviour
                 targetMesh = Resources.Load<Mesh>("Models/Meshes/Tree Trunk/SadTree");
                 break;
             case "Gamma":
-                targetMesh = Resources.Load<Mesh>("Models/StressedTrunk");
+                targetMesh = Resources.Load<Mesh>("Models/Trunks/StressedTrunk");
                 mood = "stressed";
                 break;
         }
@@ -174,7 +178,7 @@ public class VegetationBehaviour : MonoBehaviour
             startMesh = targetMesh;
             isMorphing = false;
             vfx.fall = false;
-
+            leavesController.updateStartColorsFromCurrentColors();
             Debug.Log("Transition finished");
         }
 
@@ -212,7 +216,7 @@ public class VegetationBehaviour : MonoBehaviour
         string path = "";
 
         if (gameObject.layer == LayerMask.NameToLayer("Vegetation"))
-            path = "Meshes/Tree Trunk/";
+            path = "Models/";
 
         targetMesh = Resources.Load<Mesh>($"{path}{meshName}");
         transitionProgress = 0f;
@@ -230,6 +234,7 @@ public class VegetationBehaviour : MonoBehaviour
         {
             mood = "sad";
             isMorphing = true;
+
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))
@@ -242,6 +247,7 @@ public class VegetationBehaviour : MonoBehaviour
         {
             mood = "neutral";
             isMorphing = true;
+            targetMesh = Resources.Load<Mesh>("Models/Trunks/Trunk");
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad4))
@@ -317,7 +323,7 @@ public class VegetationBehaviour : MonoBehaviour
         }
     }
 
-    public float GetTransitionProgress()
+    public float getTransitionProgress()
     {
         return transitionProgress;
     }

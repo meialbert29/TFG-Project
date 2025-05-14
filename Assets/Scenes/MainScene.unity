@@ -378,7 +378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrain: {fileID: 1293693951}
   treePrefab: {fileID: 2142089609}
-  treeCount: 2
+  treeCount: 1
   minDistanceBetweenTrees: 2
 --- !u!1 &280647103
 GameObject:
@@ -551,7 +551,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fc798f839f16e164bb4d800e08659b9d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fc798f839f16e164bb4d800e08659b9d, type: 3}
       propertyPath: m_LocalRotation.x
@@ -559,7 +559,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fc798f839f16e164bb4d800e08659b9d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fc798f839f16e164bb4d800e08659b9d, type: 3}
       propertyPath: m_LocalRotation.z
@@ -571,7 +571,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fc798f839f16e164bb4d800e08659b9d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fc798f839f16e164bb4d800e08659b9d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1462,8 +1462,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283552752}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 26.28, y: 1.98, z: 9.25}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 26.28, y: 1.98, z: 5.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2022,23 +2022,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 39377792717815700, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
       propertyPath: m_Name
-      value: TreeLOD
-      objectReference: {fileID: 0}
-    - target: {fileID: 39377792717815700, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 556596967808536655, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 556596967808536655, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_TagString
       value: Tree
       objectReference: {fileID: 0}
     - target: {fileID: 1145244503612077232, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 31.4
       objectReference: {fileID: 0}
     - target: {fileID: 1145244503612077232, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2046,7 +2034,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1145244503612077232, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 19.8
       objectReference: {fileID: 0}
     - target: {fileID: 1145244503612077232, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2075,54 +2063,6 @@ PrefabInstance:
     - target: {fileID: 1145244503612077232, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1571797350248839432, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 1571797350248839432, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_TagString
-      value: Leaves
-      objectReference: {fileID: 0}
-    - target: {fileID: 3120163394777682509, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3120163394777682509, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_TagString
-      value: Leaves
-      objectReference: {fileID: 0}
-    - target: {fileID: 3758410179644402439, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3758410179644402439, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_TagString
-      value: Leaves
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297587928734116836, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4297587928734116836, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_TagString
-      value: Tree
-      objectReference: {fileID: 0}
-    - target: {fileID: 4973845897873975726, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4973845897873975726, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_TagString
-      value: Tree
-      objectReference: {fileID: 0}
-    - target: {fileID: 6663145759300079745, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6663145759300079745, guid: 33f7482690fb1784ea3fe3d691b9a8d6, type: 3}
-      propertyPath: m_TagString
-      value: Trunk
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

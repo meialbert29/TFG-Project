@@ -65,6 +65,7 @@ public class TreeSpawner : MonoBehaviour
 
                 Quaternion treeRotation = Quaternion.identity;
                 VegetationBehaviour treeInstance = Instantiate(treePrefab, position, treeRotation);
+                treeInstance.name = "treeInstance" + i;
 
                 //// Asegura la escala correcta (útil si el prefab tiene escala guardada diferente)
                 //treeInstance.transform.localScale = Vector3.one;
