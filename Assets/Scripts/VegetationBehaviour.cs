@@ -10,38 +10,42 @@ public class VegetationBehaviour : MonoBehaviour
     private ExampleFloatInlet eeg_script;
     private LeavesController leavesController;
 
-    // Variables para onda
+    // wave variables
     private string currentWave;
     private float waveConsistencyTimer = 0f;
     private const float waveConsistencyDuration = 3f;
     private bool isWaveConsistent = false;
-    private string lastWaveThatTriggeredMorph = ""; // ✅ Añadido
+    private string lastWaveThatTriggeredMorph = "";
 
-    //MESHES
+    // meshes
     private string actualState;
     private string latestState;
     private string actualMesh;
+    private Transform trunkMesh;
     private MeshFilter meshFilter;
     private Mesh startMesh;
     private Mesh targetMesh;
     private Mesh morphedMesh;
 
-    //Leaves
+    // materials
+    private Material trunkMaterial;
+
+    // leaves
     private VFXController vfx;
     float currentLeavesVisibility;
     float latestLeavesVisibility;
 
-    //PROGRESS
+    // progress
     private float transitionProgress = 0f;
     private float transitionDuration = 3f;
 
-    //BOOLS
+    // bools
     private bool isMorphing = false;
     private bool alreadyChanged = false;
     private bool firstTime = true;
     private bool isTransitioning = false;
 
-    //OTHERS
+    // others
     public List<VegetationBehaviour> neighbourVegetation;
     private string vegetationType;
 
@@ -60,7 +64,7 @@ public class VegetationBehaviour : MonoBehaviour
         if (leavesController == null) Debug.Log("leaves Controller not found");
 
         // get mesh object
-        Transform trunkMesh = transform.GetChild(1);
+        trunkMesh = transform.GetChild(1);
         meshFilter = trunkMesh.GetComponent<MeshFilter>();
 
         // get object tag
@@ -75,7 +79,6 @@ public class VegetationBehaviour : MonoBehaviour
 
         if (startMesh == null || targetMesh == null)
         {
-            
             Debug.LogError("Meshes were not loaded correctly. Please check the path.");
             return;
         }
@@ -178,7 +181,7 @@ public class VegetationBehaviour : MonoBehaviour
             startMesh = targetMesh;
             isMorphing = false;
             vfx.fall = false;
-            leavesController.updateStartColorsFromCurrentColors();
+            leavesController.updateLeavesStartColors();
             Debug.Log("Transition finished");
         }
 
@@ -234,13 +237,13 @@ public class VegetationBehaviour : MonoBehaviour
         {
             mood = "sad";
             isMorphing = true;
-
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
             mood = "stressed";
             isMorphing = true;
+            targetMesh = Resources.Load<Mesh>("Models/Trunks/StressedTrunk");
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad3))
@@ -248,48 +251,6 @@ public class VegetationBehaviour : MonoBehaviour
             mood = "neutral";
             isMorphing = true;
             targetMesh = Resources.Load<Mesh>("Models/Trunks/Trunk");
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad4))
-        {
-            actualState = "angry";
-            if (vegetationType == "Plant")
-                actualMesh = "AngryPlant";
-            else if (vegetationType == "Tree")
-                actualMesh = "AngryTree";
-            else if (vegetationType == "Bush")
-                actualMesh = "AngryBush";
-
-            alreadyChanged = false;
-            firstTime = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad5))
-        {
-            actualState = "anxiety";
-            if (vegetationType == "Plant")
-                actualMesh = "AnxiousPlant";
-            else if (vegetationType == "Tree")
-                actualMesh = "AnxiousTree";
-            else if (vegetationType == "Bush")
-                actualMesh = "AnxiousBush";
-
-            alreadyChanged = false;
-            firstTime = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad6))
-        {
-            actualState = "stress";
-            if (vegetationType == "Plant")
-                actualMesh = "StressPlant";
-            else if (vegetationType == "Tree")
-                actualMesh = "StressTree";
-            else if (vegetationType == "Bush")
-                actualMesh = "StressBush";
-
-            alreadyChanged = false;
-            firstTime = false;
         }
     }
 
