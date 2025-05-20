@@ -288,4 +288,9 @@ public class VegetationBehaviour : MonoBehaviour
     {
         return transitionProgress;
     }
+
+    public bool getMorphingState()
+    {
+        return isMorphing;
+    }
 }

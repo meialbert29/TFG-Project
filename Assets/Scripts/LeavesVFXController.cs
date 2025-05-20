@@ -9,7 +9,7 @@ public class VFXController : MonoBehaviour
     [SerializeField] private Gradient leavesGradient;
     [SerializeField] private Gradient blendGradient;
     [SerializeField] public bool fall;
-    [SerializeField] private VegetationBehaviour vegetation;
+    [SerializeField] private VegetationBehaviour vb;
     [SerializeField] private int moodIndex;
     
 
@@ -47,8 +47,9 @@ public class VFXController : MonoBehaviour
 
     void Start()
     {
-        vegetation.mood = "neutral";
-        moodType = vegetation.mood;
+        vb = transform.GetComponent<VegetationBehaviour>();
+
+        moodType = vb.mood;
         previousMoodType = moodType;
         moodIndex = 0;
 
@@ -107,15 +108,19 @@ public class VFXController : MonoBehaviour
     void Update()
     {
         fallLeaves();
-        moodType = vegetation.mood;
 
-        if (moodType != previousMoodType)
+        if (vb.getMorphingState())
         {
-            UpdateStartColorsFromCurrentGradient(keys, keysBlend);
-            previousMoodType = moodType;
-        }
+            moodType = vb.mood;
 
-        updateGradientOverTime(keys, keysBlend, vegetation.getTransitionProgress());
+            if (moodType != previousMoodType)
+            {
+                UpdateStartColorsFromCurrentGradient(keys, keysBlend);
+                previousMoodType = moodType;
+            }
+
+            updateGradientOverTime(keys, keysBlend, vb.getTransitionProgress());
+        }
     }
 
     private void updateGradientOverTime(GradientColorKey[] keys, GradientColorKey[] keysBlend, float progress)

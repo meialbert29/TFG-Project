@@ -38,8 +38,9 @@ public class LeavesController : MonoBehaviour
     private MeshFilter _meshFilter_LOD1;
     private MeshFilter _meshFilter_LOD2;
 
-    void Start()
+    void Awake()
     {
+
         _vegetation = GetComponent<VegetationBehaviour>();
         _lodGroup = GetComponent<LODGroup>();
         _lodController = GetComponent<LODController>();
