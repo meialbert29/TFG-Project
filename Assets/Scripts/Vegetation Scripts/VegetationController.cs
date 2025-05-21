@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class VegetationBehaviour : MonoBehaviour
+public class VegetationController : MonoBehaviour
 {
     private Renderer vegetationRenderer;
     private ExampleFloatInlet eeg_script;
-    private LeavesController leavesController;
+    public VFXController _vfxController;
+    public LeavesController _leavesController;
+    public GeneralController _generalController;
+    public WavesReader _wavesReader;
 
     // wave variables
-    private string currentWave;
+    private string _currentWave;
     private float waveConsistencyTimer = 0f;
     private const float waveConsistencyDuration = 3f;
     private bool isWaveConsistent = false;
@@ -31,37 +34,48 @@ public class VegetationBehaviour : MonoBehaviour
     private Material trunkMaterial;
 
     // leaves
-    private VFXController vfx;
+    
     float currentLeavesVisibility;
     float latestLeavesVisibility;
 
     // progress
-    private float transitionProgress = 0f;
-    private float transitionDuration = 3f;
+    private float _transitionProgress = 0f;
+    private float _transitionDuration = 3f;
 
     // bools
-    private bool isMorphing = false;
+    private bool _isMorphing = false;
     private bool alreadyChanged = false;
     private bool firstTime = true;
     private bool isTransitioning = false;
 
     // others
-    public List<VegetationBehaviour> neighbourVegetation;
+    public List<VegetationController> neighbourVegetation;
     private string vegetationType;
 
-    public string mood;
 
-    void Start()
+    public bool IsMorphing { get { return _isMorphing; } set { _isMorphing = value; } }
+
+    void Awake()
     {
+        //Debug.Log("Vegetation Behaviour");
+
         // find objects
         eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
-        if (eeg_script == null) Debug.Log("EEG Script not found");
+        //_gc = FindAnyObjectByType<GeneralController>();
 
-        vfx = transform.GetComponent<VFXController>();
-        if (vfx == null) Debug.Log("VFX Graph not found");
+        if(eeg_script == null || _generalController == null)
+        {
+            Debug.Log("Error in Vegetation Behaviour");
+            return;
+        }
 
-        leavesController = transform.GetComponent<LeavesController>();
-        if (leavesController == null) Debug.Log("leaves Controller not found");
+        //vfx = transform.GetComponent<VFXController>();
+        if (_vfxController == null) Debug.Log("VFX Graph not found");
+
+        //leavesController = transform.GetComponent<LeavesController>();
+        if (_leavesController == null) Debug.Log("leaves Controller not found");
+
+        
 
         // get mesh object
         trunkMesh = transform.GetChild(1);
@@ -89,17 +103,15 @@ public class VegetationBehaviour : MonoBehaviour
         morphedMesh.triangles = startMesh.triangles;
         morphedMesh.normals = startMesh.normals;
         morphedMesh.uv = startMesh.uv;
-
-        mood = "neutral";
     }
 
     void Update()
     {
         HandleWaveConsistency();
-        HandleInput();
-        if (isMorphing)
+        if (_generalController.MoodChanging)
         {
-            vfx.fall = true;
+            //_generalController.MoodChanging = true;
+            _vfxController.fall = true;
             MorphingProcess();
         }
     }
@@ -108,7 +120,7 @@ public class VegetationBehaviour : MonoBehaviour
     {
         string newWave = GetCurrentWave();
 
-        if (newWave == currentWave)
+        if (newWave == _currentWave)
         {
             waveConsistencyTimer += Time.deltaTime;
 
@@ -116,24 +128,20 @@ public class VegetationBehaviour : MonoBehaviour
             {
                 isWaveConsistent = true;
 
-                if (newWave != lastWaveThatTriggeredMorph) // ✅ Añadido
+                if (newWave != lastWaveThatTriggeredMorph)
                 {
                     Debug.Log("Wave consistent and different from last morph: " + newWave);
-                    lastWaveThatTriggeredMorph = newWave; // ✅ Añadido
-                    isMorphing = true;
+                    lastWaveThatTriggeredMorph = newWave;
+                    _isMorphing = true;
                 }
-                //else
-                //{
-                //    Debug.Log("Wave is consistent but same as last one, skipping morph."); // ✅ Añadido
-                //}
             }
         }
         else
         {
             waveConsistencyTimer = 0f;
             isWaveConsistent = false;
-            currentWave = newWave;
-            MorphingByWave(currentWave);
+            _currentWave = newWave;
+            LoadTargetMesh(_currentWave);
         }
     }
 
@@ -142,13 +150,13 @@ public class VegetationBehaviour : MonoBehaviour
         return eeg_script.lastWaveType;
     }
 
-    private void MorphingByWave(string wave)
+    public void LoadTargetMesh(string wave)
     {
         switch (wave)
         {
             case "Delta":
                 targetMesh = Resources.Load<Mesh>("Models/Trunks/SadTrunk");
-                mood = "sad";
+                _generalController.Mood = "sad";
                 break;
             case "Theta":
                 targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
@@ -161,31 +169,35 @@ public class VegetationBehaviour : MonoBehaviour
                 break;
             case "Gamma":
                 targetMesh = Resources.Load<Mesh>("Models/Trunks/StressedTrunk");
-                mood = "stressed";
+                _generalController.Mood = "stressed";
                 break;
         }
     }
 
     public void MorphingProcess()
     {
-        transitionProgress += Time.deltaTime / transitionDuration;
+        _transitionProgress += Time.deltaTime / _transitionDuration;
 
-        if (transitionProgress >= 0.3f)
+        if (_transitionProgress >= 0.3f)
         {
-            vfx.changeMood();
+            _vfxController.ChangeMood();
         }
 
-        if (transitionProgress > 1f)
+        if (_transitionProgress >= 1f)
         {
-            transitionProgress = 0f;
+            _transitionProgress = 0f;
             startMesh = targetMesh;
-            isMorphing = false;
-            vfx.fall = false;
-            leavesController.updateLeavesStartColors();
+            //_isMorphing = false;
+            //_generalController.MoodChanging = false;
+
+            _generalController.cont++;
+            _generalController.checkCont();
+            _vfxController.fall = false;
+            _leavesController.UpdateLeavesStartColors();
             Debug.Log("Transition finished");
         }
 
-        MorphMeshes(startMesh, targetMesh, transitionProgress);
+        MorphMeshes(startMesh, targetMesh, _transitionProgress);
     }
 
     void MorphMeshes(Mesh fromMesh, Mesh toMesh, float t)
@@ -222,75 +234,52 @@ public class VegetationBehaviour : MonoBehaviour
             path = "Models/";
 
         targetMesh = Resources.Load<Mesh>($"{path}{meshName}");
-        transitionProgress = 0f;
+        _transitionProgress = 0f;
     }
 
     private void StartMorphing()
     {
         Debug.Log($"Onda consistente durante {waveConsistencyDuration} segundos. Activando morphing.");
-        isMorphing = true;
+        _isMorphing = true;
     }
 
-    private void HandleInput()
+    //public void MorphNeighbours(VegetationController vegetationMorphing)
+    //{
+    //    alreadyChanged = false;
+
+    //    if (latestState != actualState)
+    //    {
+    //        _isMorphing = true;
+    //        latestState = actualState;
+    //    }
+
+    //    if (!alreadyChanged)
+    //        SetTargetMesh(vegetationMorphing.actualMesh, vegetationMorphing.actualState);
+
+    //    if (neighbourVegetation.Count > 0)
+    //    {
+    //        StartCoroutine(OverlayMorphing());
+    //    }
+    //}
+
+    //private IEnumerator OverlayMorphing()
+    //{
+    //    yield return new WaitForSeconds(3f);
+
+    //    foreach (VegetationController neighbour in neighbourVegetation)
+    //    {
+    //        if (!neighbour.alreadyChanged)
+    //            neighbour.MorphNeighbours(neighbour);
+    //    }
+    //}
+
+    public float GetTransitionProgress()
     {
-        if (Input.GetKeyDown(KeyCode.Keypad1))
-        {
-            mood = "sad";
-            isMorphing = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad2))
-        {
-            mood = "stressed";
-            isMorphing = true;
-            targetMesh = Resources.Load<Mesh>("Models/Trunks/StressedTrunk");
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad3))
-        {
-            mood = "neutral";
-            isMorphing = true;
-            targetMesh = Resources.Load<Mesh>("Models/Trunks/Trunk");
-        }
-    }
-
-    public void MorphNeighbours(VegetationBehaviour vegetationMorphing)
-    {
-        alreadyChanged = false;
-
-        if (latestState != actualState)
-        {
-            isMorphing = true;
-            latestState = actualState;
-        }
-
-        if (!alreadyChanged)
-            SetTargetMesh(vegetationMorphing.actualMesh, vegetationMorphing.actualState);
-
-        if (neighbourVegetation.Count > 0)
-        {
-            StartCoroutine(OverlayMorphing());
-        }
-    }
-
-    private IEnumerator OverlayMorphing()
-    {
-        yield return new WaitForSeconds(3f);
-
-        foreach (VegetationBehaviour neighbour in neighbourVegetation)
-        {
-            if (!neighbour.alreadyChanged)
-                neighbour.MorphNeighbours(neighbour);
-        }
-    }
-
-    public float getTransitionProgress()
-    {
-        return transitionProgress;
+        return _transitionProgress;
     }
 
     public bool getMorphingState()
     {
-        return isMorphing;
+        return _isMorphing;
     }
 }

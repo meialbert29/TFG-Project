@@ -6,21 +6,21 @@ using UnityEngine.UIElements;
 public class TreeSpawner : MonoBehaviour
 {
     public Terrain terrain; // Asigna tu terreno en el Inspector
-    public VegetationBehaviour treePrefab; // Prefab con LOD y VFX
+    public GeneralController generalController;
+    public VegetationController treePrefab; // Prefab con LOD y VFX
 
     public int treeCount = 2;
     public float minDistanceBetweenTrees = 5f;
 
     private List<Vector3> treePositions = new List<Vector3>();
 
-    private VegetationBehaviour spawnedTree;
+    private VegetationController spawnedTree;
 
 
     void Start()
     {
+        generalController = FindAnyObjectByType<GeneralController>();
         SpawnTrees();
-
-        //AnalyzeLODGroup(spawnedTree);
     }
 
     void SpawnTrees()
@@ -64,11 +64,10 @@ public class TreeSpawner : MonoBehaviour
                 treePositions.Add(position);
 
                 Quaternion treeRotation = Quaternion.identity;
-                VegetationBehaviour treeInstance = Instantiate(treePrefab, position, treeRotation);
+                VegetationController treeInstance = Instantiate(treePrefab, position, treeRotation);
                 treeInstance.name = "treeInstance" + i;
 
-                //// Asegura la escala correcta (útil si el prefab tiene escala guardada diferente)
-                //treeInstance.transform.localScale = Vector3.one;
+                generalController.TreesList.Add(treeInstance);
             }
         }
 

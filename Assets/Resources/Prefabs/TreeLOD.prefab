@@ -64,8 +64,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 766eee0cc199af24b9414e3076be2e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vfx: {fileID: 479461186301065613}
-  leavesGradient:
+  _vfx: {fileID: 0}
+  _vb: {fileID: 0}
+  _gc: {fileID: 0}
+  _leavesGradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
     key1: {r: 1, g: 1, b: 1, a: 1}
@@ -95,7 +97,7 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  blendGradient:
+  _blendGradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
     key1: {r: 1, g: 1, b: 1, a: 1}
@@ -126,7 +128,6 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   fall: 0
-  vegetation: {fileID: 3872894233638934197}
   moodIndex: 0
 --- !u!114 &1510638932493124924
 MonoBehaviour:
@@ -455,7 +456,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: bd347823bc68bbd47907674f6f3b1e12, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: -876546973899608171, guid: e3d35a404a002064b822845f98420a8a, type: 3}
+      objectReference: {fileID: 2100000, guid: 03ef4d26c55ed244c8edb7955dfe83f7, type: 2}
     - target: {fileID: 919132149155446097, guid: bd347823bc68bbd47907674f6f3b1e12, type: 3}
       propertyPath: m_Name
       value: Leaves_LOD2
@@ -534,7 +535,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 9901a8eaa10a3f645ba542f0995f5c10, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: -876546973899608171, guid: e3d35a404a002064b822845f98420a8a, type: 3}
+      objectReference: {fileID: 2100000, guid: 03ef4d26c55ed244c8edb7955dfe83f7, type: 2}
     - target: {fileID: 919132149155446097, guid: 9901a8eaa10a3f645ba542f0995f5c10, type: 3}
       propertyPath: m_Name
       value: Leaves_LOD1

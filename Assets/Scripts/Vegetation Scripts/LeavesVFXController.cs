@@ -5,11 +5,13 @@ using static UnityEngine.ParticleSystem;
 
 public class VFXController : MonoBehaviour
 {
-    [SerializeField] private VisualEffect vfx;
-    [SerializeField] private Gradient leavesGradient;
-    [SerializeField] private Gradient blendGradient;
+    [SerializeField] private VisualEffect _vfx;
+    [SerializeField] private VegetationController _vegetationController;
+    [SerializeField] public GeneralController _generalController;
+
+    [SerializeField] private Gradient _leavesGradient;
+    [SerializeField] private Gradient _blendGradient;
     [SerializeField] public bool fall;
-    [SerializeField] private VegetationBehaviour vb;
     [SerializeField] private int moodIndex;
     
 
@@ -47,9 +49,13 @@ public class VFXController : MonoBehaviour
 
     void Start()
     {
-        vb = transform.GetComponent<VegetationBehaviour>();
+        //Debug.Log("Leaves VFX Controller");
 
-        moodType = vb.mood;
+        _vegetationController = transform.GetComponent<VegetationController>();
+        _vfx = GetComponentInChildren<VisualEffect>();
+        //_gc = FindAnyObjectByType<GeneralController>();
+
+        moodType = _generalController.Mood;
         previousMoodType = moodType;
         moodIndex = 0;
 
@@ -67,8 +73,8 @@ public class VFXController : MonoBehaviour
         targetKeyBlend1 = startKeyBlend1;
         targetKeyBlend2 = startKeyBlend2;
 
-        leavesGradient = new Gradient();
-        leavesGradient.SetKeys(
+        _leavesGradient = new Gradient();
+        _leavesGradient.SetKeys(
             new GradientColorKey[]
             {
                 new GradientColorKey(startKey0, 0f),
@@ -82,10 +88,10 @@ public class VFXController : MonoBehaviour
             }
         );
 
-        vfx.SetGradient("Leaves Gradient", leavesGradient);
+        _vfx.SetGradient("Leaves Gradient", _leavesGradient);
 
-        blendGradient = new Gradient();
-        blendGradient.SetKeys(
+        _blendGradient = new Gradient();
+        _blendGradient.SetKeys(
             new GradientColorKey[]
             {
                 new GradientColorKey(startKeyBlend0, 0f),
@@ -99,19 +105,18 @@ public class VFXController : MonoBehaviour
             }
         );
 
-        vfx.SetGradient("Blend Gradient", blendGradient);
+        _vfx.SetGradient("Blend Gradient", _blendGradient);
 
-        keys = leavesGradient.colorKeys;
-        keysBlend = blendGradient.colorKeys;
+        keys = _leavesGradient.colorKeys;
+        keysBlend = _blendGradient.colorKeys;
     }
-
     void Update()
     {
-        fallLeaves();
+        FallLeaves();
 
-        if (vb.getMorphingState())
+        if (_generalController.MoodChanging)
         {
-            moodType = vb.mood;
+            moodType = _generalController.Mood;
 
             if (moodType != previousMoodType)
             {
@@ -119,11 +124,11 @@ public class VFXController : MonoBehaviour
                 previousMoodType = moodType;
             }
 
-            updateGradientOverTime(keys, keysBlend, vb.getTransitionProgress());
+            UpdateGradientOverTime(keys, keysBlend, _vegetationController.GetTransitionProgress());
         }
     }
 
-    private void updateGradientOverTime(GradientColorKey[] keys, GradientColorKey[] keysBlend, float progress)
+    private void UpdateGradientOverTime(GradientColorKey[] keys, GradientColorKey[] keysBlend, float progress)
     {
         if (progress > 0.3f && progress < 1f)
         {
@@ -186,18 +191,18 @@ public class VFXController : MonoBehaviour
         startKeyBlend2 = keysBlend[keysBlend.Length - 1].color;
     }
 
-    private void fallLeaves()
+    private void FallLeaves()
     {
-        vfx.SetBool("Fall", fall);
+        _vfx.SetBool("Fall", fall);
     }
 
-    public void changeMood()
+    public void ChangeMood()
     {
         moodIndex = moodType == "neutral" ? 0 :
                         moodType == "sad" ? 1 :
                         moodType == "stressed" ? 2 : -1;
 
-        vfx.SetInt("MoodIndex", moodIndex);
+        _vfx.SetInt("MoodIndex", moodIndex);
     }
 
     private void LeavesColorGradientTransition(GradientColorKey[] keys, float t)
@@ -205,8 +210,8 @@ public class VFXController : MonoBehaviour
         keys[0].color = Color.Lerp(startKey0, targetKey0, t);
         keys[1].color = Color.Lerp(startKey1, targetKey1, t);
         keys[keys.Length - 1].color = Color.Lerp(startKey2, targetKey2, t);
-        leavesGradient.colorKeys = keys;
-        vfx.SetGradient("Leaves Gradient", leavesGradient);
+        _leavesGradient.colorKeys = keys;
+        _vfx.SetGradient("Leaves Gradient", _leavesGradient);
     }
 
     private void BlendColorGradientTransition(GradientColorKey[] keysBlend, float t)
@@ -214,7 +219,7 @@ public class VFXController : MonoBehaviour
         keysBlend[0].color = Color.Lerp(startKeyBlend0, targetKeyBlend0, t);
         keysBlend[1].color = Color.Lerp(startKeyBlend1, targetKeyBlend1, t);
         keysBlend[keysBlend.Length - 1].color = Color.Lerp(startKeyBlend2, targetKeyBlend2, t);
-        blendGradient.colorKeys = keysBlend;
-        vfx.SetGradient("Blend Gradient", blendGradient);
+        _blendGradient.colorKeys = keysBlend;
+        _vfx.SetGradient("Blend Gradient", _blendGradient);
     }
 }

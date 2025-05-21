@@ -2,22 +2,20 @@ using UnityEngine;
 
 public class RainController : MonoBehaviour
 {
-    ParticleSystem _rain;
-    CloudsController _cc;
+    private ParticleSystem _rain;
+    private CloudsController _cc;
+    public GeneralController _gc;
 
     void Start()
     {
         _rain = GetComponent<ParticleSystem>();
         _cc = FindAnyObjectByType<CloudsController>();
+        //_gc = FindAnyObjectByType<GeneralController>();
 
-        if( _rain == null)
+        if( _rain == null || _cc == null || _gc == null)
         {
-            Debug.Log("Particle system not found");
+            Debug.Log("Error in Rain Controller");
             return;
-        }
-        else
-        {
-            Debug.Log("ps found");
         }
 
         rainStop();
@@ -26,10 +24,10 @@ public class RainController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_cc.skyIsChanging())
-        {
-            rainStart();
-        }
+        //if (_cc.skyIsChanging())
+        //{
+        //    rainStart();
+        //}
 
     }
 

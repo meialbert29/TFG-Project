@@ -1,8 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LeavesController : MonoBehaviour
 {
-    private VegetationBehaviour _vegetation;
+    private VegetationController _vb;
+    public GeneralController _gc;
+
     private LODGroup _lodGroup;
     private LODController _lodController;
     private Material _lod1_Mat;
@@ -38,12 +42,15 @@ public class LeavesController : MonoBehaviour
     private MeshFilter _meshFilter_LOD1;
     private MeshFilter _meshFilter_LOD2;
 
-    void Awake()
+    void Start()
     {
+        //Debug.Log("Leaves Controller");
 
-        _vegetation = GetComponent<VegetationBehaviour>();
-        _lodGroup = GetComponent<LODGroup>();
-        _lodController = GetComponent<LODController>();
+        //_gc = FindAnyObjectByType<GeneralController>();
+
+        _vb = transform.GetComponent<VegetationController>();
+        _lodGroup = transform.GetComponent<LODGroup>();
+        _lodController = transform.GetComponent<LODController>();
 
         Transform _lod1 = transform.GetChild(0).GetChild(1);
         Transform _lod2 = transform.GetChild(0).GetChild(2);
@@ -73,14 +80,14 @@ public class LeavesController : MonoBehaviour
         _meshFilter_LOD2.mesh = _startMesh_LOD2;
 
         // Por defecto, aplicamos neutral
-        applyLeavesColors(_neutral_TopColor, _neutral_BottomColor);
+        ApplyLeavesColors(_neutral_TopColor, _neutral_BottomColor);
 
         _trunkMaterial = transform.GetChild(1).GetComponent<Renderer>().material;
     }
 
     void Update()
     {
-        _moodType = _vegetation.mood;
+        _moodType = _gc.Mood;
 
         if (_moodType != _previousMoodType)
         {
@@ -110,16 +117,16 @@ public class LeavesController : MonoBehaviour
             _start_BottomColor = _lod1_Mat.GetColor("_BottomColor");
         }
 
-        float _progress = _vegetation.getTransitionProgress();
+        float _progress = _vb.GetTransitionProgress();
         if(_progress >= 0.7f)
         {
-            changeLeavesLODMeshes();
+            ChangeLeavesLODMeshes();
         }
-        updateLeavesColor(_progress);
-        updateTrunkColor(_progress, _target_TrunkColor);
+        UpdateLeavesColor(_progress);
+        UpdateTrunkColor(_progress, _target_TrunkColor);
     }
 
-    void updateLeavesColor(float progress)
+    void UpdateLeavesColor(float progress)
     {
         if(progress < 1f)
         {
@@ -127,17 +134,17 @@ public class LeavesController : MonoBehaviour
             _current_BottomColor = Color.Lerp(_start_BottomColor, _target_BottomColor, progress);
         }
 
-        applyLeavesColors(_current_TopColor, _current_BottomColor);
+        ApplyLeavesColors(_current_TopColor, _current_BottomColor);
     }
 
-    void applyLeavesColors(Color top, Color bottom)
+    void ApplyLeavesColors(Color top, Color bottom)
     {
         _lod1_Mat.SetColor("_TopColor", top);
         _lod1_Mat.SetColor("_BottomColor", bottom);
         _lod2_Mat.SetColor("_TopColor", top);
         _lod2_Mat.SetColor("_BottomColor", bottom);
     }
-    void changeLeavesLODMeshes()
+    void ChangeLeavesLODMeshes()
     {
 
         if(_moodType == "sad")
@@ -149,7 +156,7 @@ public class LeavesController : MonoBehaviour
         else if(_moodType == "neutral")
         {
             _meshFilter_LOD1.mesh = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD1");
-            _meshFilter_LOD1.mesh = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD2");
+            _meshFilter_LOD2.mesh = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD2");
         }
         else if(_moodType == "stressed")
         {
@@ -158,7 +165,7 @@ public class LeavesController : MonoBehaviour
         }
     }
 
-    public void updateLeavesStartColors()
+    public void UpdateLeavesStartColors()
     {
         _current_TopColor = _target_TopColor;
         _current_BottomColor = _target_BottomColor;
@@ -167,9 +174,8 @@ public class LeavesController : MonoBehaviour
         _start_BottomColor = _target_BottomColor;
     }
 
-    public void updateTrunkColor(float progress, Color targetColor)
+    public void UpdateTrunkColor(float progress, Color targetColor)
     {
-
         _trunkMaterial.color = Color.Lerp(_trunkMaterial.color, targetColor, progress * 0.05f);
     }
 }

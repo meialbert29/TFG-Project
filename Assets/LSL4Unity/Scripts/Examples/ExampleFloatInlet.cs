@@ -33,7 +33,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
         private float scoreInterval = 10f; // Intervalo de tiempo para sumar puntos
         private float points = 0f;
 
-        public VegetationBehaviour vegetationBehaviour;
+        //public WavesReader wavesReader;
 
         protected override void Process(float[] newSample, double timeStamp)
         {
