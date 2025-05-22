@@ -40,8 +40,8 @@ public class CloudsController : MonoBehaviour
     private Color _current_ValleyColor;
     private Color _current_PeakColor;
 
-    private Color sadPeak = new Color(0.3602704f, 0.4823402f, 0.553459f, 1f);
-    private Color sadValley = new Color(0.5847869f, 0.7623752f, 0.8050313f, 1f);
+    private Color sadPeak = ColorsPalette.CloudsColors.sadPeak;
+    private Color sadValley = ColorsPalette.CloudsColors.sadValley;
 
     // time variables
     private float _transitionProgress;
@@ -87,6 +87,12 @@ public class CloudsController : MonoBehaviour
 
         _vegetationController = FindAnyObjectByType<VegetationController>();
         _rainController = FindAnyObjectByType<RainController>();
+
+        _current_ValleyColor = _valleyColor;
+        _current_PeakColor = _peakColor;
+        _current_NoiseEdge1 = _noiseEdge1;
+        _current_NoiseScale = _noiseScale;
+        _current_fresnelOpacity = _fresnelOpacity;
     }
 
     // Update is called once per frame
@@ -96,7 +102,7 @@ public class CloudsController : MonoBehaviour
     {
         if (_generalController.MoodChanging)
         {
-            if (!_skyChanging) // solo la primera vez
+            if (!_skyChanging)
             {
                 _moodType = _generalController.Mood;
                 _transitionProgress = 0f;
@@ -125,7 +131,7 @@ public class CloudsController : MonoBehaviour
     }
 
 
-    void changeCloudsSettings()
+    private void changeCloudsSettings()
     {
         if(_moodType == "sad")
         {
@@ -137,16 +143,16 @@ public class CloudsController : MonoBehaviour
         changeCloudSettingsOverTime(_noiseScale, _noiseEdge1, _fresnelOpacity, sadValley, sadPeak);
     }
 
-    void changeCloudSettingsOverTime(float noiseScale, float noiseEdge1, float fresnelOpacity, Color targetValleyColor, Color targetPeakColor)
+    private void changeCloudSettingsOverTime(float noiseScale, float noiseEdge1, float fresnelOpacity, Color targetValleyColor, Color targetPeakColor)
     {
         if(_transitionProgress < 1f)
         {
-            _current_NoiseEdge1 = Mathf.Lerp(cloudsMaterial.GetFloat("_NoiseEdge1"), _noiseEdge1, _transitionProgress);
-            _current_NoiseScale = Mathf.Lerp(cloudsMaterial.GetFloat("_NoiseScale"), _noiseScale, _transitionProgress);
-            _current_fresnelOpacity = Mathf.Lerp(cloudsMaterial.GetFloat("_FresnelOpacity"), _fresnelOpacity, _transitionProgress);
+            _current_NoiseEdge1 = Mathf.Lerp(_current_NoiseEdge1, _noiseEdge1, _transitionProgress);
+            _current_NoiseScale = Mathf.Lerp(_current_NoiseScale, _noiseScale, _transitionProgress);
+            _current_fresnelOpacity = Mathf.Lerp(_current_fresnelOpacity, _fresnelOpacity, _transitionProgress);
 
-            _current_ValleyColor = Color.Lerp(cloudsMaterial.GetColor("_ColorValley"), targetValleyColor, _transitionProgress);
-            _current_PeakColor = Color.Lerp(cloudsMaterial.GetColor("_ColorPeak"), targetPeakColor, _transitionProgress);
+            _current_ValleyColor = Color.Lerp(_current_ValleyColor, targetValleyColor, _transitionProgress);
+            _current_PeakColor = Color.Lerp(_current_PeakColor, targetPeakColor, _transitionProgress);
         }
 
         cloudsMaterial.SetFloat("_NoiseScale", _current_NoiseScale);

@@ -34,9 +34,7 @@ public class GeneralController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleInput();
-
-        
+        HandleInput();  
     }
 
     // check if any key was pulsed
@@ -65,13 +63,7 @@ public class GeneralController : MonoBehaviour
         if (keyDown)
         {
             cont = 0;
-            //foreach (var t in treesList)
-            //{
-            //    t.IsMorphing = true;
-            //}
-
             moodChanging = true; 
-
         }
     }
 

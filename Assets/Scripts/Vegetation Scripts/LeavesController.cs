@@ -13,16 +13,16 @@ public class LeavesController : MonoBehaviour
     private Material _lod2_Mat;
     private Material _trunkMaterial;
 
-    private Color _sad_TopColor = new Color(0.7735849f, 0.4542985f, 0.2262369f, 1f);
-    private Color _sad_BottomColor = new Color(0.8805031f, 0.6550949f, 0.3405719f, 1f);
-    private Color _neutral_TopColor = new Color(0.5644949f, 0.8930817f, 0.582952f, 1f);
-    private Color _neutral_BottomColor = new Color(0.5430757f, 0.7106918f, 0.2346623f, 1f);
-    private Color _stressed_TopColor = new Color(0.06607719f, 0.06925166f, 0.08176088f, 1f);
-    private Color _stressed_BottomColor = new Color(0.1509434f, 0.1509434f, 0.1509434f, 1f);
+    private Color _sad_TopColor          = ColorsPalette.LeavesColors.sad_TopColor;
+    private Color _sad_BottomColor       = ColorsPalette.LeavesColors.sad_BottomColor;
+    private Color _neutral_TopColor      = ColorsPalette.LeavesColors.neutral_TopColor;
+    private Color _neutral_BottomColor   = ColorsPalette.LeavesColors.neutral_BottomColor;
+    private Color _stressed_TopColor     = ColorsPalette.LeavesColors.stressed_TopColor;
+    private Color _stressed_BottomColor  = ColorsPalette.LeavesColors.stressed_BottomColor;
 
-    private Color _trunk_StressedColor = new Color(0f, 0f, 0f, 1f);
-    private Color _trunk_NeutralColor = new Color(0.8396226f, 0.7110994f, 0.5425863f, 1f);
-    private Color _trunk_SadColor = new Color(0.3396226f, 0.2771448f, 0.2771448f, 1f);
+    private Color _trunk_StressedColor   = ColorsPalette.TrunkColors.trunk_StressedColor;
+    private Color _trunk_NeutralColor    = ColorsPalette.TrunkColors.trunk_NeutralColor;
+    private Color _trunk_SadColor        = ColorsPalette.TrunkColors.trunk_SadColor;
     private Color _target_TrunkColor;
 
     private Color _start_TopColor;
@@ -44,10 +44,6 @@ public class LeavesController : MonoBehaviour
 
     void Start()
     {
-        //Debug.Log("Leaves Controller");
-
-        //_gc = FindAnyObjectByType<GeneralController>();
-
         _vb = transform.GetComponent<VegetationController>();
         _lodGroup = transform.GetComponent<LODGroup>();
         _lodController = transform.GetComponent<LODController>();

@@ -1,17 +1,16 @@
 using System;
 using UnityEngine;
 using UnityEngine.VFX;
-using static UnityEngine.ParticleSystem;
 
 public class VFXController : MonoBehaviour
 {
     [SerializeField] private VisualEffect _vfx;
     [SerializeField] private VegetationController _vegetationController;
-    [SerializeField] public GeneralController _generalController;
+    [SerializeField] private GeneralController _generalController;
 
     [SerializeField] private Gradient _leavesGradient;
     [SerializeField] private Gradient _blendGradient;
-    [SerializeField] public bool fall;
+    [SerializeField] private bool fall;
     [SerializeField] private int moodIndex;
     
 
@@ -20,26 +19,25 @@ public class VFXController : MonoBehaviour
     private Color startKeyBlend0, startKeyBlend1, startKeyBlend2;
     private Color targetKeyBlend0, targetKeyBlend1, targetKeyBlend2;
 
-    private Color default0 = new Color(0.286961f, 0.4150943f, 0.1240061f, 1f);
-    private Color default1 = new Color(0.2944696f, 0.3836477f, 0.1315018f, 1f);
-    private Color default2 = new Color(0.08877103f, 0.2f, 0.06666668f, 1f);
+    private Color _neutral_Key0 = ColorsPalette.LeavesVFXColors.neutral_Key0;
+    private Color _neutral_Key1 = ColorsPalette.LeavesVFXColors.neutral_Key1;
+    private Color _neutral_Key2 = ColorsPalette.LeavesVFXColors.neutral_Key2;
+    private Color _neutral_KeyBlend0 = ColorsPalette.LeavesVFXColors.neutral_KeyBlend0;
+    private Color _neutral_KeyBlend1 = ColorsPalette.LeavesVFXColors.neutral_KeyBlend1;
+    private Color _neutral_KeyBlend2 = ColorsPalette.LeavesVFXColors.neutral_KeyBlend2;
 
-    private Color stressed0 = new Color(0.1509434f, 0.1509434f, 0.1509434f, 1f);
-    private Color stressed1 = new Color(0.06607719f, 0.06925166f, 0.08176088f, 1f);
-    private Color stressed2 = new Color(0.01014595f, 0.01096753f, 0.01886791f, 1f);
-    private Color stressedBlend0 = new Color(0.01161224f, 0.01298303f, 0.02121901f, 1f);
-    private Color stressedBlend1 = new Color(0.08176088f, 0.08176088f, 0.08176088f, 1f);
-    private Color stressedBlend2 = new Color(0.1301365f, 0.1301365f, 0.1328684f);
+    private Color _stressed_Key0 = ColorsPalette.LeavesVFXColors.stressed_Key0;
+    private Color _stressed_Key1 = ColorsPalette.LeavesVFXColors.stressed_Key1;
+    private Color _stressed_Key2 = ColorsPalette.LeavesVFXColors.stressed_Key2;
+    private Color _stressed_KeyBlend0 = ColorsPalette.LeavesVFXColors.stressed_KeyBlend0;
+    private Color _stressed_KeyBlend1 = ColorsPalette.LeavesVFXColors.stressed_KeyBlend1;
+    private Color _stressed_KeyBlend2 = ColorsPalette.LeavesVFXColors.stressed_KeyBlend2;
 
-    private Color sad0 = new Color(0.1635219f, 0.02678018f, 0, 1f);
-    private Color sad1 = new Color(0.2578616f, 0.04968183f, 0f, 1f);
-    private Color sad2 = new Color(0.4784314f, 0.2680945f, 0.08235293f, 1f);
-    private Color sadBlend1 = new Color(0.4901961f, 0.2157505f, 0f, 1f);
-    private Color sadBlend2 = new Color(0.4823529f, 0.3290052f, 0.1333334f);
-
-    private Color blend0 = new Color(0.04859377f, 0.1698113f, 0.05436604f, 1f);
-    private Color blend1 = new Color(0.1579446f, 0.4150943f, 0.172345f, 1f);
-    private Color blend2 = new Color(0.2587516f, 0.5597484f, 0.3027174f);
+    private Color _sad_Key0 = ColorsPalette.LeavesVFXColors.sad_Key0;
+    private Color _sad_Key1 = ColorsPalette.LeavesVFXColors.sad_Key1;
+    private Color _sad_Key2 = ColorsPalette.LeavesVFXColors.sad_Key2;
+    private Color _sad_KeyBlend1 = ColorsPalette.LeavesVFXColors.sad_KeyBlend1;
+    private Color _sad_KeyBlend2 = ColorsPalette.LeavesVFXColors.sad_KeyBlend2;
 
     private string moodType;
     private string previousMoodType;
@@ -47,24 +45,24 @@ public class VFXController : MonoBehaviour
     GradientColorKey[] keys;
     GradientColorKey[] keysBlend;
 
+    // getters & setters
+    public bool Fall { get { return fall; } set { fall = value; } }
+
     void Start()
     {
-        //Debug.Log("Leaves VFX Controller");
-
         _vegetationController = transform.GetComponent<VegetationController>();
         _vfx = GetComponentInChildren<VisualEffect>();
-        //_gc = FindAnyObjectByType<GeneralController>();
 
         moodType = _generalController.Mood;
         previousMoodType = moodType;
         moodIndex = 0;
 
-        startKey0 = default0;
-        startKey1 = default1;
-        startKey2 = default2;
-        startKeyBlend0 = blend0;
-        startKeyBlend1 = blend1;
-        startKeyBlend2 = blend2;
+        startKey0 = _neutral_Key0;
+        startKey1 = _neutral_Key1;
+        startKey2 = _neutral_Key2;
+        startKeyBlend0 = _neutral_KeyBlend0;
+        startKeyBlend1 = _neutral_KeyBlend1;
+        startKeyBlend2 = _neutral_KeyBlend2;
 
         targetKey0 = startKey0;
         targetKey1 = startKey1;
@@ -136,33 +134,33 @@ public class VFXController : MonoBehaviour
 
             if (moodType == "sad")
             {
-                targetKey0 = sad0;
-                targetKey1 = sad1;
-                targetKey2 = sad2;
+                targetKey0 = _sad_Key0;
+                targetKey1 = _sad_Key1;
+                targetKey2 = _sad_Key2;
 
-                targetKeyBlend0 = sad0;
-                targetKeyBlend1 = sadBlend1;
-                targetKeyBlend2 = sadBlend2;
+                targetKeyBlend0 = _sad_Key0;
+                targetKeyBlend1 = _sad_KeyBlend1;
+                targetKeyBlend2 = _sad_KeyBlend2;
             }
             else if (moodType == "neutral")
             {
-                targetKey0 = default0;
-                targetKey1 = default1;
-                targetKey2 = default2;
+                targetKey0 = _neutral_Key0;
+                targetKey1 = _neutral_Key1;
+                targetKey2 = _neutral_Key2;
 
-                targetKeyBlend0 = blend0;
-                targetKeyBlend1 = blend1;
-                targetKeyBlend2 = blend2;
+                targetKeyBlend0 = _neutral_KeyBlend0;
+                targetKeyBlend1 = _neutral_KeyBlend1;
+                targetKeyBlend2 = _neutral_KeyBlend2;
             }
             else if (moodType == "stressed")
             {
-                targetKey0 = stressed0;
-                targetKey1 = stressed1;
-                targetKey2 = stressed2;
+                targetKey0 = _stressed_Key0;
+                targetKey1 = _stressed_Key1;
+                targetKey2 = _stressed_Key2;
 
-                targetKeyBlend0 = stressedBlend0;
-                targetKeyBlend1 = stressedBlend1;
-                targetKeyBlend2 = stressedBlend2;
+                targetKeyBlend0 = _stressed_KeyBlend0;
+                targetKeyBlend1 = _stressed_KeyBlend1;
+                targetKeyBlend2 = _stressed_KeyBlend2;
             }
 
             BlendColorGradientTransition(keysBlend, t);
@@ -193,6 +191,10 @@ public class VFXController : MonoBehaviour
 
     private void FallLeaves()
     {
+        if (_vegetationController.GetTransitionProgress() >= 0.3f)
+        {
+            fall = false;
+        }
         _vfx.SetBool("Fall", fall);
     }
 

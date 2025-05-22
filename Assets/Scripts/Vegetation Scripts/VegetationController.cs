@@ -7,11 +7,11 @@ using UnityEngine.VFX;
 public class VegetationController : MonoBehaviour
 {
     private Renderer vegetationRenderer;
-    private ExampleFloatInlet eeg_script;
-    public VFXController _vfxController;
-    public LeavesController _leavesController;
-    public GeneralController _generalController;
-    public WavesReader _wavesReader;
+    [SerializeField] private ExampleFloatInlet eeg_script;
+    [SerializeField] private VFXController _vfxController;
+    [SerializeField] private LeavesController _leavesController;
+    [SerializeField] private GeneralController _generalController;
+    [SerializeField] private WavesReader _wavesReader;
 
     // wave variables
     private string _currentWave;
@@ -40,7 +40,7 @@ public class VegetationController : MonoBehaviour
 
     // progress
     private float _transitionProgress = 0f;
-    private float _transitionDuration = 3f;
+    private float _transitionDuration = 5f;
 
     // bools
     private bool _isMorphing = false;
@@ -57,11 +57,6 @@ public class VegetationController : MonoBehaviour
 
     void Awake()
     {
-        //Debug.Log("Vegetation Behaviour");
-
-        // find objects
-        eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
-        //_gc = FindAnyObjectByType<GeneralController>();
 
         if(eeg_script == null || _generalController == null)
         {
@@ -107,11 +102,10 @@ public class VegetationController : MonoBehaviour
 
     void Update()
     {
-        HandleWaveConsistency();
         if (_generalController.MoodChanging)
         {
             //_generalController.MoodChanging = true;
-            _vfxController.fall = true;
+            _vfxController.Fall = true;
             MorphingProcess();
         }
     }
@@ -132,7 +126,7 @@ public class VegetationController : MonoBehaviour
                 {
                     Debug.Log("Wave consistent and different from last morph: " + newWave);
                     lastWaveThatTriggeredMorph = newWave;
-                    _isMorphing = true;
+                    _generalController.MoodChanging = true;
                 }
             }
         }
@@ -191,8 +185,9 @@ public class VegetationController : MonoBehaviour
             //_generalController.MoodChanging = false;
 
             _generalController.cont++;
+            _vfxController.Fall = false;
             _generalController.checkCont();
-            _vfxController.fall = false;
+            
             _leavesController.UpdateLeavesStartColors();
             Debug.Log("Transition finished");
         }

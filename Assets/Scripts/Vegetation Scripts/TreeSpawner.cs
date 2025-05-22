@@ -6,20 +6,18 @@ using UnityEngine.UIElements;
 public class TreeSpawner : MonoBehaviour
 {
     public Terrain terrain; // Asigna tu terreno en el Inspector
-    public GeneralController generalController;
-    public VegetationController treePrefab; // Prefab con LOD y VFX
+    [SerializeField]  private GeneralController generalController;
+    [SerializeField]  private VegetationController treePrefab; // Prefab con LOD y VFX
 
-    public int treeCount = 2;
-    public float minDistanceBetweenTrees = 5f;
+    [SerializeField] private int treeCount = 2;
+    [SerializeField] private float minDistanceBetweenTrees = 5f;
 
     private List<Vector3> treePositions = new List<Vector3>();
 
-    private VegetationController spawnedTree;
-
+    bool validPosition = false;
 
     void Start()
     {
-        generalController = FindAnyObjectByType<GeneralController>();
         SpawnTrees();
     }
 
@@ -29,7 +27,6 @@ public class TreeSpawner : MonoBehaviour
         {
             Vector3 position;
             int attempts = 0;
-            bool validPosition = false;
 
             do
             {
@@ -45,15 +42,7 @@ public class TreeSpawner : MonoBehaviour
                 position = new Vector3(worldX, worldY, worldZ);
 
                 // Verifica que no esté demasiado cerca de otros árboles
-                validPosition = true;
-                foreach (Vector3 existingPosition in treePositions)
-                {
-                    if (Vector3.Distance(position, existingPosition) < minDistanceBetweenTrees)
-                    {
-                        validPosition = false;
-                        break;
-                    }
-                }
+               TryGetRandomPosition(position);
 
                 attempts++;
             }
@@ -70,7 +59,19 @@ public class TreeSpawner : MonoBehaviour
                 generalController.TreesList.Add(treeInstance);
             }
         }
+    }
 
+    private void TryGetRandomPosition(Vector3 position)
+    {
+        validPosition = true;
+        foreach (Vector3 existingPosition in treePositions)
+        {
+            if (Vector3.Distance(position, existingPosition) < minDistanceBetweenTrees)
+            {
+                validPosition = false;
+                break;
+            }
+        }
     }
 
 }

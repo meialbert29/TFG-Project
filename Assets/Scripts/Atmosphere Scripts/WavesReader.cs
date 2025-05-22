@@ -27,7 +27,7 @@ public class WavesReader : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //HandleWaveConsistency();
+        HandleWaveConsistency();
     }
 
     private string GetCurrentWave()
@@ -52,10 +52,7 @@ public class WavesReader : MonoBehaviour
                     Debug.Log("Wave consistent and different from last morph: " + newWave);
                     lastWaveThatTriggeredMorph = newWave;
 
-                    foreach(var tree in treesList)
-                    {
-                        tree.IsMorphing = true;
-                    }
+                    _generalController.MoodChanging = true;
                 }
             }
         }
