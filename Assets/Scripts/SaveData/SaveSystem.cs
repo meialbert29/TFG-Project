@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 
@@ -24,14 +25,25 @@ public class SaveSystem : MonoBehaviour
     private Transform entryTemplate;
     private List<Transform> scoreEntryTransformList;
 
+    private RawImage logoRawImage;
+    public Texture dayLogoTexture;
+    public Texture nightLogoTexture;
+
+    private Color sunMorning = ColorsPalette.LogosColors.sunMorning;
+    private Color sunEvening = ColorsPalette.LogosColors.sunEvening;
+
     private void Awake()
     {
         entryContainer = transform.Find("ScoreTableEntryContainer");
         entryTemplate = entryContainer.Find("ScoreEntryTemplate");
+        logoRawImage = entryTemplate.Find("timeLogo").GetComponent<RawImage>();
 
         entryTemplate.gameObject.SetActive(false);
 
-        //AddScoreEntry(DateTime.Now.ToString("dd/MM/yy", DateTime.ParseExact(time, "HH:mm", null));
+        //AddNewScoreEntry(DateTime.Now.ToString("dd/MM/yy"), DateTime.Now.ToString("HH:mm"), 1000);
+        //AddNewScoreEntry(DateTime.Now.ToString("dd/MM/yy"), "01:00", 1000);
+
+
 
         string jsonString = PlayerPrefs.GetString("latestScoreTable");
         ScoresList latestScores = JsonUtility.FromJson<ScoresList>(jsonString);
@@ -59,13 +71,19 @@ public class SaveSystem : MonoBehaviour
 
         foreach(ScoreEntry latestScoreEntry in latestScores.scoreEntryList)
         {
-            CreateLatestScoreEntryTransform(latestScoreEntry, entryContainer, scoreEntryTransformList);
+            CreateLatestScoresEntryTransform(latestScoreEntry, entryContainer, scoreEntryTransformList);
         }
     }
 
-    private void CreateLatestScoreEntryTransform(ScoreEntry newScoreEntry, Transform container, List<Transform> transformList)
+    private void Update()
     {
-        float templateHeight = 70f;
+        if (Input.GetKeyDown(KeyCode.Space))
+            ClearAllScoreEntries();
+    }
+
+    private void CreateLatestScoresEntryTransform(ScoreEntry newScoreEntry, Transform container, List<Transform> transformList)
+    {
+        float templateHeight = 100f;
         string today = DateTime.Now.ToString("dd/MM/yy");
         string yesterday = DateTime.Now.AddDays(-1).ToString("dd/MM/yy");
 
@@ -93,6 +111,29 @@ public class SaveSystem : MonoBehaviour
         entryTransform.Find("timeText").GetComponent<Text>().text = timeString;
         entryTransform.Find("scoreText").GetComponent<Text>().text = score.ToString();
 
+        // change background depending odd or even day number
+        entryTransform.Find("background").gameObject.SetActive(transformList.Count % 2 == 0);
+
+        // extract time & change time logo (instance-specific)
+        int entryHour = int.Parse(newScoreEntry.time.Substring(0, 2));
+        RawImage logo = entryTransform.Find("timeLogo").GetComponent<RawImage>();
+
+        if (entryHour >= 6 && entryHour < 13)
+        {
+            logo.texture = dayLogoTexture;
+            logo.color = sunMorning;
+        }
+        else if (entryHour >= 13 && entryHour < 18)
+        {
+            logo.texture = dayLogoTexture;
+            logo.color = sunEvening;
+        }
+        else
+        {
+            logo.texture = nightLogoTexture;
+            logo.color = Color.white;
+        }
+
         transformList.Add(entryRectTransform);
     }
 
@@ -111,6 +152,18 @@ public class SaveSystem : MonoBehaviour
 
         // save updated LatestScores
         string json = JsonUtility.ToJson(latestScores);
+        PlayerPrefs.SetString("latestScoreTable", json);
+        PlayerPrefs.Save();
+    }
+
+    public void ClearAllScoreEntries()
+    {
+        ScoresList emptyList = new ScoresList
+        {
+            scoreEntryList = new List<ScoreEntry>()
+        };
+
+        string json = JsonUtility.ToJson(emptyList);
         PlayerPrefs.SetString("latestScoreTable", json);
         PlayerPrefs.Save();
     }

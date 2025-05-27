@@ -47,4 +47,10 @@ public static class ColorsPalette
         public static readonly Color sadPeak = new Color(0.3602704f, 0.4823402f, 0.553459f, 1f);
         public static readonly Color sadValley = new Color(0.5847869f, 0.7623752f, 0.8050313f, 1f);
     }
+
+    public static class LogosColors
+    {
+        public static readonly Color sunMorning = new Color(1f, 0.915f, 0.3679244f, 0.7215686f);
+        public static readonly Color sunEvening = new Color(1f, 0.8701827f, 0.5251572f, 0.7215686f);
+    }
 }
