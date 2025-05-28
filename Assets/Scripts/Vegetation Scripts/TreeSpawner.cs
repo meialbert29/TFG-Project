@@ -18,6 +18,7 @@ public class TreeSpawner : MonoBehaviour
 
     void Start()
     {
+        treePrefab = FindAnyObjectByType<VegetationController>();
         SpawnTrees();
     }
 
