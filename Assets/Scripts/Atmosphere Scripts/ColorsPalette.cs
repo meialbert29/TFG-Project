@@ -53,4 +53,11 @@ public static class ColorsPalette
         public static readonly Color sunMorning = new Color(1f, 0.915f, 0.3679244f, 0.7215686f);
         public static readonly Color sunEvening = new Color(1f, 0.8701827f, 0.5251572f, 0.7215686f);
     }
+
+    public static class ButtonsColors
+    {
+        // main menu buttons
+        public static readonly Color normalColor = new Color(0.5058824f, 0.2611249f, 0.2611249f, 1f);
+        public static readonly Color hoverColor = Color.white;
+    }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
-
 public class SaveSystem : MonoBehaviour
 {
     [Serializable]
@@ -32,6 +31,14 @@ public class SaveSystem : MonoBehaviour
     private Color sunMorning = ColorsPalette.LogosColors.sunMorning;
     private Color sunEvening = ColorsPalette.LogosColors.sunEvening;
 
+    private int entriesPerPage = 7;
+    public int currentPage = 0;
+    private List<ScoreEntry> allEntries = new List<ScoreEntry>();
+
+    // getters & setters
+    public int TotalEntries {  get { return allEntries.Count; } }
+    public int EntriesPerPage { get { return entriesPerPage; } }
+
     private void Awake()
     {
         entryContainer = transform.Find("ScoreTableEntryContainer");
@@ -41,18 +48,25 @@ public class SaveSystem : MonoBehaviour
         entryTemplate.gameObject.SetActive(false);
 
         //AddNewScoreEntry(DateTime.Now.ToString("dd/MM/yy"), DateTime.Now.ToString("HH:mm"), 1000);
-        //AddNewScoreEntry(DateTime.Now.ToString("dd/MM/yy"), "01:00", 1000);
 
-
+        for (int i = 0; i < 10; i++)
+        {
+            AddNewScoreEntry(DateTime.Now.ToString("dd/MM/yy"), DateTime.Now.ToString("HH:mm"), i * 10);
+        }
 
         string jsonString = PlayerPrefs.GetString("latestScoreTable");
+
         ScoresList latestScores = JsonUtility.FromJson<ScoresList>(jsonString);
 
-        // sort list by date & time
+        if (latestScores == null || latestScores.scoreEntryList == null)
+        {
+            latestScores = new ScoresList { scoreEntryList = new List<ScoreEntry>() };
+        }
 
+        // sort list by date & time
         for (int i = 0; i < latestScores.scoreEntryList.Count; i++)
         {
-            for(int j = i + 1; j < latestScores.scoreEntryList.Count; j++)
+            for (int j = i + 1; j < latestScores.scoreEntryList.Count; j++)
             {
                 DateTime dateI = DateTime.ParseExact(latestScores.scoreEntryList[i].date + " " + latestScores.scoreEntryList[i].time, "dd/MM/yy HH:mm", null);
                 DateTime dateJ = DateTime.ParseExact(latestScores.scoreEntryList[j].date + " " + latestScores.scoreEntryList[j].time, "dd/MM/yy HH:mm", null);
@@ -63,16 +77,13 @@ public class SaveSystem : MonoBehaviour
                     latestScores.scoreEntryList[i] = latestScores.scoreEntryList[j];
                     latestScores.scoreEntryList[j] = tmp;
                 }
-                
             }
         }
 
+        allEntries = latestScores.scoreEntryList;
         scoreEntryTransformList = new List<Transform>();
 
-        foreach(ScoreEntry latestScoreEntry in latestScores.scoreEntryList)
-        {
-            CreateLatestScoresEntryTransform(latestScoreEntry, entryContainer, scoreEntryTransformList);
-        }
+        ShowPage(0);
     }
 
     private void Update()
@@ -94,27 +105,20 @@ public class SaveSystem : MonoBehaviour
 
         string dateString = newScoreEntry.date;
 
-        if(dateString == today.ToString())
-        {
+        if (dateString == today)
             dateString = "Today";
-        }
-        else if(dateString == yesterday.ToString())
-        {
+        else if (dateString == yesterday)
             dateString = "Yesterday";
-        }
 
         string timeString = newScoreEntry.time;
-
         int score = newScoreEntry.score;
 
         entryTransform.Find("dateText").GetComponent<Text>().text = dateString;
         entryTransform.Find("timeText").GetComponent<Text>().text = timeString;
         entryTransform.Find("scoreText").GetComponent<Text>().text = score.ToString();
 
-        // change background depending odd or even day number
-        entryTransform.Find("background").gameObject.SetActive(transformList.Count % 2 == 0);
+        entryTransform.Find("backgroundRow").gameObject.SetActive(transformList.Count % 2 == 0);
 
-        // extract time & change time logo (instance-specific)
         int entryHour = int.Parse(newScoreEntry.time.Substring(0, 2));
         RawImage logo = entryTransform.Find("timeLogo").GetComponent<RawImage>();
 
@@ -139,18 +143,18 @@ public class SaveSystem : MonoBehaviour
 
     private void AddNewScoreEntry(string date, string time, int score)
     {
-
-        // create new score entry
         ScoreEntry entry = new ScoreEntry { date = date, time = time, score = score };
-        
-        // load saved scores
+
         string jsonString = PlayerPrefs.GetString("latestScoreTable");
         ScoresList latestScores = JsonUtility.FromJson<ScoresList>(jsonString);
 
-        // add new entry to LatestScores
+        if (latestScores == null || latestScores.scoreEntryList == null)
+        {
+            latestScores = new ScoresList { scoreEntryList = new List<ScoreEntry>() };
+        }
+
         latestScores.scoreEntryList.Add(entry);
 
-        // save updated LatestScores
         string json = JsonUtility.ToJson(latestScores);
         PlayerPrefs.SetString("latestScoreTable", json);
         PlayerPrefs.Save();
@@ -166,5 +170,46 @@ public class SaveSystem : MonoBehaviour
         string json = JsonUtility.ToJson(emptyList);
         PlayerPrefs.SetString("latestScoreTable", json);
         PlayerPrefs.Save();
+    }
+
+    private void ShowPage(int pageNumber)
+    {
+        foreach (Transform child in entryContainer)
+        {
+            if (child != entryTemplate)
+                Destroy(child.gameObject);
+        }
+
+        scoreEntryTransformList.Clear();
+
+        int startIndex = pageNumber * entriesPerPage;
+        int endIndex = Mathf.Min(startIndex + entriesPerPage, allEntries.Count);
+
+        for (int i = startIndex; i < endIndex; i++)
+        {
+            CreateLatestScoresEntryTransform(allEntries[i], entryContainer, scoreEntryTransformList);
+        }
+
+        currentPage = pageNumber;
+    }
+
+    public void NextPage()
+    {
+        int maxPage = Mathf.CeilToInt((float)allEntries.Count / entriesPerPage) - 1;
+        if (currentPage < maxPage)
+        {
+            currentPage++;
+            ShowPage(currentPage);
+        }
+    }
+
+    public void PreviousPage()
+    {
+        if (currentPage > 0)
+        {
+            currentPage--;
+            ShowPage(currentPage);
+        }
+
     }
 }

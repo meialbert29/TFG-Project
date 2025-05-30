@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: 53b22f402d3faf648bfb0f59fcbba210
+  - enabled: 1
+    path: Assets/Scenes/SettingsMenuScene.unity
+    guid: 7dfbb6d1c65bb5544bb4440913c972ca
+  - enabled: 1
+    path: Assets/Scenes/TrackerScoreScene.unity
+    guid: 5ebd93c0c6d62de44ae4035ff543be5d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 652a85035e366b44fa342e9ab97220d2, type: 3}
   m_UseUCBPForAssetBundles: 0

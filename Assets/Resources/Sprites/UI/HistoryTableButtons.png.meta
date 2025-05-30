@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c2d208ed9207e0941b35fe7b8213ebdc
+guid: 8d9eda88a71bfa541b4a975999916469
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI Customized Selected_0
+      name: HistoryTableButtons_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 791
-        width: 514
-        height: 115
+        x: 41
+        y: 967
+        width: 90
+        height: 90
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,20 +112,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 96261af7eaa948a4b8cbc5e92710482a
-      internalID: -928759338
+      spriteID: 30ed391b411519447be973a325b766e7
+      internalID: -992352014
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI Customized Selected_1
+      name: HistoryTableButtons_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 660
-        width: 514
-        height: 115
+        x: 35
+        y: 24
+        width: 90
+        height: 90
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,20 +134,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bdbadcde1dbb5184ea41de4f78ca8b26
-      internalID: -81817089
+      spriteID: dbf8e4bbc7a985c468a62054aa7d5906
+      internalID: 2038435793
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI Customized Selected_2
+      name: HistoryTableButtons_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 521
-        width: 514
-        height: 115
+        x: 1796
+        y: 24
+        width: 90
+        height: 90
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,118 +156,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3c6f7985f663e2d46961a86bb6507d90
-      internalID: 1011463309
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI Customized Selected_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 371
-        width: 457
-        height: 145
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 10567b932dc3fa1458156c2cf3d1814c
-      internalID: 1104047841
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI Customized Selected_4
-      rect:
-        serializedVersion: 2
-        x: 531
-        y: 386
-        width: 112
-        height: 116
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f0806e8804d1ffb46981e7f44f375702
-      internalID: 2070383113
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI Customized Selected_5
-      rect:
-        serializedVersion: 2
-        x: 651
-        y: 386
-        width: 112
-        height: 116
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fa2fca2b58bfdfb40a0e485986ed478c
-      internalID: 780183006
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI Customized Selected_6
-      rect:
-        serializedVersion: 2
-        x: 772
-        y: 386
-        width: 112
-        height: 116
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a2073faea90eda541a704c1dd8c77682
-      internalID: -1866455128
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI Customized Selected_7
-      rect:
-        serializedVersion: 2
-        x: 1039
-        y: 0
-        width: 632
-        height: 907
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3baba4329987ba246a248abb12faf704
-      internalID: -1142426127
+      spriteID: f6a9b8a571122cb47a945accc51245f3
+      internalID: -1517762565
       vertices: []
       indices: 
       edges: []
@@ -276,7 +166,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: b921fac7f0d76fc48bbfab91ee0dbae7
+    spriteID: e00629b009c8d6e4e86fd60a9099ad94
     internalID: 0
     vertices: []
     indices: 
@@ -286,14 +176,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      UI Customized Selected_0: -928759338
-      UI Customized Selected_1: -81817089
-      UI Customized Selected_2: 1011463309
-      UI Customized Selected_3: 1104047841
-      UI Customized Selected_4: 2070383113
-      UI Customized Selected_5: 780183006
-      UI Customized Selected_6: -1866455128
-      UI Customized Selected_7: -1142426127
+      HistoryTableButtons_0: -992352014
+      HistoryTableButtons_1: 2038435793
+      HistoryTableButtons_2: -1517762565
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
