@@ -4,25 +4,62 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class ButtonsController : MonoBehaviour
+public class MainButtonsController : MonoBehaviour
 {
-    public Image startButton;
-    public Image settingsButton;
-    public Image stadisticsButton;
+    AudioManager audioManager;
 
-    public Sprite hoverMain_Sprite;
-    public Sprite normalMain_Sprite;
+    [SerializeField] public Image startButton;
+    [SerializeField] private Image settingsButton;
+    [SerializeField] private Image stadisticsButton;
 
-    public TMP_Text startText;
-    public TMP_Text settingsText;
-    public TMP_Text stadisticsText;
+    [SerializeField] private Sprite hoverMain_Sprite;
+    [SerializeField] private Sprite normalMain_Sprite;
+
+    [SerializeField] private TMP_Text startText;
+    [SerializeField] private TMP_Text settingsText;
+    [SerializeField] private TMP_Text stadisticsText;
+
     private Color normalColor = ColorsPalette.ButtonsColors.normalColor;
     private Color hoverColor = ColorsPalette.ButtonsColors.hoverColor;
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+    public void ButtonSound()
+    {
+        audioManager.PlaySFX(audioManager.buttonHover);
+    }
+
+    private void OnEnable()
+    {
+        if (startButton != null)
+        {
+            startButton.sprite = normalMain_Sprite;
+            startText.color = normalColor;
+        }
+
+        if (settingsButton != null)
+        {
+            settingsButton.sprite = normalMain_Sprite;
+            settingsText.color = normalColor;
+        }
+
+        if (stadisticsButton != null)
+        {
+            stadisticsButton.sprite = normalMain_Sprite;
+            stadisticsText.color = normalColor;
+        }
+    }
 
     public void OnStartButtonEnter()
     {
         if (startButton != null)
+        {
             startButton.sprite = hoverMain_Sprite;
+            audioManager.PlaySFX(audioManager.buttonPressed);
+        }
+            
         if (startText != null)
             startText.color = hoverColor;
     }
@@ -37,7 +74,11 @@ public class ButtonsController : MonoBehaviour
     public void OnSettingstButtonEnter()
     {
         if (settingsButton != null)
+        {
             settingsButton.sprite = hoverMain_Sprite;
+            audioManager.PlaySFX(audioManager.buttonPressed);
+        }
+            
         if (settingsText != null)
             settingsText.color = hoverColor;
     }
@@ -52,7 +93,11 @@ public class ButtonsController : MonoBehaviour
     public void OnStadisticsButtonEnter()
     {
         if (stadisticsButton != null)
+        {
             stadisticsButton.sprite = hoverMain_Sprite;
+            audioManager.PlaySFX(audioManager.buttonPressed);
+        }
+            
         if (stadisticsText != null)
             stadisticsText.color = hoverColor;
     }

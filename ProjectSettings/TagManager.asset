@@ -9,6 +9,7 @@ TagManager:
   - Grass
   - Leaves
   - Sky
+  - Audio
   layers:
   - Default
   - TransparentFX
