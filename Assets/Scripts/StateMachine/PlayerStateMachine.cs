@@ -30,7 +30,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     // constants
     float _rotationFactorPerFrame = 15.0f;
-    float _runMultiplier = 3.0f;
+    float _runMultiplier = 5.0f;
     int _zero = 0;
 
     //gravity variables
@@ -203,5 +203,13 @@ public class PlayerStateMachine : MonoBehaviour
     private void OnDisable()
     {
         _playerInput.CharacterControls.Disable();
+    }
+
+    public void SetInputEnabled(bool value)
+    {
+        if (value)
+            _playerInput.CharacterControls.Enable();
+        else
+            _playerInput.CharacterControls.Disable();
     }
 }

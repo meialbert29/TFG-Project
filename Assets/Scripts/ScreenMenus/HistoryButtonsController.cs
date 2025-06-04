@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
 public class HistoryButtonsController : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class HistoryButtonsController : MonoBehaviour
     public Text totalPages;
     private int currentPageIndex;
     private int totalPageCount;
+
+    private bool canPlayErrorSound = true;
 
     private void Awake()
     {
@@ -57,7 +60,7 @@ public class HistoryButtonsController : MonoBehaviour
 
     private void OnEnable()
     {
-        // Reinicia sprites a su estado normal
+        // Reset normal sprite
         if (backButton != null)
             backButton.sprite = normalBack_Sprite;
 
@@ -67,26 +70,25 @@ public class HistoryButtonsController : MonoBehaviour
         if (nextPageButton != null)
             nextPageButton.sprite = normalNextPage_Sprite;
 
-        // Reinicia índice de página y los textos
-        currentPageIndex = 1;
+        StartCoroutine(DelayedPageLoad());
+    }
+
+    private IEnumerator DelayedPageLoad()
+    {
+        yield return null; // wait one frame
 
         if (saveSystem != null)
         {
+            currentPageIndex = 1;
             int totalEntries = saveSystem.TotalEntries;
             int entriesPerPage = saveSystem.EntriesPerPage;
-
             totalPageCount = (totalEntries / entriesPerPage) + 1;
-        }
-        else
-        {
-            totalPageCount = 1;
-        }
 
-        if (currentPage != null)
             currentPage.text = currentPageIndex.ToString();
-
-        if (totalPages != null)
             totalPages.text = "/" + totalPageCount.ToString();
+
+            saveSystem.LoadPage(currentPageIndex);
+        }
     }
 
     private void ButtonSound()
@@ -96,7 +98,18 @@ public class HistoryButtonsController : MonoBehaviour
 
     private void ButtonError()
     {
-        audioManager.PlaySFX(audioManager.error);
+        if (canPlayErrorSound)
+        {
+            audioManager.PlaySFX(audioManager.error);
+            StartCoroutine(ErrorSoundCooldown());
+        }
+    }
+
+    private IEnumerator ErrorSoundCooldown()
+    {
+        canPlayErrorSound = false;
+        yield return new WaitForSeconds(0.5f);
+        canPlayErrorSound = true;
     }
 
     public void OnBackMainButtonEnter()

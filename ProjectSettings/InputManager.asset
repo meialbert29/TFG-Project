@@ -489,8 +489,8 @@ InputManager:
     m_Name: Camera
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: mouse 0
-    positiveButton: mouse 1
+    negativeButton: 
+    positiveButton: c
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000

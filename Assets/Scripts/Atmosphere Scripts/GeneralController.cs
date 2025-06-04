@@ -21,6 +21,8 @@ public class GeneralController : MonoBehaviour
 
     public int cont = 0;
 
+    public GameObject pausedUI;
+
     private void Awake()
     {
         treesList = new List<VegetationController>(FindObjectsByType<VegetationController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None));
@@ -29,6 +31,8 @@ public class GeneralController : MonoBehaviour
         eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
 
         _mood = "neutral";
+
+        pausedUI.SetActive(false);
     }
 
     // Update is called once per frame

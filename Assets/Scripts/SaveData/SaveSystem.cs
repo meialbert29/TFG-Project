@@ -212,4 +212,9 @@ public class SaveSystem : MonoBehaviour
         }
 
     }
+
+    public void LoadPage(int pageIndex)
+    {
+        ShowPage(pageIndex - 1);
+    }
 }
