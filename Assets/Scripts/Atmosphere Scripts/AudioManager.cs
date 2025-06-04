@@ -8,8 +8,8 @@ public class AudioManager : MonoBehaviour
 
     [Header("Audio Clip")]
     public AudioClip background;
-    public AudioClip buttonPressed;
     public AudioClip buttonHover;
+    public AudioClip buttonPressed;
     public AudioClip error;
 
     private void Start()

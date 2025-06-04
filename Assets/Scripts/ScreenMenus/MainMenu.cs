@@ -6,16 +6,12 @@ using TMPro;
 
 public class MainMenu : MonoBehaviour
 {
-    public void StartGame()
+    public void GameScreen()
     {
-        SceneManager.LoadSceneAsync("MainScene");
+        SceneManager.LoadScene("GameScene");
     }
-    public void SettingsMenu()
+    public void HomeScreen()
     {
-        SceneManager.LoadSceneAsync("SettingsMenuScene");
-    }
-    public void StadisticsMenu()
-    {
-        SceneManager.LoadSceneAsync("TrackerScoreScene");
+        SceneManager.LoadScene("StartScene");
     }
 }

@@ -93,7 +93,7 @@ public class HistoryButtonsController : MonoBehaviour
 
     private void ButtonSound()
     {
-        audioManager.PlaySFX(audioManager.buttonHover);
+        audioManager.PlaySFX(audioManager.buttonPressed);
     }
 
     private void ButtonError()
@@ -117,7 +117,7 @@ public class HistoryButtonsController : MonoBehaviour
         if (backButton != null)
         {
             backButton.sprite = hoverBack_Sprite;
-            audioManager.PlaySFX(audioManager.buttonPressed);
+            audioManager.PlaySFX(audioManager.buttonHover);
         }
             
     }
@@ -131,7 +131,7 @@ public class HistoryButtonsController : MonoBehaviour
         if (previousPageButton != null)
         {
             previousPageButton.sprite = hoverPreviousPage_Sprite;
-            audioManager.PlaySFX(audioManager.buttonPressed);
+            audioManager.PlaySFX(audioManager.buttonHover);
         }
     }
     public void OnPreviousPageButtonExit()
@@ -144,7 +144,7 @@ public class HistoryButtonsController : MonoBehaviour
         if (nextPageButton != null)
         {
             nextPageButton.sprite = hoverNextPage_Sprite;
-            audioManager.PlaySFX(audioManager.buttonPressed);
+            audioManager.PlaySFX(audioManager.buttonHover);
         }
     }
     public void OnNextPageButtonExit()

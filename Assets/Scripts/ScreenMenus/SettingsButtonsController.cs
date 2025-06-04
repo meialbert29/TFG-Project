@@ -35,7 +35,7 @@ public class SettingsButtonsController : MonoBehaviour
         if (saveButton != null)
         {
             saveButton.sprite = hover_Sprite;
-            audioManager.PlaySFX(audioManager.buttonPressed);
+            audioManager.PlaySFX(audioManager.buttonHover);
         }
             
         if (saveText != null)
@@ -50,6 +50,6 @@ public class SettingsButtonsController : MonoBehaviour
     }
     public void ButtonSound()
     {
-        audioManager.PlaySFX(audioManager.buttonHover);
+        audioManager.PlaySFX(audioManager.buttonPressed);
     }
 }

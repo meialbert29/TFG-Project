@@ -31,8 +31,6 @@ public class GeneralController : MonoBehaviour
         eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
 
         _mood = "neutral";
-
-        pausedUI.SetActive(false);
     }
 
     // Update is called once per frame

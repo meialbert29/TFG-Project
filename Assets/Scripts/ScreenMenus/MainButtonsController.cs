@@ -28,7 +28,7 @@ public class MainButtonsController : MonoBehaviour
     }
     public void ButtonSound()
     {
-        audioManager.PlaySFX(audioManager.buttonHover);
+        audioManager.PlaySFX(audioManager.buttonPressed);
     }
 
     private void OnEnable()
@@ -57,7 +57,7 @@ public class MainButtonsController : MonoBehaviour
         if (startButton != null)
         {
             startButton.sprite = hoverMain_Sprite;
-            audioManager.PlaySFX(audioManager.buttonPressed);
+            audioManager.PlaySFX(audioManager.buttonHover);
         }
             
         if (startText != null)
@@ -76,7 +76,7 @@ public class MainButtonsController : MonoBehaviour
         if (settingsButton != null)
         {
             settingsButton.sprite = hoverMain_Sprite;
-            audioManager.PlaySFX(audioManager.buttonPressed);
+            audioManager.PlaySFX(audioManager.buttonHover);
         }
             
         if (settingsText != null)
@@ -95,7 +95,7 @@ public class MainButtonsController : MonoBehaviour
         if (stadisticsButton != null)
         {
             stadisticsButton.sprite = hoverMain_Sprite;
-            audioManager.PlaySFX(audioManager.buttonPressed);
+            audioManager.PlaySFX(audioManager.buttonHover);
         }
             
         if (stadisticsText != null)
