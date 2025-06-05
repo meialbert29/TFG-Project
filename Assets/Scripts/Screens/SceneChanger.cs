@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class MainMenu : MonoBehaviour
+public class SceneChanger : MonoBehaviour
 {
     public void GameScreen()
     {
@@ -12,6 +12,6 @@ public class MainMenu : MonoBehaviour
     }
     public void HomeScreen()
     {
-        SceneManager.LoadScene("StartScene");
+        SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
     }
 }

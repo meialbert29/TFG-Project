@@ -85,41 +85,44 @@ public class LeavesController : MonoBehaviour
     {
         _moodType = _gc.Mood;
 
-        if (_moodType != _previousMoodType)
+        if (_gc.MoodChanging)
         {
-            _previousMoodType = _moodType;
+            if (_moodType != _previousMoodType)
+            {
+                _previousMoodType = _moodType;
 
-            if (_moodType == "sad")
-            {
-                _target_TopColor = _sad_TopColor;
-                _target_BottomColor = _sad_BottomColor;
-                _target_TrunkColor = _trunk_SadColor;
-            }
-            else if (_moodType == "neutral")
-            {
-                _target_TopColor = _neutral_TopColor;
-                _target_BottomColor = _neutral_BottomColor;
-                _target_TrunkColor = _trunk_NeutralColor;
-            }
-            else if(_moodType == "stressed")
-            {
-                _target_TopColor = _stressed_TopColor;
-                _target_BottomColor = _stressed_BottomColor;
-                _target_TrunkColor = _trunk_StressedColor;
+                if (_moodType == "sad")
+                {
+                    _target_TopColor = _sad_TopColor;
+                    _target_BottomColor = _sad_BottomColor;
+                    _target_TrunkColor = _trunk_SadColor;
+                }
+                else if (_moodType == "neutral")
+                {
+                    _target_TopColor = _neutral_TopColor;
+                    _target_BottomColor = _neutral_BottomColor;
+                    _target_TrunkColor = _trunk_NeutralColor;
+                }
+                else if (_moodType == "stressed")
+                {
+                    _target_TopColor = _stressed_TopColor;
+                    _target_BottomColor = _stressed_BottomColor;
+                    _target_TrunkColor = _trunk_StressedColor;
+                }
+
+                // Guardamos el estado actual como punto de partida
+                _start_TopColor = _lod1_Mat.GetColor("_TopColor");
+                _start_BottomColor = _lod1_Mat.GetColor("_BottomColor");
             }
 
-            // Guardamos el estado actual como punto de partida
-            _start_TopColor = _lod1_Mat.GetColor("_TopColor");
-            _start_BottomColor = _lod1_Mat.GetColor("_BottomColor");
+            float _progress = _vb.GetTransitionProgress();
+            if (_progress >= 0.7f)
+            {
+                ChangeLeavesLODMeshes();
+            }
+            UpdateLeavesColor(_progress);
+            UpdateTrunkColor(_progress, _target_TrunkColor);
         }
-
-        float _progress = _vb.GetTransitionProgress();
-        if(_progress >= 0.7f)
-        {
-            ChangeLeavesLODMeshes();
-        }
-        UpdateLeavesColor(_progress);
-        UpdateTrunkColor(_progress, _target_TrunkColor);
     }
 
     void UpdateLeavesColor(float progress)

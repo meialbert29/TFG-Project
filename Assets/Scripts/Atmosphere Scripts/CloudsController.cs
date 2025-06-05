@@ -48,6 +48,13 @@ public class CloudsController : MonoBehaviour
     private float _transitionDuration;
     private bool _skyChanging;
 
+    // target variables
+    float target_NoiseScale;
+    float target_NoiseEdge1;
+    float target_fresnelOpacity;
+    Color targetValley = Color.white;
+    Color targetPeak = Color.white;
+
 
     void Start()
     {
@@ -114,16 +121,17 @@ public class CloudsController : MonoBehaviour
         if (_skyChanging)
         {
             _transitionProgress += Time.deltaTime / _transitionDuration;
-            changeCloudsSettings();
+            ChangeCloudsSettings(_moodType);
 
             if (_transitionProgress >= 0.2f && !_rainStarted)
             {
-                _rainController.rainStart();
+                _rainController.RainStart();
                 _rainStarted = true;
             }
 
             if (_transitionProgress >= 1f)
             {
+                UpdateStartCloudSettings();
                 _transitionProgress = 0f;
                 _skyChanging = false;
             }
@@ -131,39 +139,63 @@ public class CloudsController : MonoBehaviour
     }
 
 
-    private void changeCloudsSettings()
-    {
-        if(_moodType == "sad")
+    private void ChangeCloudsSettings(string mood)
+    {   
+        switch (mood)
         {
-            _noiseScale = 0.31f;
-            _noiseEdge1 = 0.06f;
-            _fresnelOpacity = 0.18f;
+            case "neutral":
+                target_NoiseScale = _noiseScale;
+                target_NoiseEdge1 = _noiseEdge1;
+                target_fresnelOpacity = _fresnelOpacity;
+                targetValley = _valleyColor;
+                targetPeak = _peakColor;
+                break;
+
+            case "sad":
+                target_NoiseScale = 0.31f;
+                target_NoiseEdge1 = 0.06f;
+                target_fresnelOpacity = 0.18f;
+                targetValley = sadValley;
+                targetPeak= sadPeak;
+                break;
+            case "stressed":
+                break;
+            
         }
 
-        changeCloudSettingsOverTime(_noiseScale, _noiseEdge1, _fresnelOpacity, sadValley, sadPeak);
+        ChangeCloudSettingsOverTime(target_NoiseScale, target_NoiseEdge1, target_fresnelOpacity, targetValley, targetPeak);
     }
 
-    private void changeCloudSettingsOverTime(float noiseScale, float noiseEdge1, float fresnelOpacity, Color targetValleyColor, Color targetPeakColor)
+    private void ChangeCloudSettingsOverTime(float noiseScale, float noiseEdge1, float fresnelOpacity, Color targetValleyColor, Color targetPeakColor)
     {
         if(_transitionProgress < 1f)
         {
-            _current_NoiseEdge1 = Mathf.Lerp(_current_NoiseEdge1, _noiseEdge1, _transitionProgress);
-            _current_NoiseScale = Mathf.Lerp(_current_NoiseScale, _noiseScale, _transitionProgress);
-            _current_fresnelOpacity = Mathf.Lerp(_current_fresnelOpacity, _fresnelOpacity, _transitionProgress);
+            _current_NoiseEdge1 = Mathf.Lerp(_current_NoiseEdge1, noiseEdge1, _transitionProgress);
+            _current_NoiseScale = Mathf.Lerp(_current_NoiseScale, noiseScale, _transitionProgress);
+            _current_fresnelOpacity = Mathf.Lerp(_current_fresnelOpacity, fresnelOpacity, _transitionProgress);
 
             _current_ValleyColor = Color.Lerp(_current_ValleyColor, targetValleyColor, _transitionProgress);
             _current_PeakColor = Color.Lerp(_current_PeakColor, targetPeakColor, _transitionProgress);
         }
 
+        ApplyCloudSettings();
+    }
+
+    private void UpdateStartCloudSettings()
+    {
+        _current_NoiseScale = target_NoiseScale;
+        _current_NoiseEdge1 = target_NoiseEdge1;
+        _current_fresnelOpacity = target_fresnelOpacity;
+        _current_ValleyColor = targetValley;
+        _current_PeakColor = targetPeak;
+    }
+
+    private void ApplyCloudSettings()
+    {
         cloudsMaterial.SetFloat("_NoiseScale", _current_NoiseScale);
         cloudsMaterial.SetFloat("_NoiseEdge1", _current_NoiseEdge1);
         cloudsMaterial.SetFloat("_FresnelOpacity", _current_fresnelOpacity);
         cloudsMaterial.SetColor("_ColorValley", _current_ValleyColor);
         cloudsMaterial.SetColor("_ColorPeak", _current_PeakColor);
-    }
-
-    public bool skyIsChanging()
-    {
-        return _skyChanging;
     }
 }

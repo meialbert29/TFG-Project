@@ -1,6 +1,7 @@
 ﻿using Assets.LSL4Unity.Scripts.Examples;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -69,7 +70,6 @@ public class VegetationController : MonoBehaviour
 
         //leavesController = transform.GetComponent<LeavesController>();
         if (_leavesController == null) Debug.Log("leaves Controller not found");
-
         
 
         // get mesh object
@@ -86,9 +86,9 @@ public class VegetationController : MonoBehaviour
             targetMesh = Resources.Load<Mesh>("Models/Trunks/SadTrunk");
         }
 
-        if (startMesh == null || targetMesh == null)
+        if (startMesh == null)
         {
-            Debug.LogError("Meshes were not loaded correctly. Please check the path.");
+            Debug.LogError("Start mesh were not loaded correctly. Please check the path.");
             return;
         }
 
@@ -106,38 +106,39 @@ public class VegetationController : MonoBehaviour
         {
             //_generalController.MoodChanging = true;
             _vfxController.Fall = true;
+            LoadTargetMeshByMood(_generalController.Mood);
             MorphingProcess();
         }
     }
 
-    private void HandleWaveConsistency()
-    {
-        string newWave = GetCurrentWave();
+    //private void HandleWaveConsistency()
+    //{
+    //    string newWave = GetCurrentWave();
 
-        if (newWave == _currentWave)
-        {
-            waveConsistencyTimer += Time.deltaTime;
+    //    if (newWave == _currentWave)
+    //    {
+    //        waveConsistencyTimer += Time.deltaTime;
 
-            if (waveConsistencyTimer >= waveConsistencyDuration && !isWaveConsistent)
-            {
-                isWaveConsistent = true;
+    //        if (waveConsistencyTimer >= waveConsistencyDuration && !isWaveConsistent)
+    //        {
+    //            isWaveConsistent = true;
 
-                if (newWave != lastWaveThatTriggeredMorph)
-                {
-                    Debug.Log("Wave consistent and different from last morph: " + newWave);
-                    lastWaveThatTriggeredMorph = newWave;
-                    _generalController.MoodChanging = true;
-                }
-            }
-        }
-        else
-        {
-            waveConsistencyTimer = 0f;
-            isWaveConsistent = false;
-            _currentWave = newWave;
-            LoadTargetMesh(_currentWave);
-        }
-    }
+    //            if (newWave != lastWaveThatTriggeredMorph)
+    //            {
+    //                Debug.Log("Wave consistent and different from last morph: " + newWave);
+    //                lastWaveThatTriggeredMorph = newWave;
+    //                _generalController.MoodChanging = true;
+    //            }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        waveConsistencyTimer = 0f;
+    //        isWaveConsistent = false;
+    //        _currentWave = newWave;
+    //        LoadTargetMesh(_currentWave);
+    //    }
+    //}
 
     private string GetCurrentWave()
     {
@@ -150,7 +151,7 @@ public class VegetationController : MonoBehaviour
         {
             case "Delta":
                 targetMesh = Resources.Load<Mesh>("Models/Trunks/SadTrunk");
-                _generalController.Mood = "sad";
+                //_generalController.Mood = "sad";
                 break;
             case "Theta":
                 targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
@@ -163,9 +164,35 @@ public class VegetationController : MonoBehaviour
                 break;
             case "Gamma":
                 targetMesh = Resources.Load<Mesh>("Models/Trunks/StressedTrunk");
-                _generalController.Mood = "stressed";
+                //_generalController.Mood = "stressed";
                 break;
         }
+    }
+
+    public void LoadTargetMeshByMood(string mood)
+    {
+        string path = "Models/Trunks/";
+        string meshName = "";
+        switch (mood)
+        {
+            case "sad":
+                meshName = "SadTrunk";
+                break;
+            case "neutral":
+                meshName = "Trunk";
+                break;
+            case "stressed":
+                meshName = "StressedTrunk";
+                break;
+            case "calm":
+                meshName = "Trunk";
+                break;
+            case "anxious":
+                meshName = "StressedTrunk";
+                break;
+
+        }
+        targetMesh = Resources.Load<Mesh>($"{path}{meshName}");
     }
 
     public void MorphingProcess()
@@ -186,7 +213,7 @@ public class VegetationController : MonoBehaviour
 
             _generalController.cont++;
             _vfxController.Fall = false;
-            _generalController.checkCont();
+            _generalController.CheckTreesCount();
             
             _leavesController.UpdateLeavesStartColors();
             Debug.Log("Transition finished");
@@ -226,7 +253,7 @@ public class VegetationController : MonoBehaviour
         string path = "";
 
         if (gameObject.layer == LayerMask.NameToLayer("Vegetation"))
-            path = "Models/";
+            path = "Models/Trunks/";
 
         targetMesh = Resources.Load<Mesh>($"{path}{meshName}");
         _transitionProgress = 0f;

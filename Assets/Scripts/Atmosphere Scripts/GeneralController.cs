@@ -53,6 +53,7 @@ public class GeneralController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
             _mood = "stressed";
+            
             keyDown = true;
         }
 
@@ -62,14 +63,27 @@ public class GeneralController : MonoBehaviour
             keyDown = true;
         }
 
-        if (keyDown)
+        if (Input.GetKeyDown(KeyCode.Keypad4))
         {
-            cont = 0;
-            moodChanging = true; 
+            _mood = "calm";
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad5))
+        {
+            _mood = "anxious";
+        }
+
+        if (keyDown) // fix to not compare if any key's down
+        {
+            _rainController.RainChangeSettings(_mood);
+            if (!Input.GetKeyDown(KeyCode.Keypad3))
+            {
+                cont = 0;
+                moodChanging = true;
+            }
         }
     }
 
-    public void checkCont()
+    public void CheckTreesCount()
     {
         if (cont >= treesList.Count)
             moodChanging = false;

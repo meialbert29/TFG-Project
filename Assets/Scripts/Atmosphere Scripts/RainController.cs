@@ -18,7 +18,7 @@ public class RainController : MonoBehaviour
             return;
         }
 
-        rainStop();
+        RainStop();
     }
 
     // Update is called once per frame
@@ -31,13 +31,41 @@ public class RainController : MonoBehaviour
 
     }
 
-    public void rainStart()
+    public void RainStart()
     {
         _rain.Play();
     }
 
-    public void rainStop()
+    public void RainStop()
     {
         _rain.Stop();
+    }
+
+    public void RainChangeSettings(string mood)
+    {
+        var emission = _rain.emission;
+        var main = _rain.main;
+
+        int maxParticles = 0;
+        int rateOverTime = 0;
+
+
+        switch (mood)
+        {
+            case "normal":
+                _rain.Stop();
+                break;
+            case "sad":
+                maxParticles = 10000;
+                rateOverTime = 100;
+                break;
+            case "stressed":
+                maxParticles = 30000;
+                rateOverTime = 10000;
+                break;
+        }
+
+        emission.rateOverTime = new ParticleSystem.MinMaxCurve(rateOverTime);
+        main.maxParticles = maxParticles;
     }
 }

@@ -160,4 +160,9 @@ public class PauseMenu : MonoBehaviour
     {
         audioManager.PlaySFX(audioManager.buttonPressed);
     }
+
+    public void QuitGame()
+    {
+        Time.timeScale = 1f;
+    }
 }
