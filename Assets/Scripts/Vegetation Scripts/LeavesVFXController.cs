@@ -162,6 +162,16 @@ public class VFXController : MonoBehaviour
                 targetKeyBlend1 = _stressed_KeyBlend1;
                 targetKeyBlend2 = _stressed_KeyBlend2;
             }
+            else if(moodType == "calm")
+            {
+                targetKey0 = _neutral_Key0;
+                targetKey1 = _neutral_Key1;
+                targetKey2 = _neutral_Key2;
+
+                targetKeyBlend0 = _neutral_KeyBlend0;
+                targetKeyBlend1 = _neutral_KeyBlend1;
+                targetKeyBlend2 = _neutral_KeyBlend2;
+            }
 
             BlendColorGradientTransition(keysBlend, t);
             LeavesColorGradientTransition(keys, t);
@@ -201,8 +211,9 @@ public class VFXController : MonoBehaviour
     public void ChangeMood()
     {
         moodIndex = moodType == "neutral" ? 0 :
-                        moodType == "sad" ? 1 :
-                        moodType == "stressed" ? 2 : -1;
+                    moodType == "calm" ? 0 :
+                    moodType == "sad" ? 1 :
+                    moodType == "stressed" ? 2 : -1;
 
         _vfx.SetInt("MoodIndex", moodIndex);
     }

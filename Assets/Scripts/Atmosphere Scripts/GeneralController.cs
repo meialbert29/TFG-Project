@@ -36,7 +36,7 @@ public class GeneralController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleInput();  
+        HandleInput();
     }
 
     // check if any key was pulsed
@@ -66,6 +66,7 @@ public class GeneralController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
             _mood = "calm";
+            keyDown = true;
         }
         if (Input.GetKeyDown(KeyCode.Keypad5))
         {
@@ -75,11 +76,8 @@ public class GeneralController : MonoBehaviour
         if (keyDown) // fix to not compare if any key's down
         {
             _rainController.RainChangeSettings(_mood);
-            if (!Input.GetKeyDown(KeyCode.Keypad3))
-            {
                 cont = 0;
                 moodChanging = true;
-            }
         }
     }
 

@@ -11,6 +11,8 @@ namespace Assets.LSL4Unity.Scripts.Examples
 {
     public class ExampleFloatInlet : AFloatInlet
     {
+        public ScoreSystem scoreSystem;
+
         public string lastSample = String.Empty;
         public int samplingRate = 256; // Frecuencia de muestreo
         private int bufferSize = 256; // Número de muestras para FFT
@@ -31,7 +33,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
         private bool waveChanged = false; // Indica si ha habido un cambio de onda
         private float timeSinceLastScore = 0f; // Tiempo desde la última puntuación
         private float scoreInterval = 10f; // Intervalo de tiempo para sumar puntos
-        private float points = 0f;
+        private int points = 0;
 
         //public WavesReader wavesReader;
 
@@ -69,19 +71,21 @@ namespace Assets.LSL4Unity.Scripts.Examples
                     
                     if (waveType != lastWaveType)
                     {
-                        pointsText.enabled = false;
+                        scoreSystem.pointsEarnedText.enabled = false;
                         if (waveChanged)
                         {
-                            Debug.Log("-------------------------------------");
-                            points = 1;
+                            points = 2;
                             actualScore += points; // Si cambia a una nueva onda tras otra, sumar menos
+
+                            scoreSystem.PointsEarned = 2;
+                            scoreSystem.Score += points;
                         }
                         else
                         {
-                            pointsText.enabled = true;
-                            points = 2;
-                            actualScore += points; // Si cambia de onda y se mantiene, sumar más puntos
-                            
+                            scoreSystem.pointsEarnedText.enabled = true;
+                            scoreSystem.PointsEarned = 1;
+                            scoreSystem.Score += points; // Si cambia de onda y se mantiene, sumar más puntos
+
                         }
                         waveChanged = true;
                         timeSinceLastScore = 0f; // Reiniciar el contador de tiempo
@@ -91,17 +95,16 @@ namespace Assets.LSL4Unity.Scripts.Examples
                         timeSinceLastScore += Time.deltaTime;
                         if (timeSinceLastScore >= scoreInterval)
                         {
-                            //vegetationBehaviour.MorphingProcess();
-                            pointsText.enabled = true;
-                            points = 20; // Sumar puntos si la onda se mantiene cada 10 segundos
-                            actualScore += points;
+                            scoreSystem.pointsEarnedText.enabled = true;
+                            scoreSystem.PointsEarned = 20; // add points if the wave stays the same 10 secs
+                            scoreSystem.Score += scoreSystem.PointsEarned;
                             timeSinceLastScore = 0f; // Reiniciar el temporizador
                         }
                     }
                 }
                 else
                 {
-                    pointsText.enabled = false;
+                    scoreSystem.pointsEarnedText.enabled = false;
                     waveChanged = false; // Si la onda no es consistente, esperar un cambio estable
                     timeSinceLastScore = 0f; // Reiniciar el contador si hay inestabilidad
                 }
@@ -114,8 +117,8 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
                 ChangeObjectColor(waveType);
                 showState(waveType, dominantFrequency);
-                showScore(actualScore);
-                showPoints(points);
+                scoreSystem.UpdateScorePoints();
+                scoreSystem.UpdatePointsEarned();
             }
         }
 
@@ -162,8 +165,8 @@ namespace Assets.LSL4Unity.Scripts.Examples
             {
                 { "Delta", magnitudes.Where((_, i) => i * frequencyResolution < 4).Sum() },
                 { "Theta", magnitudes.Where((_, i) => i * frequencyResolution >= 4 && i * frequencyResolution < 8).Sum() },
-                { "Alpha", magnitudes.Where((_, i) => i * frequencyResolution >= 8 && i * frequencyResolution < 14).Sum() },
-                { "Beta", magnitudes.Where((_, i) => i * frequencyResolution >= 14 && i * frequencyResolution < 30).Sum() },
+                { "Alpha", magnitudes.Where((_, i) => i * frequencyResolution >= 8 && i * frequencyResolution < 12).Sum() },
+                { "Beta", magnitudes.Where((_, i) => i * frequencyResolution >= 12 && i * frequencyResolution < 30).Sum() },
                 { "Gamma", magnitudes.Where((_, i) => i * frequencyResolution >= 30).Sum() }
             };
 
@@ -180,19 +183,19 @@ namespace Assets.LSL4Unity.Scripts.Examples
             switch (wave)
             {
                 case "Delta":
-                    actualScore += 100;
+                    actualScore += 10;
                     break;
                 case "Theta":
-                    actualScore += 50;
+                    actualScore += 5;
                     break;
                 case "Alpha":
-                    actualScore += 30;
+                    actualScore += 3;
                     break;
                 case "Beta":
-                    actualScore += 20;
+                    actualScore += 2;
                     break;
                 case "Gamma":
-                    actualScore += 10;
+                    actualScore += 1;
                     break;
             }
         }

@@ -47,12 +47,6 @@ public class SaveSystem : MonoBehaviour
 
         entryTemplate.gameObject.SetActive(false);
 
-        //AddNewScoreEntry(DateTime.Now.ToString("dd/MM/yy"), DateTime.Now.ToString("HH:mm"), 1000);
-
-        for (int i = 0; i < 10; i++)
-        {
-            AddNewScoreEntry(DateTime.Now.ToString("dd/MM/yy"), DateTime.Now.ToString("HH:mm"), i * 10);
-        }
 
         string jsonString = PlayerPrefs.GetString("latestScoreTable");
 
@@ -140,7 +134,10 @@ public class SaveSystem : MonoBehaviour
 
         transformList.Add(entryRectTransform);
     }
-
+    public void SaveNewScore(int score)
+    {
+        AddNewScoreEntry(DateTime.Now.ToString("dd/MM/yy"), DateTime.Now.ToString("HH:mm"), score);
+    }
     private void AddNewScoreEntry(string date, string time, int score)
     {
         ScoreEntry entry = new ScoreEntry { date = date, time = time, score = score };

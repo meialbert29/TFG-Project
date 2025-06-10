@@ -63,6 +63,9 @@ public class RainController : MonoBehaviour
                 maxParticles = 30000;
                 rateOverTime = 10000;
                 break;
+            case "calm":
+                _rain.Stop();
+                break;
         }
 
         emission.rateOverTime = new ParticleSystem.MinMaxCurve(rateOverTime);

@@ -16,6 +16,8 @@ public class WavesReader : MonoBehaviour
     private bool isWaveConsistent = false;
     private string lastWaveThatTriggeredMorph = "";
 
+    public string CurrentWave { get { return _currentWave; } }
+
     void Start()
     {
         eeg_script = FindAnyObjectByType<ExampleFloatInlet>();

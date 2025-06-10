@@ -104,8 +104,8 @@ public class VegetationController : MonoBehaviour
     {
         if (_generalController.MoodChanging)
         {
-            //_generalController.MoodChanging = true;
             _vfxController.Fall = true;
+            LoadTargetMesh(_wavesReader.CurrentWave);
             LoadTargetMeshByMood(_generalController.Mood);
             MorphingProcess();
         }
@@ -151,7 +151,7 @@ public class VegetationController : MonoBehaviour
         {
             case "Delta":
                 targetMesh = Resources.Load<Mesh>("Models/Trunks/SadTrunk");
-                //_generalController.Mood = "sad";
+                _generalController.Mood = "sad";
                 break;
             case "Theta":
                 targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
@@ -164,7 +164,7 @@ public class VegetationController : MonoBehaviour
                 break;
             case "Gamma":
                 targetMesh = Resources.Load<Mesh>("Models/Trunks/StressedTrunk");
-                //_generalController.Mood = "stressed";
+                _generalController.Mood = "stressed";
                 break;
         }
     }

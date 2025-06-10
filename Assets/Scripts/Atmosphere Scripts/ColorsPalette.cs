@@ -40,12 +40,22 @@ public static class ColorsPalette
         public static readonly Color sad_Key2 = new Color(0.4784314f, 0.2680945f, 0.08235293f, 1f);
         public static readonly Color sad_KeyBlend1 = new Color(0.4901961f, 0.2157505f, 0f, 1f);
         public static readonly Color sad_KeyBlend2 = new Color(0.4823529f, 0.3290052f, 0.1333334f);
+
+        public static readonly Color calm_Key0 = new Color(0.7058824f, 0.6392202f, 0.2117647f, 1f);
+        public static readonly Color calm_Key1 = new Color(0.4501218f, 0.5843138f, 0.2196078f, 1f);
+        public static readonly Color calm_Key2 = new Color(0.1700774f, 0.02f, 0.06666668f, 1f);
+        public static readonly Color calm_KeyBlend0 = new Color(0.1700774f, 0.02f, 0.06666668f, 1f);
+        public static readonly Color calm_KeyBlend1 = new Color(0.1700774f, 0.02f, 0.06666668f, 1f);
+        public static readonly Color calm_KeyBlend2 = new Color(0.1700774f, 0.02f, 0.06666668f, 1f);
     }
 
     public static class CloudsColors
     {
-        public static readonly Color sadPeak = new Color(0.3602704f, 0.4823402f, 0.553459f, 1f);
         public static readonly Color sadValley = new Color(0.5847869f, 0.7623752f, 0.8050313f, 1f);
+        public static readonly Color sadPeak = new Color(0.3602704f, 0.4823402f, 0.553459f, 1f);
+
+        public static readonly Color stressedValley = new Color(0.3679245f, 0.3679245f, 0.3679245f, 1f);
+        public static readonly Color stressedPeak = new Color(0.4909666f, 0.5261293f, 0.5566037f, 1f);
     }
 
     public static class LogosColors
@@ -59,5 +69,10 @@ public static class ColorsPalette
         // main menu buttons
         public static readonly Color normalColor = new Color(0.5058824f, 0.2611249f, 0.2611249f, 1f);
         public static readonly Color hoverColor = Color.white;
+    }
+
+    public static class LotusColors
+    {
+        public static readonly Color transparent = new Color(0f, 0f, 0f, 0f);
     }
 }

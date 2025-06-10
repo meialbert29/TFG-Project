@@ -5,7 +5,7 @@ using UnityEngine;
 public class LeavesController : MonoBehaviour
 {
     private VegetationController _vb;
-    public GeneralController _gc;
+    public GeneralController _generalController;
 
     private LODGroup _lodGroup;
     private LODController _lodController;
@@ -83,9 +83,9 @@ public class LeavesController : MonoBehaviour
 
     void Update()
     {
-        _moodType = _gc.Mood;
+        _moodType = _generalController.Mood;
 
-        if (_gc.MoodChanging)
+        if (_generalController.MoodChanging)
         {
             if (_moodType != _previousMoodType)
             {
@@ -108,6 +108,12 @@ public class LeavesController : MonoBehaviour
                     _target_TopColor = _stressed_TopColor;
                     _target_BottomColor = _stressed_BottomColor;
                     _target_TrunkColor = _trunk_StressedColor;
+                }
+                else if(_moodType == "calm")
+                {
+                    _target_TopColor = _neutral_TopColor;
+                    _target_BottomColor = _neutral_BottomColor;
+                    _target_TrunkColor = _trunk_NeutralColor;
                 }
 
                 // Guardamos el estado actual como punto de partida
@@ -159,8 +165,14 @@ public class LeavesController : MonoBehaviour
         }
         else if(_moodType == "stressed")
         {
+            // no meshes to load
             _meshFilter_LOD1.mesh = null;
             _meshFilter_LOD2.mesh = null;
+        }
+        else if( _moodType == "calm")
+        {
+            _meshFilter_LOD1.mesh = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD1");
+            _meshFilter_LOD2.mesh = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD2");
         }
     }
 
