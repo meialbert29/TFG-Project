@@ -122,7 +122,7 @@ TextureImporter:
       name: Settings background_1
       rect:
         serializedVersion: 2
-        x: 18
+        x: 24
         y: 527
         width: 495
         height: 140
@@ -144,7 +144,7 @@ TextureImporter:
       name: Settings background_2
       rect:
         serializedVersion: 2
-        x: 18
+        x: 21
         y: 368
         width: 495
         height: 140
@@ -166,7 +166,7 @@ TextureImporter:
       name: Settings background_3
       rect:
         serializedVersion: 2
-        x: 18
+        x: 22
         y: 209
         width: 495
         height: 140

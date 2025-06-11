@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class PauseMenu : MonoBehaviour
 {
     public PlayerStateMachine playerStateMachine;
+    public GameObject saveScreen;
+    public GameObject finalScoreScreen;
 
     AudioManager audioManager;
 
@@ -22,6 +24,9 @@ public class PauseMenu : MonoBehaviour
     public Image settingsButton;
     public TMP_Text settingsText;
 
+    public Image helpButton;
+    public TMP_Text helpText;
+
     public Image quitButton;
     public TMP_Text quitText;
 
@@ -29,6 +34,8 @@ public class PauseMenu : MonoBehaviour
     public Sprite hoverResume_Sprite;
     public Sprite normalSettings_Sprite;
     public Sprite hoverSettings_Sprite;
+    public Sprite normalHelp_Sprite;
+    public Sprite hoverHelp_Sprite;
     public Sprite normalQuit_Sprite;
     public Sprite hoverQuit_Sprite;
 
@@ -58,6 +65,9 @@ public class PauseMenu : MonoBehaviour
     private void Start()
     {
         pausedUI.SetActive(false);
+        settingsMenu.SetActive(false);
+        saveScreen.SetActive(false);
+        finalScoreScreen.SetActive(false);
     }
 
     void Update()
@@ -66,8 +76,12 @@ public class PauseMenu : MonoBehaviour
         {
             if (isPaused)
             {
-                ResumeGame();
                 pausedUI.SetActive(false);
+                settingsMenu.SetActive(false);
+                saveScreen.SetActive(false);
+                finalScoreScreen.SetActive(false);
+                ResumeGame();
+                
             }
                 
                 
@@ -81,6 +95,20 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0f;
         playerStateMachine.SetInputEnabled(false); //
         isPaused = true;
+
+        if (resumeButton != null && settingsButton != null && quitButton != null && helpButton != null)
+        {
+            resumeButton.sprite = normalResume_Sprite;
+            settingsButton.sprite = normalSettings_Sprite;
+            helpButton.sprite = normalHelp_Sprite;
+            quitButton.sprite = normalQuit_Sprite;
+
+            resumeText.color = normalColor;
+            settingsText.color = normalColor;
+            helpText.color = normalColor;
+            quitText.color = normalColor;
+        }
+
         pausedUI.SetActive(true);
     }
 
@@ -133,8 +161,29 @@ public class PauseMenu : MonoBehaviour
             audioManager.PlaySFX(audioManager.buttonHover);
         }
 
-        if (resumeText != null)
-            resumeText.color = normalColor;
+        if (settingsText != null)
+            settingsText.color = normalColor;
+    }
+
+    public void OnHelpButtonEnter()
+    {
+        if(helpButton != null)
+        {
+            helpButton.sprite = hoverHelp_Sprite;
+            audioManager.PlaySFX(audioManager.buttonHover);
+        }
+
+        if(helpText != null)
+            helpText.color = hoverColor;
+    }
+
+    public void OnHelpButtonExit()
+    {
+        if (helpButton != null)
+            helpButton.sprite = normalHelp_Sprite;
+
+        if (helpText != null)
+            helpText.color = normalColor;
     }
 
     public void OnQuitButtonEnter()

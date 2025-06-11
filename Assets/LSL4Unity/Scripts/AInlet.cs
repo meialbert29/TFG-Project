@@ -54,7 +54,7 @@ namespace Assets.LSL4Unity.Scripts.AbstractInlets
 			else if (expectedStreamHasAType)
 			{
 				Debug.Log("Creating LSL resolver for stream with type " + StreamType);
-				resolver = new liblsl.ContinuousResolver("type ", StreamType);
+				resolver = new liblsl.ContinuousResolver("type", StreamType);
 			}
 			
 			StartCoroutine(ResolveExpectedStream());

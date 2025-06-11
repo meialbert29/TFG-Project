@@ -167,7 +167,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4740756141072957858}
-  - component: {fileID: 6274696459881847219}
   m_Layer: 5
   m_Name: Table
   m_TagString: Untagged
@@ -195,21 +194,6 @@ RectTransform:
   m_AnchoredPosition: {x: 44.98352, y: 83.5343}
   m_SizeDelta: {x: 1679, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6274696459881847219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1517469102571614169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6292b34d2cd25fd4a9179e50f883931e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dayLogoTexture: {fileID: 2800000, guid: 9c569b5b38c56a34aaf882d3f6d2d02d, type: 3}
-  nightLogoTexture: {fileID: 2800000, guid: 5348f0850ee1a3c42be7f660cf1f8198, type: 3}
-  currentPage: 0
 --- !u!1 &1931829686422634658
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,7 +316,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6274696459881847219}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
         m_MethodName: PreviousPage
         m_Mode: 1
@@ -1030,7 +1014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 046b09acd69b2594589dc83bea62dd18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveSystem: {fileID: 6274696459881847219}
+  saveSystem: {fileID: 0}
   backButton: {fileID: 4020187809025980292}
   previousPageButton: {fileID: 3324457995228494777}
   nextPageButton: {fileID: 8662540045186143203}
@@ -1164,7 +1148,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6274696459881847219}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
         m_MethodName: NextPage
         m_Mode: 1
@@ -1661,7 +1645,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &10690369290685101
 Transform:
   m_ObjectHideFlags: 0
@@ -1670,7 +1654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7382336250327530871}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -34.48352, y: 69.4657, z: -7.3902297}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

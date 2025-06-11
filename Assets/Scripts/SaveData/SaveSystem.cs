@@ -20,11 +20,11 @@ public class SaveSystem : MonoBehaviour
         public List<ScoreEntry> scoreEntryList;
     }
 
-    private Transform entryContainer;
-    private Transform entryTemplate;
+    [SerializeField] private Transform entryContainer;
+    [SerializeField] private Transform entryTemplate;
     private List<Transform> scoreEntryTransformList;
 
-    private RawImage logoRawImage;
+    [SerializeField] private RawImage logoRawImage;
     public Texture dayLogoTexture;
     public Texture nightLogoTexture;
 
@@ -41,12 +41,7 @@ public class SaveSystem : MonoBehaviour
 
     private void Awake()
     {
-        entryContainer = transform.Find("ScoreTableEntryContainer");
-        entryTemplate = entryContainer.Find("ScoreEntryTemplate");
-        logoRawImage = entryTemplate.Find("timeLogo").GetComponent<RawImage>();
-
         entryTemplate.gameObject.SetActive(false);
-
 
         string jsonString = PlayerPrefs.GetString("latestScoreTable");
 
@@ -82,8 +77,6 @@ public class SaveSystem : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            ClearAllScoreEntries();
     }
 
     private void CreateLatestScoresEntryTransform(ScoreEntry newScoreEntry, Transform container, List<Transform> transformList)
@@ -213,5 +206,26 @@ public class SaveSystem : MonoBehaviour
     public void LoadPage(int pageIndex)
     {
         ShowPage(pageIndex - 1);
+    }
+
+    public void RefreshScoreTable()
+    {
+        string jsonString = PlayerPrefs.GetString("latestScoreTable");
+        ScoresList latestScores = JsonUtility.FromJson<ScoresList>(jsonString);
+
+        if (latestScores == null || latestScores.scoreEntryList == null)
+        {
+            latestScores = new ScoresList { scoreEntryList = new List<ScoreEntry>() };
+        }
+
+        latestScores.scoreEntryList.Sort((a, b) =>
+        {
+            DateTime dateA = DateTime.ParseExact(a.date + " " + a.time, "dd/MM/yy HH:mm", null);
+            DateTime dateB = DateTime.ParseExact(b.date + " " + b.time, "dd/MM/yy HH:mm", null);
+            return dateB.CompareTo(dateA); // Más recientes primero
+        });
+
+        allEntries = latestScores.scoreEntryList;
+        ShowPage(currentPage);
     }
 }

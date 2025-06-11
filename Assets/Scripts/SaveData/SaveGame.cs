@@ -102,12 +102,17 @@ public class SaveGame : MonoBehaviour
     public void SaveGameScore()
     {
         saveSystem.SaveNewScore(scoreSystem.Score);
+        saveSystem.RefreshScoreTable();
     }
 
     public void OnNewGameButtonEnter()
     {
         if (newGameButton != null)
+        {
             newGameButton.sprite = hover_NewGameButton;
+            audioManager.PlaySFX(audioManager.buttonHover);
+        }
+            
     }
     public void OnNewGameButtonExit()
     {
@@ -117,7 +122,10 @@ public class SaveGame : MonoBehaviour
     public void OnStaticsButtonEnter()
     {
         if (staticsButton != null)
+        {
             staticsButton.sprite = hover_StaticsButton;
+            audioManager.PlaySFX(audioManager.buttonHover);
+        }   
     }
     public void OnStaticsButtonExit()
     {
@@ -127,12 +135,15 @@ public class SaveGame : MonoBehaviour
     public void OnExitGameButtonEnter()
     {
         if (exitGameButton != null)
-            exitGameButton.sprite = hover_NewGameButton;
+        {
+            exitGameButton.sprite = hover_ExitGameButton;
+            audioManager.PlaySFX(audioManager.buttonHover);
+        }
     }
     public void OnExitGameButtonExit()
     {
         if (exitGameButton != null)
-            exitGameButton.sprite = normal_NewGameButton;
+            exitGameButton.sprite = normal_ExitGameButton;
     }
 
     public void ButtonSound()

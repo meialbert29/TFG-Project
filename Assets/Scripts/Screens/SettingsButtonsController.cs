@@ -6,13 +6,21 @@ using TMPro;
 public class SettingsButtonsController : MonoBehaviour
 {
     AudioManager audioManager;
+    [SerializeField] SaveSystem saveSystem;
 
     // images variables
     public Image saveButton;
     public TMP_Text saveText;
+
+    public Image clearHistoryButton;
+    public TMP_Text clearHistoryText;
+
     // sprites variables
-    public Sprite normal_Sprite;
-    public Sprite hover_Sprite;
+    public Sprite normalSaveButton_Sprite;
+    public Sprite hoverSaveButton_Sprite;
+
+    public Sprite normalClearButton_Sprite;
+    public Sprite hoverClearButton_Sprite;
 
     private Color normalColor = ColorsPalette.ButtonsColors.normalColor;
     private Color hoverColor = ColorsPalette.ButtonsColors.hoverColor;
@@ -21,12 +29,33 @@ public class SettingsButtonsController : MonoBehaviour
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
+
+    private void Start()
+    {
+        if(audioManager == null)
+            Debug.Log("Audio manager not found");
+        if (saveSystem == null)
+            Debug.Log("Save system not found");
+        
+        if (SceneManager.GetActiveScene().name == "GameScene")
+        {
+            if (clearHistoryButton != null)
+                clearHistoryButton.gameObject.SetActive(false);
+
+            if (clearHistoryText != null)
+                clearHistoryText.gameObject.SetActive(false);
+        }
+    }
+
     private void OnEnable()
     {
         if (saveButton != null)
         {
-            saveButton.sprite = normal_Sprite;
+            saveButton.sprite = normalSaveButton_Sprite;
             saveText.color = normalColor;
+
+            //clearHistoryButton.sprite = normalSaveButton_Sprite;
+            //clearHistoryText.color = normalColor;
         }
     }
 
@@ -34,7 +63,7 @@ public class SettingsButtonsController : MonoBehaviour
     {
         if (saveButton != null)
         {
-            saveButton.sprite = hover_Sprite;
+            saveButton.sprite = hoverSaveButton_Sprite;
             audioManager.PlaySFX(audioManager.buttonHover);
         }
             
@@ -44,12 +73,38 @@ public class SettingsButtonsController : MonoBehaviour
     public void OnSaveButtonExit()
     {
         if (saveButton != null)
-            saveButton.sprite = normal_Sprite;
+            saveButton.sprite = normalSaveButton_Sprite;
         if (saveText != null)
             saveText.color = normalColor;
     }
+
+    public void OnClearHistoryButtonEnter()
+    {
+        if (clearHistoryButton != null)
+        {
+            clearHistoryButton.sprite = hoverClearButton_Sprite;
+            audioManager.PlaySFX(audioManager.buttonHover);
+        }
+
+        if (clearHistoryText != null)
+            clearHistoryText.color = hoverColor;
+    }
+
+    public void OnClearHistoryButtonExit()
+    {
+        if (clearHistoryButton != null)
+            clearHistoryButton.sprite = normalClearButton_Sprite;
+        if (clearHistoryText != null)
+            clearHistoryText.color = normalColor;
+    }
+
     public void ButtonSound()
     {
         audioManager.PlaySFX(audioManager.buttonPressed);
+    }
+
+    public void OnClearHistoryButtonClick()
+    {
+        saveSystem.ClearAllScoreEntries();
     }
 }
