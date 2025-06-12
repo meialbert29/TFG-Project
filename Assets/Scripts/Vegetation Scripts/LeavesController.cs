@@ -115,6 +115,12 @@ public class LeavesController : MonoBehaviour
                     _target_BottomColor = _neutral_BottomColor;
                     _target_TrunkColor = _trunk_NeutralColor;
                 }
+                else if(_moodType == "anxious")
+                {
+                    _target_TopColor = _neutral_TopColor;
+                    _target_BottomColor = _neutral_BottomColor;
+                    _target_TrunkColor = _trunk_NeutralColor;
+                }
 
                 // Guardamos el estado actual como punto de partida
                 _start_TopColor = _lod1_Mat.GetColor("_TopColor");

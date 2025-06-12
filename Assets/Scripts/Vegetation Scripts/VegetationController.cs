@@ -9,7 +9,7 @@ public class VegetationController : MonoBehaviour
 {
     private Renderer vegetationRenderer;
     [SerializeField] private ExampleFloatInlet eeg_script;
-    [SerializeField] private VFXController _vfxController;
+    [SerializeField] private LeavesVFXController _vfxController;
     [SerializeField] private LeavesController _leavesController;
     [SerializeField] private GeneralController _generalController;
     [SerializeField] private WavesReader _wavesReader;

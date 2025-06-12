@@ -14,9 +14,10 @@ public static class ColorsPalette
 
     public static class TrunkColors
     {
-        public static readonly Color trunk_StressedColor = new Color(0f, 0f, 0f, 1f);
+        public static readonly Color trunk_AnxiousColor = new Color(0f, 0f, 0f, 1f);
         public static readonly Color trunk_NeutralColor = new Color(0.8396226f, 0.7110994f, 0.5425863f, 1f);
         public static readonly Color trunk_SadColor = new Color(0.3396226f, 0.2771448f, 0.2771448f, 1f);
+        public static readonly Color trunk_StressedColor = new Color(0.3207547f, 0.3118332f, 0.2920078f, 1f);
     }
 
     public static class LeavesVFXColors
@@ -33,13 +34,13 @@ public static class ColorsPalette
         public static readonly Color stressed_Key2 = new Color(0.01014595f, 0.01096753f, 0.01886791f, 1f);
         public static readonly Color stressed_KeyBlend0 = new Color(0.01161224f, 0.01298303f, 0.02121901f, 1f);
         public static readonly Color stressed_KeyBlend1 = new Color(0.08176088f, 0.08176088f, 0.08176088f, 1f);
-        public static readonly Color stressed_KeyBlend2 = new Color(0.1301365f, 0.1301365f, 0.1328684f);
+        public static readonly Color stressed_KeyBlend2 = new Color(0.1301365f, 0.1301365f, 0.1328684f, 1f);
 
         public static readonly Color sad_Key0 = new Color(0.1635219f, 0.02678018f, 0, 1f);
         public static readonly Color sad_Key1 = new Color(0.2578616f, 0.04968183f, 0f, 1f);
         public static readonly Color sad_Key2 = new Color(0.4784314f, 0.2680945f, 0.08235293f, 1f);
         public static readonly Color sad_KeyBlend1 = new Color(0.4901961f, 0.2157505f, 0f, 1f);
-        public static readonly Color sad_KeyBlend2 = new Color(0.4823529f, 0.3290052f, 0.1333334f);
+        public static readonly Color sad_KeyBlend2 = new Color(0.4823529f, 0.3290052f, 0.1333334f, 1f);
 
         public static readonly Color calm_Key0 = new Color(0.7058824f, 0.6392202f, 0.2117647f, 1f);
         public static readonly Color calm_Key1 = new Color(0.4501218f, 0.5843138f, 0.2196078f, 1f);
@@ -47,6 +48,14 @@ public static class ColorsPalette
         public static readonly Color calm_KeyBlend0 = new Color(0.1700774f, 0.02f, 0.06666668f, 1f);
         public static readonly Color calm_KeyBlend1 = new Color(0.1700774f, 0.02f, 0.06666668f, 1f);
         public static readonly Color calm_KeyBlend2 = new Color(0.1700774f, 0.02f, 0.06666668f, 1f);
+
+        public static readonly Color anxious_Key0 = new Color(0.0754717f, 0.03239587f, 0.03471738f, 1f);
+        public static readonly Color anxious_Key1 = new Color(0.0471698f, 0.01357244f, 0.01662675f, 1f);
+        public static readonly Color anxious_Key2 = new Color(0.01014595f, 0.01096753f, 0.01886791f, 1f);
+
+        public static readonly Color anxious_KeyBlend0 = new Color(0.02028856f, 0.01161224f, 0.01850022f, 1f);
+        public static readonly Color anxious_KeyBlend1 = new Color(0.0471698f, 0.0471698f, 0.0471698f, 1f);
+        public static readonly Color anxious_KeyBlend2 = new Color(0.1301365f, 0.1301365f, 0.1328684f, 1f);
     }
 
     public static class CloudsColors

@@ -195,21 +195,22 @@ public class CloudsController : MonoBehaviour
     }
 
     private void ChangeCloudsSettings(string mood)
-    {   
+    {
         switch (mood)
         {
             case "neutral":
-                target_NoiseEdge1 = _noiseEdge1;
-                target_NoiseEdge2 = _noiseEdge2;
                 target_NoiseScale = _noiseScale;
-                target_NoisePower = _noisePower;    
                 target_NoiseRemap = _noiseRemap;
-                target_BaseScale = _baseScale;
-                target_BaseSpeed = _baseSpeed;
-                target_FresnelOpacity = _fresnelOpacity;
+                target_NoisePower = _noisePower;
                 target_FresnelPower = _fresnelPower;
                 target_FadeDepth = _fadeDepth;
-                target_CloudSpeed = _cloudsSpeed;
+                target_NoiseEdge1 = _noiseEdge1;
+                target_NoiseEdge2 = _noiseEdge2;
+
+                target_NoiseRemap.w = 5f;
+                target_BaseScale = 0.07f;
+                target_BaseStrength = -0.12f;
+                target_FresnelOpacity = 0.44f;
                 target_Valley = _valleyColor;
                 target_Peak = _peakColor;
                 break;
@@ -228,12 +229,9 @@ public class CloudsController : MonoBehaviour
                 target_NoiseRemap = _noiseRemap;
                 target_BaseScale = _baseScale;
                 target_BaseSpeed = _baseSpeed;
-
-
                 break;
 
             case "stressed":
-
                 target_NoiseRemap = _noiseRemap;
                 target_NoiseScale = 0.68f;
                 target_NoiseEdge1 = 0.96f;
@@ -258,18 +256,18 @@ public class CloudsController : MonoBehaviour
                 break;
 
             case "calm":
-                target_NoiseScale = _noiseScale;
-                target_NoiseRemap = _noiseRemap;
-                target_NoisePower = _noisePower;
-                target_FresnelPower = _fresnelPower;
-                target_FadeDepth = _fadeDepth;
+
                 target_NoiseEdge1 = _noiseEdge1;
                 target_NoiseEdge2 = _noiseEdge2;
-
-                target_NoiseRemap.w = 5f;
-                target_BaseScale = 0.07f;
-                target_BaseStrength = -0.12f;
-                target_FresnelOpacity = 0.44f;
+                target_NoiseScale = _noiseScale;
+                target_NoisePower = _noisePower;
+                target_NoiseRemap = _noiseRemap;
+                target_BaseScale = _baseScale;
+                target_BaseSpeed = _baseSpeed;
+                target_FresnelOpacity = _fresnelOpacity;
+                target_FresnelPower = _fresnelPower;
+                target_FadeDepth = _fadeDepth;
+                target_CloudSpeed = _cloudsSpeed;
                 target_Valley = _valleyColor;
                 target_Peak = _peakColor;
 
@@ -354,4 +352,14 @@ public class CloudsController : MonoBehaviour
         cloudsMaterial.SetColor("_ColorValley", _current_ValleyColor);
         cloudsMaterial.SetColor("_ColorPeak", _current_PeakColor);
     }
+
+    public void UpdateWind(float speed, Vector3 targetRotateProjection)
+    {
+        // (1, 1, 0) -> -x
+        // (1, 0, 0) -> -z
+        // (0, 1, 1) -> z
+
+        cloudsMaterial.SetVector("_RotateProjection", targetRotateProjection);
+    }
+
 }

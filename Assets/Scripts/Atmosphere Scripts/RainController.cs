@@ -3,16 +3,16 @@ using UnityEngine;
 public class RainController : MonoBehaviour
 {
     private ParticleSystem _rain;
-    private CloudsController _cc;
-    public GeneralController _gc;
+    private CloudsController _cloudsController;
+    public GeneralController _generalController;
 
     void Start()
     {
         _rain = GetComponent<ParticleSystem>();
-        _cc = FindAnyObjectByType<CloudsController>();
+        _cloudsController = FindAnyObjectByType<CloudsController>();
         //_gc = FindAnyObjectByType<GeneralController>();
 
-        if( _rain == null || _cc == null || _gc == null)
+        if( _rain == null || _cloudsController == null || _generalController == null)
         {
             Debug.Log("Error in Rain Controller");
             return;
@@ -70,5 +70,18 @@ public class RainController : MonoBehaviour
 
         emission.rateOverTime = new ParticleSystem.MinMaxCurve(rateOverTime);
         main.maxParticles = maxParticles;
+
+        UpdateWind(_generalController.WindSpeed, _generalController.WindDirection);
     }
+
+    public void UpdateWind(float speed, Vector3 direction)
+    {
+        var forceOverLifetime = _rain.forceOverLifetime;
+        forceOverLifetime.enabled = true;
+
+        forceOverLifetime.x = new ParticleSystem.MinMaxCurve(direction.x * speed);
+        forceOverLifetime.y = new ParticleSystem.MinMaxCurve(direction.y * speed);
+        forceOverLifetime.z = new ParticleSystem.MinMaxCurve(direction.z * speed);
+    }
+
 }

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class VFXController : MonoBehaviour
+public class LeavesVFXController : MonoBehaviour
 {
     [SerializeField] private VisualEffect _vfx;
     [SerializeField] private VegetationController _vegetationController;
@@ -39,11 +39,30 @@ public class VFXController : MonoBehaviour
     private Color _sad_KeyBlend1 = ColorsPalette.LeavesVFXColors.sad_KeyBlend1;
     private Color _sad_KeyBlend2 = ColorsPalette.LeavesVFXColors.sad_KeyBlend2;
 
+    private Color calm_Key0 = ColorsPalette.LeavesVFXColors.calm_Key0;
+    private Color calm_Key1 = ColorsPalette.LeavesVFXColors.calm_Key1;
+    private Color calm_Key2 = ColorsPalette.LeavesVFXColors.calm_Key2;
+    private Color calm_KeyBlend0 = ColorsPalette.LeavesVFXColors.calm_KeyBlend0;
+    private Color calm_KeyBlend1 = ColorsPalette.LeavesVFXColors.calm_KeyBlend1;
+    private Color calm_KeyBlend2 = ColorsPalette.LeavesVFXColors.calm_KeyBlend2;
+
+    private Color anxious_Key0 = ColorsPalette.LeavesVFXColors.anxious_Key0;
+    private Color anxious_Key1 = ColorsPalette.LeavesVFXColors.anxious_Key1;
+    private Color anxious_Key2 = ColorsPalette.LeavesVFXColors.anxious_Key2;
+    private Color anxious_KeyBlend0 = ColorsPalette.LeavesVFXColors.anxious_KeyBlend0;
+    private Color anxious_KeyBlend1 = ColorsPalette.LeavesVFXColors.anxious_KeyBlend1;
+    private Color anxious_KeyBlend2 = ColorsPalette.LeavesVFXColors.anxious_KeyBlend2;
+
     private string moodType;
     private string previousMoodType;
 
     GradientColorKey[] keys;
     GradientColorKey[] keysBlend;
+
+    private float _current_windSpeed;
+    private Vector3 _current_windDirection;
+    private float target_windSpeed;
+    private Vector3 target_windDirection;
 
     // getters & setters
     public bool Fall { get { return fall; } set { fall = value; } }
@@ -107,6 +126,10 @@ public class VFXController : MonoBehaviour
 
         keys = _leavesGradient.colorKeys;
         keysBlend = _blendGradient.colorKeys;
+
+        // set neutral leaves settings
+        _current_windDirection = _vfx.GetVector3("WindDirection");
+        _current_windSpeed = _vfx.GetFloat("WindSpeed");
     }
     void Update()
     {
@@ -141,6 +164,8 @@ public class VFXController : MonoBehaviour
                 targetKeyBlend0 = _sad_Key0;
                 targetKeyBlend1 = _sad_KeyBlend1;
                 targetKeyBlend2 = _sad_KeyBlend2;
+
+                //target_windSpeed = 0.74f;
             }
             else if (moodType == "neutral")
             {
@@ -151,6 +176,8 @@ public class VFXController : MonoBehaviour
                 targetKeyBlend0 = _neutral_KeyBlend0;
                 targetKeyBlend1 = _neutral_KeyBlend1;
                 targetKeyBlend2 = _neutral_KeyBlend2;
+
+                //target_windSpeed = 0.5f;
             }
             else if (moodType == "stressed")
             {
@@ -161,18 +188,35 @@ public class VFXController : MonoBehaviour
                 targetKeyBlend0 = _stressed_KeyBlend0;
                 targetKeyBlend1 = _stressed_KeyBlend1;
                 targetKeyBlend2 = _stressed_KeyBlend2;
+
+                //target_windDirection.y = _generalController.WindDirection.y * -2;
             }
             else if(moodType == "calm")
             {
-                targetKey0 = _neutral_Key0;
-                targetKey1 = _neutral_Key1;
-                targetKey2 = _neutral_Key2;
+                targetKey0 = calm_Key0;
+                targetKey1 = calm_Key1;
+                targetKey2 = calm_Key2;
 
-                targetKeyBlend0 = _neutral_KeyBlend0;
-                targetKeyBlend1 = _neutral_KeyBlend1;
-                targetKeyBlend2 = _neutral_KeyBlend2;
+                targetKeyBlend0 = calm_KeyBlend0;
+                targetKeyBlend1 = calm_KeyBlend1;
+                targetKeyBlend2 = calm_KeyBlend2;
+
+                //target_windSpeed = 0.5f;
+            }
+            else if(moodType == "anxious")
+            {
+                targetKey0 = anxious_Key0;
+                targetKey1 = anxious_Key1;
+                targetKey2 = anxious_Key2;
+
+                targetKeyBlend0 = anxious_KeyBlend0;
+                targetKeyBlend1 = anxious_KeyBlend1;
+                targetKeyBlend2 = anxious_KeyBlend2;
+
+               // target_windDirection.y = _generalController.WindDirection.y * 2;
             }
 
+            ApplyWindDirection();
             BlendColorGradientTransition(keysBlend, t);
             LeavesColorGradientTransition(keys, t);
         }
@@ -213,7 +257,8 @@ public class VFXController : MonoBehaviour
         moodIndex = moodType == "neutral" ? 0 :
                     moodType == "calm" ? 0 :
                     moodType == "sad" ? 1 :
-                    moodType == "stressed" ? 2 : -1;
+                    moodType == "stressed" ? 2 :
+                    moodType == "anxious" ? 2 : -1;
 
         _vfx.SetInt("MoodIndex", moodIndex);
     }
@@ -234,5 +279,15 @@ public class VFXController : MonoBehaviour
         keysBlend[keysBlend.Length - 1].color = Color.Lerp(startKeyBlend2, targetKeyBlend2, t);
         _blendGradient.colorKeys = keysBlend;
         _vfx.SetGradient("Blend Gradient", _blendGradient);
+    }
+
+    private void ApplyWindDirection()
+    {
+        _vfx.SetVector3("WindDirection", target_windDirection);
+    }
+
+    public void SetWind(Vector3 direction, float speed)
+    {
+        _vfx.SetVector3("WindDirection", direction);
     }
 }

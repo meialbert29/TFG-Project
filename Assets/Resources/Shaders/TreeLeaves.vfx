@@ -16395,7 +16395,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Vector, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"vector":{"x":0.0,"y":-1.5,"z":0.0}}'
+      m_SerializableObject: '{"vector":{"x":0.0,"y":-1.0,"z":0.0}}'
     m_Space: 0
   m_Property:
     name: Force
@@ -18345,7 +18345,7 @@ MonoBehaviour:
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
   m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
+  m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots: []
   m_OutputSlots:
@@ -27424,7 +27424,7 @@ MonoBehaviour:
       inputSlot: {fileID: 8926484042661617017}
     - outputSlot: {fileID: 8926484042661617000}
       inputSlot: {fileID: 8926484042661617277}
-    position: {x: -1784, y: 4433}
+    position: {x: -1812, y: 4475}
     expandedSlots: []
     expanded: 1
     supecollapsed: 0
@@ -28912,7 +28912,7 @@ MonoBehaviour:
   m_Children:
   - {fileID: 8926484042661617057}
   m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
+  m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_MasterSlot: {fileID: 8926484042661617056}
   m_MasterData:
@@ -28921,7 +28921,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Vector, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"vector":{"x":0.0,"y":-1.5,"z":0.0}}'
+      m_SerializableObject: '{"vector":{"x":0.0,"y":-10.0,"z":0.0}}'
     m_Space: 0
   m_Property:
     name: Force
@@ -28949,7 +28949,7 @@ MonoBehaviour:
   - {fileID: 8926484042661617059}
   - {fileID: 8926484042661617060}
   m_UIPosition: {x: 0, y: 0}
-  m_UICollapsed: 1
+  m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_MasterSlot: {fileID: 8926484042661617056}
   m_MasterData:
