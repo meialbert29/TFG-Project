@@ -71,7 +71,7 @@ public class RainController : MonoBehaviour
         emission.rateOverTime = new ParticleSystem.MinMaxCurve(rateOverTime);
         main.maxParticles = maxParticles;
 
-        UpdateWind(_generalController.WindSpeed, _generalController.WindDirection);
+        //UpdateWind(_generalController.WindSpeed, _generalController.WindDirection);
     }
 
     public void UpdateWind(float speed, Vector3 direction)

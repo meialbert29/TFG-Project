@@ -98,10 +98,10 @@ public class GeneralController : MonoBehaviour
             cont = 0;
             moodChanging = true;
 
-            windSpeed = Random.Range(0.3f, 1.5f);
-            windDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
+            //windSpeed = Random.Range(0.3f, 1.5f);
+            //windDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
 
-            ApplyWind();
+            //ApplyWind();
         }
     }
 
