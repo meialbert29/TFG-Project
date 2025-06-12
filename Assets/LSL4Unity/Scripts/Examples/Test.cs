@@ -1,4 +1,4 @@
-ï»¿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Linq;
 using Assets.LSL4Unity.Scripts.AbstractInlets;
@@ -15,9 +15,9 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
         public string lastSample = String.Empty;
         public int samplingRate = 256; // Frecuencia de muestreo
-        private int bufferSize = 256; // NÃºmero de muestras para FFT
+        private int bufferSize = 256; // Número de muestras para FFT
         private Queue<float> eegBuffer = new Queue<float>(); // Buffer de muestras EEG
-        public Renderer targetObjectRenderer; // Objeto que cambiarÃ¡ de color
+        public Renderer targetObjectRenderer; // Objeto que cambiará de color
 
         public string waveType;
         public float dominantFrequency;
@@ -28,10 +28,10 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
         private double actualScore = 0;
 
-        private Queue<string> waveBuffer = new Queue<string>(); // Almacena las Ãºltimas 5 ondas
-        public string lastWaveType = ""; // Ãšltima onda registrada
+        private Queue<string> waveBuffer = new Queue<string>(); // Almacena las últimas 5 ondas
+        public string lastWaveType = ""; // Última onda registrada
         private bool waveChanged = false; // Indica si ha habido un cambio de onda
-        private float timeSinceLastScore = 0f; // Tiempo desde la Ãºltima puntuaciÃ³n
+        private float timeSinceLastScore = 0f; // Tiempo desde la última puntuación
         private float scoreInterval = 10f; // Intervalo de tiempo para sumar puntos
         private int points = 0;
 
@@ -41,34 +41,24 @@ namespace Assets.LSL4Unity.Scripts.Examples
         {
             eegBuffer.Enqueue(newSample[0]); // Usamos el primer canal
             if (eegBuffer.Count > bufferSize)
-                eegBuffer.Dequeue(); // Mantener el buffer con tamaÃ±o adecuado
+                eegBuffer.Dequeue(); // Mantener el buffer con tamaño adecuado
 
             if (eegBuffer.Count == bufferSize)
             {
                 dominantFrequency = AnalyzeEEG(eegBuffer.ToArray());
                 waveType = ClassifyBrainWave(dominantFrequency);
-                //Dictionary<string, float> waveMagnitudes = GetWaveMagnitudes(eegBuffer.ToArray());
-
-                // Calcular puntuaciÃ³n de concentraciÃ³n
-                //double concentrationScore = CalculateConcentrationScore(
-                //    waveMagnitudes["Delta"],
-                //    waveMagnitudes["Theta"],
-                //    waveMagnitudes["Alpha"],
-                //    waveMagnitudes["Beta"],
-                //    waveMagnitudes["Gamma"]
-                //);
 
                 // Agregar la onda detectada al buffer
                 waveBuffer.Enqueue(waveType);
                 if (waveBuffer.Count > 5)
-                    waveBuffer.Dequeue(); // Mantener solo las Ãºltimas 5 ondas
+                    waveBuffer.Dequeue(); // Mantener solo las últimas 5 ondas
 
-                // Evaluar consistencia de ondas en las Ãºltimas 5 muestras
+                // Evaluar consistencia de ondas en las últimas 5 muestras
                 bool consistent = waveBuffer.All(w => w == waveType);
 
                 if (consistent)
                 {
-                    
+
                     if (waveType != lastWaveType)
                     {
                         scoreSystem.pointsEarnedText.enabled = false;
@@ -84,7 +74,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
                         {
                             scoreSystem.pointsEarnedText.enabled = true;
                             scoreSystem.PointsEarned = 1;
-                            scoreSystem.Score += points; // Si cambia de onda y se mantiene, sumar mÃ¡s puntos
+                            scoreSystem.Score += points; // Si cambia de onda y se mantiene, sumar más puntos
 
                         }
                         waveChanged = true;
@@ -109,11 +99,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
                     timeSinceLastScore = 0f; // Reiniciar el contador si hay inestabilidad
                 }
 
-                lastWaveType = waveType; // Actualizar Ãºltima onda detectada
-
-                //Debug.Log($"Got {newSample.Length} samples at {timeStamp}, " +
-                //          $"Dominant Frequency: {dominantFrequency} Hz, Wave Type: {waveType}, " +
-                //          $"Score: {actualScore}");
+                lastWaveType = waveType; // Actualizar última onda detectada
 
                 ChangeObjectColor(waveType);
                 showState(waveType, dominantFrequency);

@@ -58,6 +58,8 @@ public class CloudsController : MonoBehaviour
     private Color stressedValley = ColorsPalette.CloudsColors.stressedValley;
     private Color stressedPeak = ColorsPalette.CloudsColors.stressedPeak;
 
+    private Color anxiousValley = ColorsPalette.CloudsColors.anxiousValley;
+    private Color anxiousPeak = ColorsPalette.CloudsColors.anxiousPeak;
 
     // time variables
     private float _transitionProgress;
@@ -231,12 +233,21 @@ public class CloudsController : MonoBehaviour
                 break;
 
             case "stressed":
+
+                target_NoiseRemap = _noiseRemap;
                 target_NoiseScale = 0.68f;
-                target_CloudSpeed = 5.44f;
                 target_NoiseEdge1 = 0.96f;
+                target_NoiseEdge2 = 0f;
                 target_NoiseRemap.x = -0.12f;
                 target_NoiseEdge1 = 0.01f;
-                target_NoiseEdge2 = 0f;
+
+                target_FresnelOpacity = _fresnelOpacity;
+                target_FresnelPower = _fresnelPower;
+                target_FadeDepth = _fadeDepth;
+
+                target_CloudSpeed = 5.44f;
+
+
                 target_NoisePower = 0.73f;
                 target_BaseScale = -0.23f;
                 target_BaseSpeed = 10f;
@@ -250,17 +261,38 @@ public class CloudsController : MonoBehaviour
                 target_NoiseScale = _noiseScale;
                 target_NoiseRemap = _noiseRemap;
                 target_NoisePower = _noisePower;
-                target_NoiseRemap.w = 5f;
                 target_FresnelPower = _fresnelPower;
                 target_FadeDepth = _fadeDepth;
-
                 target_NoiseEdge1 = _noiseEdge1;
                 target_NoiseEdge2 = _noiseEdge2;
+
+                target_NoiseRemap.w = 5f;
                 target_BaseScale = 0.07f;
                 target_BaseStrength = -0.12f;
                 target_FresnelOpacity = 0.44f;
                 target_Valley = _valleyColor;
                 target_Peak = _peakColor;
+
+                break;
+
+            case "anxious":
+                target_BaseStrength = _baseStrength;
+                target_NoiseRemap = _noiseRemap;
+
+                target_NoiseScale = -0.21f;
+                target_CloudSpeed = 20f;
+                target_NoiseRemap.y = 1.49f;
+                target_NoiseRemap.z = -1.7f;
+                target_NoiseEdge1 = 0.57f;
+                target_NoiseEdge2 = 0.73f;
+                target_BaseScale = -0.12f;
+                target_BaseSpeed = 0.49f;
+
+                target_FresnelPower = 34.8f;
+                target_FresnelOpacity = 0.46f;
+                target_FadeDepth = 72.5f;
+                target_Valley = anxiousValley;
+                target_Peak = anxiousPeak;
 
                 break;
             

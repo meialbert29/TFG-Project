@@ -53,11 +53,11 @@ Material:
     - _EmissionStrength: 2
     - _FadeDepth: 100
     - _FresnelOpacity: 1.8
-    - _FresnelPower: 12.5
-    - _NoiseEdge1: 0.45
-    - _NoiseEdge2: 0.86
+    - _FresnelPower: 12.72
+    - _NoiseEdge1: 0.94
+    - _NoiseEdge2: 0.66
     - _NoiseHeight: 0.96
-    - _NoisePower: 0.73
+    - _NoisePower: 0.36
     - _NoiseScale: 0.6
     - _QueueControl: 0
     - _QueueOffset: -1
@@ -67,9 +67,9 @@ Material:
     - _ZWrite: 0
     - _ZWriteControl: 0
     m_Colors:
-    - _ColorPeak: {r: 0.63243145, g: 0.8093417, b: 0.9622642, a: 1}
-    - _ColorValley: {r: 0.9276729, g: 0.9979909, b: 1, a: 1}
-    - _NoiseRemap: {r: -0.31, g: 0.62, b: -1, a: 1}
+    - _ColorPeak: {r: 0.6313726, g: 0.8078432, b: 0.9607844, a: 1}
+    - _ColorValley: {r: 0.9294118, g: 0.9960785, b: 1, a: 1}
+    - _NoiseRemap: {r: -0.31, g: 1, b: -1, a: 1}
     - _RotateProjection: {r: 1, g: 0, b: 0, a: 90}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

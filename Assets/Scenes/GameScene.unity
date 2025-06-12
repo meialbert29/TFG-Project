@@ -1401,6 +1401,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fc798f839f16e164bb4d800e08659b9d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: fc798f839f16e164bb4d800e08659b9d, type: 3}
       propertyPath: m_Controller
       value: 
@@ -2666,7 +2670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &556560829
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12155,7 +12159,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2068343182}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da38a6a9335e8e48af8b17d9c369265, type: 3}
+  m_Script: {fileID: 11500000, guid: e3005d9e00aa9ff49bb031682cbaed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moment: 0
@@ -13344,6 +13348,10 @@ PrefabInstance:
     - target: {fileID: 5757769693513246508, guid: 481c23496fcccfa4bb183d7d45c64cb1, type: 3}
       propertyPath: m_Name
       value: GrassPlant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5757769693513246508, guid: 481c23496fcccfa4bb183d7d45c64cb1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

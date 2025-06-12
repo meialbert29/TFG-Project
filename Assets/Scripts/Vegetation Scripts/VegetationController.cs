@@ -140,10 +140,6 @@ public class VegetationController : MonoBehaviour
     //    }
     //}
 
-    private string GetCurrentWave()
-    {
-        return eeg_script.lastWaveType;
-    }
 
     public void LoadTargetMesh(string wave)
     {

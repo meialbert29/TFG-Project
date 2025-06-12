@@ -56,6 +56,9 @@ public static class ColorsPalette
 
         public static readonly Color stressedValley = new Color(0.3679245f, 0.3679245f, 0.3679245f, 1f);
         public static readonly Color stressedPeak = new Color(0.4909666f, 0.5261293f, 0.5566037f, 1f);
+
+        public static readonly Color anxiousValley = new Color(0.1834727f, 0.2329639f, 0.2924528f, 1f);
+        public static readonly Color anxiousPeak = new Color(0.04846029f, 0.134976f, 0.3113208f, 1f);
     }
 
     public static class LogosColors
