@@ -216,7 +216,6 @@ public class LeavesVFXController : MonoBehaviour
                // target_windDirection.y = _generalController.WindDirection.y * 2;
             }
 
-            ApplyWindDirection();
             BlendColorGradientTransition(keysBlend, t);
             LeavesColorGradientTransition(keys, t);
         }
@@ -280,14 +279,9 @@ public class LeavesVFXController : MonoBehaviour
         _blendGradient.colorKeys = keysBlend;
         _vfx.SetGradient("Blend Gradient", _blendGradient);
     }
-
-    private void ApplyWindDirection()
-    {
-        _vfx.SetVector3("WindDirection", target_windDirection);
-    }
-
-    public void SetWind(Vector3 direction, float speed)
+    public void UpdateWind(Vector3 direction, float speed)
     {
         _vfx.SetVector3("WindDirection", direction);
+        _vfx.SetFloat("WindSpeed", speed);
     }
 }

@@ -61,7 +61,7 @@ Material:
     - _UseTerrainColor: 1
     - _WindHeight: 0.5
     - _WindIntensity: 0.2
-    - _WindNoiseSpeed: 1
+    - _WindNoiseSpeed: 0.2
     - _WindSpeed: 0.1
     m_Colors:
     - _BottomColor: {r: 0.08235294, g: 0.5803922, b: 0.38431376, a: 1}

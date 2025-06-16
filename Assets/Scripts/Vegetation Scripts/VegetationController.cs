@@ -111,36 +111,6 @@ public class VegetationController : MonoBehaviour
         }
     }
 
-    //private void HandleWaveConsistency()
-    //{
-    //    string newWave = GetCurrentWave();
-
-    //    if (newWave == _currentWave)
-    //    {
-    //        waveConsistencyTimer += Time.deltaTime;
-
-    //        if (waveConsistencyTimer >= waveConsistencyDuration && !isWaveConsistent)
-    //        {
-    //            isWaveConsistent = true;
-
-    //            if (newWave != lastWaveThatTriggeredMorph)
-    //            {
-    //                Debug.Log("Wave consistent and different from last morph: " + newWave);
-    //                lastWaveThatTriggeredMorph = newWave;
-    //                _generalController.MoodChanging = true;
-    //            }
-    //        }
-    //    }
-    //    else
-    //    {
-    //        waveConsistencyTimer = 0f;
-    //        isWaveConsistent = false;
-    //        _currentWave = newWave;
-    //        LoadTargetMesh(_currentWave);
-    //    }
-    //}
-
-
     public void LoadTargetMesh(string wave)
     {
         switch (wave)
@@ -294,10 +264,5 @@ public class VegetationController : MonoBehaviour
     public float GetTransitionProgress()
     {
         return _transitionProgress;
-    }
-
-    public bool getMorphingState()
-    {
-        return _isMorphing;
     }
 }

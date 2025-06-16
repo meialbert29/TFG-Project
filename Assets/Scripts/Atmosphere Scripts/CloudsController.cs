@@ -228,7 +228,7 @@ public class CloudsController : MonoBehaviour
                 target_CloudSpeed = _cloudsSpeed;
                 target_NoiseRemap = _noiseRemap;
                 target_BaseScale = _baseScale;
-                target_BaseSpeed = _baseSpeed;
+                target_BaseSpeed = 7f;
                 break;
 
             case "stressed":
@@ -256,7 +256,6 @@ public class CloudsController : MonoBehaviour
                 break;
 
             case "calm":
-
                 target_NoiseEdge1 = _noiseEdge1;
                 target_NoiseEdge2 = _noiseEdge2;
                 target_NoiseScale = _noiseScale;
@@ -353,11 +352,13 @@ public class CloudsController : MonoBehaviour
         cloudsMaterial.SetColor("_ColorPeak", _current_PeakColor);
     }
 
-    public void UpdateWind(float speed, Vector3 targetRotateProjection)
+    public void UpdateWind(float speed, Vector4 targetRotateProjection)
     {
         // (1, 1, 0) -> -x
         // (1, 0, 0) -> -z
         // (0, 1, 1) -> z
+
+        targetRotateProjection.x *= speed;
 
         cloudsMaterial.SetVector("_RotateProjection", targetRotateProjection);
     }

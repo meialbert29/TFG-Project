@@ -24,10 +24,6 @@ public class RainController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (_cc.skyIsChanging())
-        //{
-        //    rainStart();
-        //}
 
     }
 
@@ -70,8 +66,6 @@ public class RainController : MonoBehaviour
 
         emission.rateOverTime = new ParticleSystem.MinMaxCurve(rateOverTime);
         main.maxParticles = maxParticles;
-
-        //UpdateWind(_generalController.WindSpeed, _generalController.WindDirection);
     }
 
     public void UpdateWind(float speed, Vector3 direction)
@@ -79,9 +73,17 @@ public class RainController : MonoBehaviour
         var forceOverLifetime = _rain.forceOverLifetime;
         forceOverLifetime.enabled = true;
 
-        forceOverLifetime.x = new ParticleSystem.MinMaxCurve(direction.x * speed);
+        if(direction.x < 0)
+            forceOverLifetime.x = new ParticleSystem.MinMaxCurve(-direction.x * speed);
+        else
+            forceOverLifetime.x = new ParticleSystem.MinMaxCurve(-direction.x * speed);
+
         forceOverLifetime.y = new ParticleSystem.MinMaxCurve(direction.y * speed);
-        forceOverLifetime.z = new ParticleSystem.MinMaxCurve(direction.z * speed);
+
+        if(direction.z < 0)
+            forceOverLifetime.z = new ParticleSystem.MinMaxCurve(direction.z * speed);
+        else
+            forceOverLifetime.z = new ParticleSystem.MinMaxCurve(direction.z * speed);
     }
 
 }

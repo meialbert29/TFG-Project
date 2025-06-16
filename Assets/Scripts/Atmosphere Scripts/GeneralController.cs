@@ -3,16 +3,31 @@ using Assets.LSL4Unity.Scripts.Examples;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class GeneralController : MonoBehaviour
 {
+    public struct WindData
+    {
+        public Vector3 direction;
+        public float speed;
+
+        public Vector4 TransformToRotateProjection()
+        {
+            return new Vector4(direction.x, 0f, 0f, 90);
+        }
+    }
+
     private CloudsController _cloudsController;
     private RainController _rainController;
     public List<VegetationController> treesList = new List<VegetationController>();
     private ExampleFloatInlet eeg_script;
 
+    public int cont = 0;
+
+    public GameObject pausedUI;
+
     // global wind variables
-    float windSpeed;
-    Vector3 windDirection;
+    private WindData globalWind;  
 
     // state variables
     private string _mood = "neutral";
@@ -23,17 +38,7 @@ public class GeneralController : MonoBehaviour
     public bool MoodChanging { get { return moodChanging; } set { moodChanging = value; } }
     public List<VegetationController> TreesList { get { return treesList;} }
 
-    public int cont = 0;
-
-    public GameObject pausedUI;
-
-    private float randomSpeed;
-    private Vector3 randomDirection;
-
-    // getters & setters
-    // global wind variables
-    public float WindSpeed { get; private set; }
-    public Vector3 WindDirection { get; private set; }
+    public WindData GlobalWind { get { return globalWind; } }
 
     private void Awake()
     {
@@ -47,8 +52,8 @@ public class GeneralController : MonoBehaviour
 
     private void Start()
     {
-        windSpeed = 0.5f;
-        windDirection = new Vector3(0.5f, 0, 0.5f);
+        globalWind.speed = 0.5f;
+        globalWind.direction = new Vector3(0.5f, 0, 0.5f);
     }
 
     // Update is called once per frame
@@ -98,10 +103,10 @@ public class GeneralController : MonoBehaviour
             cont = 0;
             moodChanging = true;
 
-            //windSpeed = Random.Range(0.3f, 1.5f);
-            //windDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
+            globalWind.speed = Random.Range(0.3f, 1.5f);
+            globalWind.direction = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
 
-            //ApplyWind();
+            ApplyWind();
         }
     }
 
@@ -113,16 +118,23 @@ public class GeneralController : MonoBehaviour
 
     private void ApplyWind()
     {
-        _rainController.UpdateWind(windSpeed, windDirection);
-        _cloudsController.UpdateWind(windSpeed, windDirection);
+        _rainController.UpdateWind(globalWind.speed, globalWind.direction);
+
+        Vector4 rotateProjection = globalWind.TransformToRotateProjection();
+        _cloudsController.UpdateWind(globalWind.speed, rotateProjection);
 
         foreach (var tree in treesList)
         {
             var leaves = tree.GetComponentInChildren<LeavesVFXController>();
             if (leaves != null)
             {
-                leaves.SetWind(windDirection, windSpeed);
+                Vector3 localDir = Quaternion.Euler(0, Random.Range(-10f, 10f), 0) * globalWind.direction;
+                float localSpeed = globalWind.speed * Random.Range(0.9f, 1.1f);
+
+                leaves.UpdateWind(localDir, localSpeed);
             }
         }
     }
+
+    
 }
