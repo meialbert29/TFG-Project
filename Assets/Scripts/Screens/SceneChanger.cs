@@ -16,4 +16,17 @@ public class SceneChanger : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
     }
+    public void StartManualMode()
+    {
+        Time.timeScale = 1f;
+        PlayerPrefs.SetInt("GameMode", 0); // 0 = manual
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void StartMuseMode()
+    {
+        Time.timeScale = 1f;
+        PlayerPrefs.SetInt("GameMode", 1); // 1 = muse
+        SceneManager.LoadScene("GameScene");
+    }
 }

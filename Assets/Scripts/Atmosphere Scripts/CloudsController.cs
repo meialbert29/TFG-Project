@@ -276,18 +276,20 @@ public class CloudsController : MonoBehaviour
                 target_BaseStrength = _baseStrength;
                 target_NoiseRemap = _noiseRemap;
 
-                target_NoiseScale = -0.21f;
+                target_NoiseScale = 0.04f;
                 target_CloudSpeed = 20f;
                 target_NoiseRemap.y = 1.49f;
                 target_NoiseRemap.z = -1.7f;
                 target_NoiseEdge1 = 0.57f;
-                target_NoiseEdge2 = 0.73f;
-                target_BaseScale = -0.12f;
+                target_NoiseEdge2 = 0.4f;
+                target_NoiseHeight = 0.96f;
+                target_BaseScale = -0.18f;
                 target_BaseSpeed = 0.49f;
 
-                target_FresnelPower = 34.8f;
-                target_FresnelOpacity = 0.46f;
+                target_FresnelPower = 12.72f;
+                target_FresnelOpacity = 0.08f;
                 target_FadeDepth = 72.5f;
+                target_FadeDepth = 56.9f;
                 target_Valley = anxiousValley;
                 target_Peak = anxiousPeak;
 

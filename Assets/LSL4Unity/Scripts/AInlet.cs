@@ -33,7 +33,40 @@ namespace Assets.LSL4Unity.Scripts.AbstractInlets
 
         float[] sample;
 
-        void Start()
+        //void Start()
+        //{
+        //    var expectedStreamHasAName = !StreamName.Equals("");
+        //    var expectedStreamHasAType = !StreamType.Equals("");
+
+        //    if (!expectedStreamHasAName && !expectedStreamHasAType)
+        //    {
+        //        Debug.LogError("Inlet has to specify a name or a type before it is able to lookup a stream.");
+        //        this.enabled = false;
+        //        return;
+        //    }
+
+        //    if (expectedStreamHasAName)
+        //    {
+        //        Debug.Log("Creating LSL resolver for stream " + StreamName);
+
+        //        resolver = new liblsl.ContinuousResolver("name", StreamName);
+        //    }
+        //    else if (expectedStreamHasAType)
+        //    {
+        //        Debug.Log("Creating LSL resolver for stream with type " + StreamType);
+        //        resolver = new liblsl.ContinuousResolver("type ", StreamType);
+        //    }
+
+        //    StartCoroutine(ResolveExpectedStream());
+
+        //    AdditionalStart();
+        //}
+        /// <summary>
+        /// Override this method in the subclass to specify what should happen during Start().
+        /// </summary>
+        /// 
+
+        public void StartMuseConnection()
         {
             var expectedStreamHasAName = !StreamName.Equals("");
             var expectedStreamHasAType = !StreamType.Equals("");
@@ -61,9 +94,7 @@ namespace Assets.LSL4Unity.Scripts.AbstractInlets
 
             AdditionalStart();
         }
-        /// <summary>
-        /// Override this method in the subclass to specify what should happen during Start().
-        /// </summary>
+
         protected virtual void AdditionalStart()
         {
             //By default, do nothing.

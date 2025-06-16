@@ -16,19 +16,16 @@ public class GeneralController : MonoBehaviour
             return new Vector4(direction.x, 0f, 0f, 90);
         }
     }
-
+    private WindData globalWind;
     private CloudsController _cloudsController;
     private RainController _rainController;
     public List<VegetationController> treesList = new List<VegetationController>();
-    private ExampleFloatInlet eeg_script;
-
-    public int cont = 0;
-
+    [SerializeField] private ExampleFloatInlet museController;
+    [SerializeField] private KeyboardInputController keyboardInputController;
+    public List<VegetationController> TreesList { get { return treesList; } }
     public GameObject pausedUI;
 
-    // global wind variables
-    private WindData globalWind;  
-
+    public int cont = 0;
     // state variables
     private string _mood = "neutral";
     private bool moodChanging = false;
@@ -36,8 +33,6 @@ public class GeneralController : MonoBehaviour
     // getters & setters
     public string Mood { get { return _mood; } set { _mood = value; } }
     public bool MoodChanging { get { return moodChanging; } set { moodChanging = value; } }
-    public List<VegetationController> TreesList { get { return treesList;} }
-
     public WindData GlobalWind { get { return globalWind; } }
 
     private void Awake()
@@ -45,7 +40,23 @@ public class GeneralController : MonoBehaviour
         treesList = new List<VegetationController>(FindObjectsByType<VegetationController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None));
         _cloudsController = FindAnyObjectByType<CloudsController>();
         _rainController = FindAnyObjectByType<RainController>();
-        //eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
+
+        int gameMode = PlayerPrefs.GetInt("GameMode", 0);
+
+        if (gameMode == 0)
+        {
+            // Manual mode
+            keyboardInputController.gameObject.SetActive(true);
+
+            museController.gameObject.SetActive(false);
+        }
+        else
+        {
+            // Muse mode
+            keyboardInputController.gameObject.SetActive(false);
+            museController.gameObject.SetActive(true);
+            museController.StartMuseConnection();
+        }
 
         _mood = "neutral";
     }
@@ -59,57 +70,15 @@ public class GeneralController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleInput();
-    }
-
-    // check if any key was pulsed
-    private void HandleInput()
-    {
-        bool keyDown = false;
-
-        if (Input.GetKeyDown(KeyCode.Keypad1))
-        {
-            _mood = "sad";
-            keyDown = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad2))
-        {
-            _mood = "stressed";
-            
-            keyDown = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad3))
-        {
-            _mood = "neutral";
-            keyDown = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad4))
-        {
-            _mood = "calm";
-            keyDown = true;
-        }
-        if (Input.GetKeyDown(KeyCode.Keypad5))
-        {
-            _mood = "anxious";
-            keyDown = true;
-        }
-
-        if (keyDown) // fix to not compare if any key's down
+        if (keyboardInputController != null && keyboardInputController.KeyDown)
         {
             _rainController.RainChangeSettings(_mood);
             cont = 0;
             moodChanging = true;
 
-            globalWind.speed = Random.Range(0.3f, 1.5f);
-            globalWind.direction = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
-
-            ApplyWind();
+            ChangeWindParameters();
         }
     }
-
     public void CheckTreesCount()
     {
         if (cont >= treesList.Count)
@@ -134,6 +103,14 @@ public class GeneralController : MonoBehaviour
                 leaves.UpdateWind(localDir, localSpeed);
             }
         }
+    }
+
+    public void ChangeWindParameters()
+    {
+        globalWind.speed = Random.Range(0.3f, 1.5f);
+        globalWind.direction = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
+
+        ApplyWind();
     }
 
     

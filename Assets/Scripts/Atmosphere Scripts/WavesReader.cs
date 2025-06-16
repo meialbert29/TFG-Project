@@ -55,6 +55,7 @@ public class WavesReader : MonoBehaviour
                     lastWaveThatTriggeredMorph = newWave;
 
                     _generalController.MoodChanging = true;
+                    _generalController.ChangeWindParameters();
                 }
             }
         }

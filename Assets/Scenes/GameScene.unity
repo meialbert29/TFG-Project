@@ -434,6 +434,51 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74367356}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &93948623
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 93948625}
+  - component: {fileID: 93948624}
+  m_Layer: 0
+  m_Name: KeyboardInputController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &93948624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93948623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6706d8a916de4f94ea5606c43f760b10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generalController: {fileID: 976823264}
+--- !u!4 &93948625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93948623}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1761.0497, y: 143.05899, z: 8.097396}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &107616648
 GameObject:
   m_ObjectHideFlags: 0
@@ -3619,9 +3664,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treesList: []
-  _grassController: {fileID: 0}
-  cont: 0
+  museController: {fileID: 2068343185}
+  keyboardInputController: {fileID: 93948624}
   pausedUI: {fileID: 809137438}
+  cont: 0
 --- !u!4 &976823265
 Transform:
   m_ObjectHideFlags: 0
@@ -12130,7 +12176,7 @@ GameObject:
   - component: {fileID: 2068343184}
   - component: {fileID: 2068343185}
   m_Layer: 0
-  m_Name: EEG Script
+  m_Name: MuseController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17108,6 +17154,7 @@ SceneRoots:
   - {fileID: 704716907}
   - {fileID: 893437373}
   - {fileID: 1770112105}
+  - {fileID: 93948625}
   - {fileID: 976823265}
   - {fileID: 871858184}
   - {fileID: 1500597376}
