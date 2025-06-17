@@ -34,6 +34,7 @@ public class GeneralController : MonoBehaviour
     public string Mood { get { return _mood; } set { _mood = value; } }
     public bool MoodChanging { get { return moodChanging; } set { moodChanging = value; } }
     public WindData GlobalWind { get { return globalWind; } }
+    public int Cont { get { return cont; } set { cont = value; } }
 
     private void Awake()
     {
@@ -70,19 +71,26 @@ public class GeneralController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (keyboardInputController != null && keyboardInputController.KeyDown)
+        if (keyboardInputController.KeyDown)
         {
             _rainController.RainChangeSettings(_mood);
-            cont = 0;
+            cont++;
             moodChanging = true;
 
             ChangeWindParameters();
+
+            keyboardInputController.KeyDown = false;
         }
     }
+
     public void CheckTreesCount()
     {
         if (cont >= treesList.Count)
+        {
             moodChanging = false;
+            keyboardInputController.KeyDown = false;
+        }
+            
     }
 
     private void ApplyWind()
@@ -111,6 +119,8 @@ public class GeneralController : MonoBehaviour
         globalWind.direction = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
 
         ApplyWind();
+
+        CheckTreesCount();
     }
 
     
