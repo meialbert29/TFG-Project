@@ -133,10 +133,9 @@ public class LeavesVFXController : MonoBehaviour
     }
     void Update()
     {
-        FallLeaves();
-
         if (_generalController.MoodChanging)
         {
+            FallLeaves();
             moodType = _generalController.Mood;
 
             if (moodType != previousMoodType)
@@ -244,10 +243,21 @@ public class LeavesVFXController : MonoBehaviour
 
     private void FallLeaves()
     {
-        if (_vegetationController.GetTransitionProgress() >= 0.3f)
+        if(moodType == "sad" || moodType == "stressed" || moodType == "anxious")
+        {
+            fall = true;
+
+        }
+        else if(!fall)
         {
             fall = false;
         }
+
+        if (fall && _vegetationController.GetTransitionProgress() >= 0.3f)
+        {
+            fall = false;
+        }
+
         _vfx.SetBool("Fall", fall);
     }
 
@@ -279,9 +289,8 @@ public class LeavesVFXController : MonoBehaviour
         _blendGradient.colorKeys = keysBlend;
         _vfx.SetGradient("Blend Gradient", _blendGradient);
     }
-    public void UpdateWind(Vector3 direction, float speed)
+    public void UpdateWind(Vector3 direction)
     {
         _vfx.SetVector3("WindDirection", direction);
-        _vfx.SetFloat("WindSpeed", speed);
     }
 }

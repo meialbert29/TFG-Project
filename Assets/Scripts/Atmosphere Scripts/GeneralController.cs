@@ -16,46 +16,49 @@ public class GeneralController : MonoBehaviour
             return new Vector4(direction.x, 0f, 0f, 90);
         }
     }
-    private WindData globalWind;
-    private CloudsController _cloudsController;
-    private RainController _rainController;
-    public List<VegetationController> treesList = new List<VegetationController>();
+    [SerializeField] private WindData globalWind;
+    [SerializeField] private CloudsController _cloudsController;
+    [SerializeField] private RainController _rainController;
     [SerializeField] private ExampleFloatInlet museController;
     [SerializeField] private KeyboardInputController keyboardInputController;
-    public List<VegetationController> TreesList { get { return treesList; } }
-    public GameObject pausedUI;
+    [SerializeField] private WavesReader wavesReader;
+    [SerializeField] private GameObject pausedUI;
+
+    public List<VegetationController> treesList = new List<VegetationController>();   
 
     public int cont = 0;
     // state variables
     private string _mood = "neutral";
     private bool moodChanging = false;
+    private bool windChanging = false;
+
+    private Vector3 localDir;
+    private float localSpeed;
 
     // getters & setters
     public string Mood { get { return _mood; } set { _mood = value; } }
     public bool MoodChanging { get { return moodChanging; } set { moodChanging = value; } }
+    public List<VegetationController> TreesList { get { return treesList; } }
     public WindData GlobalWind { get { return globalWind; } }
-    public int Cont { get { return cont; } set { cont = value; } }
+    public int contTrees { get { return cont; } set { cont = value; } }
 
     private void Awake()
     {
         treesList = new List<VegetationController>(FindObjectsByType<VegetationController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None));
-        _cloudsController = FindAnyObjectByType<CloudsController>();
-        _rainController = FindAnyObjectByType<RainController>();
 
-        int gameMode = PlayerPrefs.GetInt("GameMode", 0);
+        int gameMode = PlayerPrefs.GetInt("GameMode");
 
         if (gameMode == 0)
         {
             // Manual mode
             keyboardInputController.gameObject.SetActive(true);
 
-            museController.gameObject.SetActive(false);
+            wavesReader.gameObject.SetActive(false);
         }
         else
         {
             // Muse mode
             keyboardInputController.gameObject.SetActive(false);
-            museController.gameObject.SetActive(true);
             museController.StartMuseConnection();
         }
 
@@ -65,21 +68,24 @@ public class GeneralController : MonoBehaviour
     private void Start()
     {
         globalWind.speed = 0.5f;
-        globalWind.direction = new Vector3(0.5f, 0, 0.5f);
+        globalWind.direction = new Vector3(0.5f, 0, 0.5f); 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (keyboardInputController.KeyDown)
+        if (moodChanging)
         {
             _rainController.RainChangeSettings(_mood);
-            cont++;
-            moodChanging = true;
-
-            ChangeWindParameters();
-
             keyboardInputController.KeyDown = false;
+
+            if (!windChanging)
+            {
+                ChangeWindParameters();
+                windChanging = true;
+            }
+
+            ApplyWind();
         }
     }
 
@@ -103,14 +109,9 @@ public class GeneralController : MonoBehaviour
         foreach (var tree in treesList)
         {
             var leaves = tree.GetComponentInChildren<LeavesVFXController>();
-            if (leaves != null)
-            {
-                Vector3 localDir = Quaternion.Euler(0, Random.Range(-10f, 10f), 0) * globalWind.direction;
-                float localSpeed = globalWind.speed * Random.Range(0.9f, 1.1f);
-
-                leaves.UpdateWind(localDir, localSpeed);
-            }
+            leaves.UpdateWind(localDir);
         }
+        
     }
 
     public void ChangeWindParameters()
@@ -118,10 +119,6 @@ public class GeneralController : MonoBehaviour
         globalWind.speed = Random.Range(0.3f, 1.5f);
         globalWind.direction = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
 
-        ApplyWind();
-
-        CheckTreesCount();
+        localDir = Quaternion.Euler(0, Random.Range(-10f, 10f), 0) * globalWind.direction;
     }
-
-    
 }

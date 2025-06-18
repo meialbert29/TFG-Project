@@ -19,14 +19,14 @@ public class SceneChanger : MonoBehaviour
     public void StartManualMode()
     {
         Time.timeScale = 1f;
-        PlayerPrefs.SetInt("GameMode", 0); // 0 = manual
+        //PlayerPrefs.SetInt("GameMode", 0); // 0 = manual
         SceneManager.LoadScene("GameScene");
     }
 
     public void StartMuseMode()
     {
         Time.timeScale = 1f;
-        PlayerPrefs.SetInt("GameMode", 1); // 1 = muse
+        //PlayerPrefs.SetInt("GameMode", 1); // 1 = muse
         SceneManager.LoadScene("GameScene");
     }
 }

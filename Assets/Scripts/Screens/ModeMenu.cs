@@ -49,6 +49,7 @@ public class ModeMenu : MonoBehaviour
     {
         if (manualButton != null)
         {
+            PlayerPrefs.SetInt("GameMode", 0); // 1 = muse
             manualButton.sprite = hoverManual_Sprite;
             audioManager.PlaySFX(audioManager.buttonHover);
         }
@@ -68,6 +69,7 @@ public class ModeMenu : MonoBehaviour
     {
         if (neuronalButton != null)
         {
+            PlayerPrefs.SetInt("GameMode", 1); // 1 = muse
             neuronalButton.sprite = hoverNeuronal_Sprite;
             audioManager.PlaySFX(audioManager.buttonHover);
         }

@@ -23,6 +23,8 @@ public class LeavesController : MonoBehaviour
     private Color _trunk_StressedColor   = ColorsPalette.TrunkColors.trunk_StressedColor;
     private Color _trunk_NeutralColor    = ColorsPalette.TrunkColors.trunk_NeutralColor;
     private Color _trunk_SadColor        = ColorsPalette.TrunkColors.trunk_SadColor;
+    private Color _trunk_AnxiousColor    = ColorsPalette.TrunkColors.trunk_AnxiousColor;
+    private Color _trunk_CalmColor       = ColorsPalette.TrunkColors.trunk_CalmColor;
     private Color _target_TrunkColor;
 
     private Color _start_TopColor;
@@ -113,13 +115,13 @@ public class LeavesController : MonoBehaviour
                 {
                     _target_TopColor = _neutral_TopColor;
                     _target_BottomColor = _neutral_BottomColor;
-                    _target_TrunkColor = _trunk_NeutralColor;
+                    _target_TrunkColor = _trunk_CalmColor;
                 }
                 else if(_moodType == "anxious")
                 {
                     _target_TopColor = _neutral_TopColor;
                     _target_BottomColor = _neutral_BottomColor;
-                    _target_TrunkColor = _trunk_NeutralColor;
+                    _target_TrunkColor = _trunk_AnxiousColor;
                 }
 
                 // Guardamos el estado actual como punto de partida

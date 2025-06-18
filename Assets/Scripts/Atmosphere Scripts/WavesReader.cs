@@ -12,11 +12,12 @@ public class WavesReader : MonoBehaviour
 
     private string _currentWave;
     private float waveConsistencyTimer = 0f;
-    private const float waveConsistencyDuration = 3f;
+    private const float waveConsistencyDuration = 5f;
     private bool isWaveConsistent = false;
     private string lastWaveThatTriggeredMorph = "";
 
     public string CurrentWave { get { return _currentWave; } }
+    public bool IsWaveConsistent { get { return isWaveConsistent; } }
 
     void Start()
     {

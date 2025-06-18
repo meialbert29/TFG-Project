@@ -104,7 +104,6 @@ public class VegetationController : MonoBehaviour
     {
         if (_generalController.MoodChanging)
         {
-            _vfxController.Fall = true;
             LoadTargetMesh(_wavesReader.CurrentWave);
             LoadTargetMeshByMood(_generalController.Mood);
             MorphingProcess();
@@ -178,7 +177,7 @@ public class VegetationController : MonoBehaviour
             //_generalController.MoodChanging = false;
 
             _generalController.cont++;
-            _vfxController.Fall = false;
+            //_vfxController.Fall = false;
             _generalController.CheckTreesCount();
             
             _leavesController.UpdateLeavesStartColors();

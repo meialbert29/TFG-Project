@@ -3,6 +3,7 @@ using UnityEngine;
 public class KeyboardInputController : MonoBehaviour
 {
     [SerializeField] private GeneralController generalController;
+    [SerializeField] private LeavesVFXController _vfxController;
     private string _mood;
     private bool keyDown = false;
 
@@ -27,13 +28,14 @@ public class KeyboardInputController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             generalController.Mood = "sad";
+            _vfxController.Fall = true;
             keyDown = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
             generalController.Mood = "stressed";
-
+            _vfxController.Fall = true;
             keyDown = true;
         }
 
@@ -51,12 +53,14 @@ public class KeyboardInputController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Keypad5))
         {
             generalController.Mood = "anxious";
+            _vfxController.Fall = true;
             keyDown = true;
         }
 
         if (keyDown)
         {
-            generalController.Cont = 0;
+            generalController.contTrees = 0;
+            generalController.MoodChanging = true;
         }
            
     }

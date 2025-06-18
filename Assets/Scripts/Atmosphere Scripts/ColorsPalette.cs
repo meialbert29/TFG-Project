@@ -18,6 +18,7 @@ public static class ColorsPalette
         public static readonly Color trunk_NeutralColor = new Color(0.8396226f, 0.7110994f, 0.5425863f, 1f);
         public static readonly Color trunk_SadColor = new Color(0.3396226f, 0.2771448f, 0.2771448f, 1f);
         public static readonly Color trunk_StressedColor = new Color(0.3207547f, 0.3118332f, 0.2920078f, 1f);
+        public static readonly Color trunk_CalmColor = new Color(1f, 0.9037364f, 0.7783019f, 1f);
     }
 
     public static class LeavesVFXColors
