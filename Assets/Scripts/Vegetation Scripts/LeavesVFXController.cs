@@ -243,22 +243,27 @@ public class LeavesVFXController : MonoBehaviour
 
     private void FallLeaves()
     {
-        if(moodType == "sad" || moodType == "stressed" || moodType == "anxious")
-        {
-            fall = true;
+        //if(moodType == "sad" || moodType == "stressed" || moodType == "anxious")
+        //{
+        //    fall = true;
 
-        }
-        else if(!fall)
+        //}
+        //else if(!fall)
+        //{
+        //    fall = false;
+        //}
+
+        //if (fall && _vegetationController.GetTransitionProgress() >= 0.3f)
+        //{
+        //    fall = false;
+        //}
+
+        if (_vegetationController.GetTransitionProgress() >= 0.3f)
         {
             fall = false;
         }
 
-        if (fall && _vegetationController.GetTransitionProgress() >= 0.3f)
-        {
-            fall = false;
-        }
-
-        _vfx.SetBool("Fall", fall);
+         _vfx.SetBool("Fall", fall);
     }
 
     public void ChangeMood()

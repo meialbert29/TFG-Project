@@ -46,8 +46,10 @@ public class GeneralController : MonoBehaviour
     {
         treesList = new List<VegetationController>(FindObjectsByType<VegetationController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None));
 
+        PlayerPrefs.SetInt("GameMode", 0);
         int gameMode = PlayerPrefs.GetInt("GameMode");
 
+        Debug.Log(gameMode);
         if (gameMode == 0)
         {
             // Manual mode
