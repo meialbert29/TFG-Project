@@ -57,6 +57,14 @@ public class WavesReader : MonoBehaviour
 
                     _generalController.MoodChanging = true;
                     _generalController.ChangeWindParameters();
+
+                    if(newWave == "Delta" || newWave == "Beta" || newWave == "Gamma")
+                    {
+                        foreach (var tree in treesList)
+                        {
+                            tree.GetComponentInChildren<LeavesVFXController>().Fall = true;
+                        }
+                    }
                 }
             }
         }

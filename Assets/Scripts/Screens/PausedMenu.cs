@@ -50,15 +50,17 @@ public class PauseMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        if(resumeButton != null && settingsButton != null && quitButton != null)
+        if(resumeButton != null && settingsButton != null && quitButton != null && helpButton != null)
         {
             resumeButton.sprite = normalResume_Sprite;
             settingsButton.sprite = normalSettings_Sprite;
             quitButton.sprite = normalQuit_Sprite;
+            helpButton.sprite = normalHelp_Sprite;
 
             resumeText.color = normalColor;
             settingsText.color = normalColor;
             quitText.color = normalColor;
+            helpText.color = normalColor;
         }
     }
 

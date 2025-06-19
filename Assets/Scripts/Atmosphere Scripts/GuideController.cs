@@ -62,6 +62,8 @@ public class GuideController : MonoBehaviour
     private int gameMode;
     private string lastMood;
     private string currentMood;
+    private string lastWave;
+    private string currentWave;
 
     void Start()
     {
@@ -73,8 +75,12 @@ public class GuideController : MonoBehaviour
 
         gameMode = PlayerPrefs.GetInt("GameMode");
         currentMood = generalController.Mood;
+        currentWave = wavesReader.CurrentWave;
 
-        ShowMessageByKeynumber(currentMood);
+        if(gameMode == 0)
+            ShowMessageByKeynumber(currentMood);
+        else
+            ShowMessageByCurrentWave(currentWave);
     }
 
     // Update is called once per frame
@@ -90,11 +96,19 @@ public class GuideController : MonoBehaviour
                 lastMood = currentMood;
             }
         }
+        else
+        {
+            currentWave = wavesReader.CurrentWave;
+            if(generalController.MoodChanging && currentWave != lastWave)
+            {
+                ShowMessageByCurrentWave(currentWave);
+                lastWave = currentWave;
+            }
+        }
     }
 
-    private void ShowMessageByCurrentWave()
+    private void ShowMessageByCurrentWave(string currentWave)
     {
-        string currentWave = wavesReader.CurrentWave;
 
         if (currentWave != null)
         {

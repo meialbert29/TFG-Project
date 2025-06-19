@@ -102,7 +102,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
                 lastWaveType = waveType; // Actualizar última onda detectada
 
                 ChangeObjectColor(waveType);
-                showState(waveType, dominantFrequency);
+                //showState(waveType, dominantFrequency);
                 scoreSystem.UpdateScorePoints();
                 scoreSystem.UpdatePointsEarned();
             }

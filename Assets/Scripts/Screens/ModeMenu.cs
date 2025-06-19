@@ -24,6 +24,7 @@ public class ModeMenu : MonoBehaviour
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        
     }
     public void ButtonSound()
     {
@@ -49,7 +50,8 @@ public class ModeMenu : MonoBehaviour
     {
         if (manualButton != null)
         {
-            PlayerPrefs.SetInt("GameMode", 0); // 1 = muse
+
+            PlayerPrefs.SetInt("GameMode", 0); // 0 = manual
             manualButton.sprite = hoverManual_Sprite;
             audioManager.PlaySFX(audioManager.buttonHover);
         }
