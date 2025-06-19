@@ -218,7 +218,7 @@ public class VegetationController : MonoBehaviour
         string path = "";
 
         if (gameObject.layer == LayerMask.NameToLayer("Vegetation"))
-            path = "Models/Trunks/";
+            path = "Models/Tree/Trunks";
 
         targetMesh = Resources.Load<Mesh>($"{path}{meshName}");
         _transitionProgress = 0f;
