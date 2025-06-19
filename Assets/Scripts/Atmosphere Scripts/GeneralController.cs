@@ -62,6 +62,7 @@ public class GeneralController : MonoBehaviour
             // Muse mode
             keyboardInputController.gameObject.SetActive(false);
             museController.StartMuseConnection();
+            museController.StartMuseController();
         }
 
         _mood = "neutral";

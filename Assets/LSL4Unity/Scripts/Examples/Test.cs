@@ -14,10 +14,11 @@ namespace Assets.LSL4Unity.Scripts.Examples
         public ScoreSystem scoreSystem;
 
         public string lastSample = String.Empty;
-        public int samplingRate = 256; // Frecuencia de muestreo
-        private int bufferSize = 256; // Número de muestras para FFT
-        private Queue<float> eegBuffer = new Queue<float>(); // Buffer de muestras EEG
-        public Renderer targetObjectRenderer; // Objeto que cambiará de color
+        public int samplingRate = 256;
+        private int bufferSize = 512; // samples number
+        private int numChannels = 5;
+        private Queue<float> eegBuffer = new Queue<float>(); // buffer
+        public Renderer targetObjectRenderer;
 
         public string waveType;
         public float dominantFrequency;
@@ -28,37 +29,114 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
         private double actualScore = 0;
 
-        private Queue<string> waveBuffer = new Queue<string>(); // Almacena las últimas 5 ondas
-        public string lastWaveType = ""; // Última onda registrada
-        private bool waveChanged = false; // Indica si ha habido un cambio de onda
-        private float timeSinceLastScore = 0f; // Tiempo desde la última puntuación
-        private float scoreInterval = 10f; // Intervalo de tiempo para sumar puntos
+        private Queue<string> waveBuffer = new Queue<string>(); // Store last 5 waves
+        public string lastWaveType = ""; // Last registered wave
+        private bool waveChanged = false; // Indicates if there was a wave change
+        private float timeSinceLastScore = 0f; // time since last score
+        private float scoreInterval = 10f; // interval to add points
         private int points = 0;
 
-        //public WavesReader wavesReader;
+        private Dictionary<int, Queue<float>> channelBuffers = new Dictionary<int, Queue<float>>();
+        private Dictionary<int, float> dominantFrequencies = new Dictionary<int, float>();
 
+        public void StartMuseController()
+        {
+            for (int channel = 0; channel < numChannels; channel++)
+            {
+                channelBuffers[channel] = new Queue<float>();
+            }
+        }
         protected override void Process(float[] newSample, double timeStamp)
         {
-            eegBuffer.Enqueue(newSample[0]); // Usamos el primer canal
-            if (eegBuffer.Count > bufferSize)
-                eegBuffer.Dequeue(); // Mantener el buffer con tamaño adecuado
-
-            if (eegBuffer.Count == bufferSize)
+            for(int channel = 0; channel < 5; channel++)
             {
-                dominantFrequency = AnalyzeEEG(eegBuffer.ToArray());
-                waveType = ClassifyBrainWave(dominantFrequency);
+                channelBuffers[channel].Enqueue(newSample[channel]);
+                if(channelBuffers[channel].Count > bufferSize)
+                {
+                    channelBuffers[channel].Dequeue();
+                }
+            }
 
-                // Agregar la onda detectada al buffer
+            bool allBuffersFull = true;
+
+            for(int channel = 0; channel < numChannels; channel++)
+            {
+                if (channelBuffers[channel].Count != bufferSize)
+                {
+                    allBuffersFull = false;
+                    break;
+                }
+
+            }
+            // Solo analizar si todos los buffers están llenos
+            if (allBuffersFull)
+            {
+                float[] dominantFrequencies = new float[numChannels];
+                string[] waveTypes = new string[numChannels];
+
+                // Analizar la frecuencia dominante por canal
+                //for (int i = 0; i < 5; i++)
+                //    dominantFrequencies[i] = AnalyzeEEG(channelBuffers[i].ToArray());
+
+                for (int i = 0; i < numChannels; i++)
+                {
+                    waveTypes[i] = ClassifyBrainWave(channelBuffers[i].ToArray());
+                }
+
+                // Determinar la onda dominante global como la más frecuente entre los canales
+                // Creamos un diccionario para contar cuántas veces aparece cada onda
+                Dictionary<string, int> waveCounts = new Dictionary<string, int>();
+
+                // Contamos las apariciones
+                foreach (string wave in waveTypes)
+                {
+                    if (!waveCounts.ContainsKey(wave))
+                        waveCounts[wave] = 1;
+                    else
+                        waveCounts[wave]++;
+                }
+
+                // Ahora buscamos cuál es la onda que más veces se repite
+                string finalWave = "";
+                int maxCount = 0;
+
+                foreach (var wave in waveCounts)
+                {
+                    if (wave.Value > maxCount)
+                    {
+                        maxCount = wave.Value;
+                        finalWave = wave.Key;
+                    }
+                }
+
+                // Ahora trabajas con finalWave como la onda dominante para todo el conjunto
+                waveType = finalWave;
+
+                // Calcular frecuencia promedio
+                //float averageFrequency = dominantFrequencies.Average();
+
+                // Clasificar onda cerebral en base a la frecuencia promedio
+                //waveType = ClassifyBrainWave(dominantFrequencies);
+
+                // Agregar la onda detectada al buffer para comprobar consistencia
                 waveBuffer.Enqueue(waveType);
                 if (waveBuffer.Count > 5)
-                    waveBuffer.Dequeue(); // Mantener solo las últimas 5 ondas
+                    waveBuffer.Dequeue();
 
-                // Evaluar consistencia de ondas en las últimas 5 muestras
-                bool consistent = waveBuffer.All(w => w == waveType);
+                // Verificar si las últimas ondas son iguales
+                bool consistent = true;
+
+                foreach(var wave in waveBuffer)
+                {
+                    if(wave != waveType)
+                    {
+                        consistent = false;
+                        break;
+                    }
+                }
 
                 if (consistent)
                 {
-
                     if (waveType != lastWaveType)
                     {
                         scoreSystem.pointsEarnedText.enabled = false;
@@ -125,44 +203,102 @@ namespace Assets.LSL4Unity.Scripts.Examples
             return maxIndex * frequencyResolution;
         }
 
-        private string ClassifyBrainWave(float frequency)
+        private string ClassifyBrainWave(float[] samples)
         {
-            if (frequency < 4) return "Delta";
-            if (frequency < 8) return "Theta";
-            if (frequency < 14) return "Alpha";
-            if (frequency < 30) return "Beta";
-            return "Gamma";
+            // Llamamos a otra función que calcula cuánta energía tiene cada tipo de onda cerebral
+            var waveMagnitudes = GetWaveMagnitudes(samples);
+
+            // Encontramos cuál onda tiene la energía más alta (la que domina)
+            string dominantWave = null;
+            float highestEnergy = 0f;
+
+            // Revisamos cada tipo de onda y su energía para encontrar la más grande
+            foreach (var wave in waveMagnitudes)
+            {
+                if (wave.Value > highestEnergy)
+                {
+                    highestEnergy = wave.Value;  // Guardamos la energía más alta encontrada
+                    dominantWave = wave.Key;      // Guardamos el nombre de la onda con más energía
+                }
+            }
+
+            // Devolvemos el nombre de la onda dominante
+            return dominantWave;
         }
 
         private Dictionary<string, float> GetWaveMagnitudes(float[] samples)
         {
-            int N = samples.Length;
+            int N = samples.Length; // Número de muestras que tenemos
             Complex[] fftInput = new Complex[N];
 
+            // Preparamos los datos para hacer la Transformada Rápida de Fourier (FFT)
             for (int i = 0; i < N; i++)
+            {
+                // Convertimos cada muestra en un número complejo (parte real es la muestra, parte imaginaria es 0)
                 fftInput[i] = new Complex(samples[i], 0);
+            }
 
+            // Aplicamos la FFT para obtener las frecuencias y su intensidad
             Fourier.Forward(fftInput, FourierOptions.NoScaling);
 
+            // Sacamos la magnitud (intensidad) de cada frecuencia calculada
             float[] magnitudes = fftInput.Select(c => (float)c.Magnitude).ToArray();
+
+            // Calculamos cuánto abarca cada "paso" en frecuencias
             float frequencyResolution = (float)samplingRate / N;
 
-            Dictionary<string, float> waveMagnitudes = new Dictionary<string, float>
-            {
-                { "Delta", magnitudes.Where((_, i) => i * frequencyResolution < 4).Sum() },
-                { "Theta", magnitudes.Where((_, i) => i * frequencyResolution >= 4 && i * frequencyResolution < 8).Sum() },
-                { "Alpha", magnitudes.Where((_, i) => i * frequencyResolution >= 8 && i * frequencyResolution < 12).Sum() },
-                { "Beta", magnitudes.Where((_, i) => i * frequencyResolution >= 12 && i * frequencyResolution < 30).Sum() },
-                { "Gamma", magnitudes.Where((_, i) => i * frequencyResolution >= 30).Sum() }
-            };
+            // Aquí vamos a guardar cuánta energía hay en cada banda de ondas cerebrales
+            Dictionary<string, float> waveMagnitudes = new Dictionary<string, float>();
 
+            // Inicializamos los contadores para cada banda
+            float deltaSum = 0f;
+            float thetaSum = 0f;
+            float alphaSum = 0f;
+            float betaSum = 0f;
+            float gammaSum = 0f;
+
+            // Recorremos todas las frecuencias calculadas
+            for (int i = 0; i < magnitudes.Length; i++)
+            {
+                // Calculamos la frecuencia de este índice
+                float frequency = i * frequencyResolution;
+
+                // Sumamos la energía según el rango de frecuencia que corresponde a cada tipo de onda
+                if (frequency < 4)
+                    deltaSum += magnitudes[i];
+                else if (frequency >= 4 && frequency < 8)
+                    thetaSum += magnitudes[i];
+                else if (frequency >= 8 && frequency < 12)
+                    alphaSum += magnitudes[i];
+                else if (frequency >= 12 && frequency < 30)
+                    betaSum += magnitudes[i];
+                else if (frequency >= 30 && frequency < 45)
+                    gammaSum += magnitudes[i];
+            }
+
+            // Guardamos los resultados en el diccionario
+            waveMagnitudes["Delta"] = deltaSum;
+            waveMagnitudes["Theta"] = thetaSum;
+            waveMagnitudes["Alpha"] = alphaSum;
+            waveMagnitudes["Beta"] = betaSum;
+            waveMagnitudes["Gamma"] = gammaSum;
+
+            // Normalizamos para que la suma de todas las energías sea 1 (100%)
+            float totalEnergy = deltaSum + thetaSum + alphaSum + betaSum + gammaSum;
+
+            if (totalEnergy > 0)
+            {
+                waveMagnitudes["Delta"] /= totalEnergy;
+                waveMagnitudes["Theta"] /= totalEnergy;
+                waveMagnitudes["Alpha"] /= totalEnergy;
+                waveMagnitudes["Beta"] /= totalEnergy;
+                waveMagnitudes["Gamma"] /= totalEnergy;
+            }
+
+            // Devolvemos el diccionario con la energía normalizada de cada onda cerebral
             return waveMagnitudes;
         }
 
-        private double Normalize(double value, double min, double max)
-        {
-            return (value - min) / (max - min);
-        }
 
         private void CalculateConcentrationScore(string wave)
         {
