@@ -11,13 +11,17 @@ public class MainButtonsController : MonoBehaviour
     [SerializeField] public Image startButton;
     [SerializeField] private Image settingsButton;
     [SerializeField] private Image stadisticsButton;
+    [SerializeField] private Image helpButton;
 
     [SerializeField] private Sprite hoverMain_Sprite;
     [SerializeField] private Sprite normalMain_Sprite;
+    [SerializeField] private Sprite helpNormal_Sprite;
+    [SerializeField] private Sprite helpHover_Sprite;
 
     [SerializeField] private TMP_Text startText;
     [SerializeField] private TMP_Text settingsText;
     [SerializeField] private TMP_Text stadisticsText;
+    [SerializeField] private TMP_Text helpText;
 
     private Color normalColor = ColorsPalette.ButtonsColors.normalColor;
     private Color hoverColor = ColorsPalette.ButtonsColors.hoverColor;
@@ -49,6 +53,12 @@ public class MainButtonsController : MonoBehaviour
         {
             stadisticsButton.sprite = normalMain_Sprite;
             stadisticsText.color = normalColor;
+        }
+
+        if(helpButton != null)
+        {
+            helpButton.sprite = helpNormal_Sprite;
+            helpText.color = normalColor;
         }
     }
 
@@ -107,5 +117,24 @@ public class MainButtonsController : MonoBehaviour
             stadisticsButton.sprite = normalMain_Sprite;
         if (stadisticsText != null)
             stadisticsText.color = normalColor;
+    }
+
+    public void OnHelpButtonEnter()
+    {
+        if(helpButton != null)
+        {
+            helpButton.sprite = helpHover_Sprite;
+            audioManager.PlaySFX(audioManager.buttonHover);
+        }
+        if (helpText != null)
+            helpText.color = hoverColor;
+    }
+
+    public void OnHelpButtonExit()
+    {
+        if(helpButton != null)
+            helpButton.sprite = helpNormal_Sprite;
+        if(helpText != null)
+            helpText.color = normalColor;
     }
 }
