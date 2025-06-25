@@ -10,6 +10,7 @@ TagManager:
   - Leaves
   - Sky
   - Audio
+  - Bush
   layers:
   - Default
   - TransparentFX

@@ -8,7 +8,7 @@ public class KeyboardInputController : MonoBehaviour
     private bool keyDown = false;
 
     //getters & setters
-    public bool KeyDown {  get { return keyDown; } set { keyDown = value; } }
+    public bool KeyDown { get { return keyDown; } set { keyDown = value; } }
 
     void Start()
     {
@@ -27,33 +27,33 @@ public class KeyboardInputController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
-            generalController.Mood = "sad";
-            _vfxController.Fall = true;
+            generalController.SetMood("sad");
+            EnableFallingLeaves();
             keyDown = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
-            generalController.Mood = "stressed";
-            _vfxController.Fall = true;
+            generalController.SetMood("stressed");
+            EnableFallingLeaves();
             keyDown = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad3))
         {
-            generalController.Mood = "neutral";
+            generalController.SetMood("neutral");
             keyDown = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
-            generalController.Mood = "calm";
+            generalController.SetMood("calm");
             keyDown = true;
         }
         if (Input.GetKeyDown(KeyCode.Keypad5))
         {
-            generalController.Mood = "anxious";
-            _vfxController.Fall = true;
+            generalController.SetMood("anxious");
+            EnableFallingLeaves();
             keyDown = true;
         }
 
@@ -62,6 +62,18 @@ public class KeyboardInputController : MonoBehaviour
             generalController.contTrees = 0;
             generalController.MoodChanging = true;
         }
-           
+
+    }
+
+    private void EnableFallingLeaves()
+    {
+        foreach (var tree in generalController.TreesList)
+        {
+            tree.GetComponentInChildren<LeavesVFXController>().Fall = true;
+        }
+        foreach (var bush in generalController.BushesList)
+        {
+            bush.GetComponentInChildren<LeavesVFXController>().Fall = true;
+        }
     }
 }

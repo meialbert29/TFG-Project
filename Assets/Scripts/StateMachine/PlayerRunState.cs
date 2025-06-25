@@ -15,11 +15,19 @@ public class PlayerRunState : PlayerBaseState
     {
         CheckSwitchStates();
 
-        Vector3 _appliedMovement = Vector3.zero;
+        if (Ctx.CharacterController.isGrounded)
+        {
+            Ctx.CurrentMovementY = Ctx.GroundedGravity;
+        }
+        else
+        {
+            Ctx.CurrentMovementY += Ctx.Gravity * Time.deltaTime;
+            Ctx.CurrentMovementY = Mathf.Max(Ctx.CurrentMovementY, -20f);
+        }
+        Vector3 horizontalMovement = Ctx.Transform.forward * Ctx.RunMultiplier;
+        Vector3 totalMovement = new Vector3(horizontalMovement.x, Ctx.CurrentMovementY, horizontalMovement.z);
 
-        _appliedMovement = Ctx.Transform.forward * Ctx.RunMultiplier;
-
-        Ctx.CharacterController.Move(_appliedMovement * Time.deltaTime);
+        Ctx.CharacterController.Move(totalMovement * Time.deltaTime);
     }
     public override void ExitState()
     {

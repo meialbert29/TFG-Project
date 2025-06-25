@@ -11,7 +11,9 @@ namespace Assets.LSL4Unity.Scripts.Examples
 {
     public class ExampleFloatInlet : AFloatInlet
     {
-        public ScoreSystem scoreSystem;
+        [SerializeField] private ScoreSystem scoreSystem;
+        [SerializeField] private HerzsController herzsController;
+        [SerializeField] private GeneralController generalController;
 
         public string lastSample = String.Empty;
         public int samplingRate = 256;
@@ -23,9 +25,8 @@ namespace Assets.LSL4Unity.Scripts.Examples
         public string waveType;
         public float dominantFrequency;
 
-        public Text emotionalStateText;
-        public Text scoreText;
-        public Text pointsText;
+        [SerializeField] private Text scoreText;
+        [SerializeField] private Text pointsText;
 
         private double actualScore = 0;
 
@@ -38,6 +39,10 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
         private Dictionary<int, Queue<float>> channelBuffers = new Dictionary<int, Queue<float>>();
         private Dictionary<int, float> dominantFrequencies = new Dictionary<int, float>();
+
+        float averageFrequency = 0f;
+
+        public float AverageFrequency {  get { return averageFrequency; } set { averageFrequency = value; } }
 
         public void StartMuseController()
         {
@@ -75,15 +80,19 @@ namespace Assets.LSL4Unity.Scripts.Examples
                 string[] waveTypes = new string[numChannels];
 
                 // Analizar la frecuencia dominante por canal
-                //for (int i = 0; i < 5; i++)
-                //    dominantFrequencies[i] = AnalyzeEEG(channelBuffers[i].ToArray());
+                for (int i = 0; i < 5; i++)
+                {
+                    dominantFrequencies[i] = AnalyzeEEG(channelBuffers[i].ToArray());
+                }
+
+                dominantFrequency = dominantFrequencies.Average();
+
 
                 for (int i = 0; i < numChannels; i++)
                 {
                     waveTypes[i] = ClassifyBrainWave(channelBuffers[i].ToArray());
                 }
 
-                // Determinar la onda dominante global como la más frecuente entre los canales
                 // Creamos un diccionario para contar cuántas veces aparece cada onda
                 Dictionary<string, int> waveCounts = new Dictionary<string, int>();
 
@@ -111,12 +120,6 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
                 // Ahora trabajas con finalWave como la onda dominante para todo el conjunto
                 waveType = finalWave;
-
-                // Calcular frecuencia promedio
-                //float averageFrequency = dominantFrequencies.Average();
-
-                // Clasificar onda cerebral en base a la frecuencia promedio
-                //waveType = ClassifyBrainWave(dominantFrequencies);
 
                 // Agregar la onda detectada al buffer para comprobar consistencia
                 waveBuffer.Enqueue(waveType);
@@ -181,6 +184,8 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
                 ChangeObjectColor(waveType);
                 //showState(waveType, dominantFrequency);
+                herzsController.SetFrequency(dominantFrequency);
+                ChangeGeneralMood(waveType);
                 scoreSystem.UpdateScorePoints();
                 scoreSystem.UpdatePointsEarned();
             }
@@ -350,9 +355,26 @@ namespace Assets.LSL4Unity.Scripts.Examples
             }
         }
 
-        public void showState(string wave, float frequency)
+        private void ChangeGeneralMood(string waveType)
         {
-            emotionalStateText.text = "Wave " + wave + "\nFrequency " + frequency;
+            switch (waveType)
+            {
+                case "Delta":
+                    generalController.Mood = "neutral";
+                    break;
+                case "Theta":
+                    generalController.Mood = "sad";
+                    break;
+                case "Alpha":
+                    generalController.Mood = "calm";
+                    break;
+                case "Beta":
+                    generalController.Mood = "stressed";
+                    break;
+                case "Gamma":
+                    generalController.Mood = "anxious";
+                    break;
+            }
         }
 
         public void showScore(double actualPoints)

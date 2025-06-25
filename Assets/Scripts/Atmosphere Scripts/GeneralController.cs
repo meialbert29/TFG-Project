@@ -16,15 +16,22 @@ public class GeneralController : MonoBehaviour
             return new Vector4(direction.x, 0f, 0f, 90);
         }
     }
+    [Header("Audio Manager")]
+    [SerializeField] private AudioManager audioManager;
+    [Header("Scripts")]
     [SerializeField] private WindData globalWind;
     [SerializeField] private CloudsController _cloudsController;
     [SerializeField] private RainController _rainController;
     [SerializeField] private ExampleFloatInlet museController;
     [SerializeField] private KeyboardInputController keyboardInputController;
     [SerializeField] private WavesReader wavesReader;
+    
+    [Header("GameObjects")]
     [SerializeField] private GameObject pausedUI;
 
-    public List<VegetationController> treesList = new List<VegetationController>();   
+    private List<VegetationController> treesList = new List<VegetationController>();   
+    private List<VegetationController> bushesList = new List<VegetationController>();
+    private List<GameObject> rocksList = new List<GameObject>();
 
     public int cont = 0;
     // state variables
@@ -39,6 +46,8 @@ public class GeneralController : MonoBehaviour
     public string Mood { get { return _mood; } set { _mood = value; } }
     public bool MoodChanging { get { return moodChanging; } set { moodChanging = value; } }
     public List<VegetationController> TreesList { get { return treesList; } }
+    public List<VegetationController> BushesList { get { return bushesList; } }
+    public List<GameObject> RocksList { get { return rocksList; } }
     public WindData GlobalWind { get { return globalWind; } }
     public int contTrees { get { return cont; } set { cont = value; } }
 
@@ -46,10 +55,9 @@ public class GeneralController : MonoBehaviour
     {
         treesList = new List<VegetationController>(FindObjectsByType<VegetationController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None));
 
-        //PlayerPrefs.SetInt("GameMode", 0);
+        PlayerPrefs.SetInt("GameMode", 0);
         int gameMode = PlayerPrefs.GetInt("GameMode");
 
-        Debug.Log(gameMode);
         if (gameMode == 0)
         {
             // Manual mode
@@ -123,5 +131,39 @@ public class GeneralController : MonoBehaviour
         globalWind.direction = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
 
         localDir = Quaternion.Euler(0, Random.Range(-10f, 10f), 0) * globalWind.direction;
+    }
+
+    public void SetMood(string newMood)
+    {
+        if (_mood != newMood)
+        {
+            _mood = newMood;
+            moodChanging = true;
+            windChanging = false;
+
+            switch (_mood)
+            {
+                case "neutral":
+                    audioManager.ChangeMusicWithMixerFade(audioManager.neutralMusic);
+                    audioManager.ChangeSFXClips(audioManager.neutralWind, null);
+                    break;
+                case "sad":
+                    audioManager.ChangeMusicWithMixerFade(audioManager.sadMusic);
+                    audioManager.ChangeSFXClips(audioManager.neutralWind, audioManager.softRain);
+                    break;
+                case "calm":
+                    audioManager.ChangeMusicWithMixerFade(audioManager.calmMusic);
+                    audioManager.ChangeSFXClips(audioManager.neutralWind, null);
+                    break;
+                case "stressed":
+                    audioManager.ChangeMusicWithMixerFade(audioManager.stressMusic);
+                    audioManager.ChangeSFXClips(audioManager.neutralWind, audioManager.normalRain);
+                    break;
+                case "anxious":
+                    audioManager.ChangeMusicWithMixerFade(audioManager.anxiousMusic);
+                    audioManager.ChangeSFXClips(audioManager.neutralWind, audioManager.normalRain);
+                    break;
+            }
+        }
     }
 }

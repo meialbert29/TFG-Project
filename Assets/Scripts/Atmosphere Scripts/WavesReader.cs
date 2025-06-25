@@ -8,8 +8,6 @@ public class WavesReader : MonoBehaviour
     private ExampleFloatInlet eeg_script;
     private GeneralController _generalController;
 
-    private List<VegetationController> treesList = new List<VegetationController>();
-
     private string _currentWave;
     private float waveConsistencyTimer = 0f;
     private const float waveConsistencyDuration = 5f;
@@ -23,8 +21,6 @@ public class WavesReader : MonoBehaviour
     {
         eeg_script = FindAnyObjectByType<ExampleFloatInlet>();
         _generalController = FindAnyObjectByType<GeneralController>();
-
-        treesList = _generalController.TreesList;
     }
 
     // Update is called once per frame
@@ -60,9 +56,13 @@ public class WavesReader : MonoBehaviour
 
                     if(newWave == "Delta" || newWave == "Beta" || newWave == "Gamma")
                     {
-                        foreach (var tree in treesList)
+                        foreach (var tree in _generalController.TreesList)
                         {
                             tree.GetComponentInChildren<LeavesVFXController>().Fall = true;
+                        }
+                        foreach (var bush in _generalController.BushesList)
+                        {
+                            bush.GetComponentInChildren<LeavesVFXController>().Fall = true;
                         }
                     }
                 }
@@ -74,9 +74,13 @@ public class WavesReader : MonoBehaviour
             isWaveConsistent = false;
             _currentWave = newWave;
 
-            foreach (var tree in treesList)
+            foreach (var tree in _generalController.TreesList)
             {
                 tree.LoadTargetMesh(_currentWave);
+            }
+            foreach (var bush in _generalController.BushesList)
+            {
+                bush.LoadTargetMesh(_currentWave);
             }
         }
     }

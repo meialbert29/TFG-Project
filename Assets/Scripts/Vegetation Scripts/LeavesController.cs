@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class LeavesController : MonoBehaviour
@@ -61,15 +62,32 @@ public class LeavesController : MonoBehaviour
 
         if (gameObject.layer == LayerMask.NameToLayer("Vegetation") && _lod1.tag == "Leaves" && _lod2.tag == "Leaves")
         {
-            _startMesh_LOD1 = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD1");
-            _targetMesh_LOD1 = Resources.Load<Mesh>("Models/Leaves/SadLeaves_LOD1");
+            string path = "";
+            string startMeshName_LOD1 = "";
+            string startMeshName_LOD2 = "";
+            string targetMeshName_LOD1 = "";
+            string targetMeshName_LOD2 = "";
 
-            _startMesh_LOD2 = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD2");
-            _targetMesh_LOD2 = Resources.Load<Mesh>("Models/Leaves/SadLeaves_LOD2");
+            if(gameObject.tag == "Tree")
+                path = "Models/Tree/Leaves/";
+            else if(gameObject.tag == "Bush")
+                path = "Models/Bush/Leaves/";
+
+            startMeshName_LOD1 = "NormalLeaves_LOD1";
+            startMeshName_LOD2 = "NormalLeaves_LOD2";
+            targetMeshName_LOD1 = "SadLeaves_LOD1";
+            targetMeshName_LOD2 = "SadLeaves_LOD2";
+
+            _startMesh_LOD1 = Resources.Load<Mesh>($"{path}{startMeshName_LOD1}");
+            _targetMesh_LOD1 = Resources.Load<Mesh>($"{path}{targetMeshName_LOD1}");
+            _startMesh_LOD2 = Resources.Load<Mesh>($"{path}{startMeshName_LOD2}");
+            _targetMesh_LOD2 = Resources.Load<Mesh>($"{path}{targetMeshName_LOD2}");
         }
 
         if (_startMesh_LOD1 == null || _startMesh_LOD2 == null)
         {
+            Debug.Log(_startMesh_LOD1);
+            Debug.Log(_startMesh_LOD2);
             Debug.LogError("No se pudieron cargar las meshes iniciales.");
             return;
         }
@@ -159,28 +177,36 @@ public class LeavesController : MonoBehaviour
     }
     void ChangeLeavesLODMeshes()
     {
+        string path = "";
+        string targetMeshName_LOD1 = "";
+        string targetMeshName_LOD2 = "";
 
-        if(_moodType == "sad")
-        {
-            _meshFilter_LOD1.mesh = Resources.Load<Mesh>("Models/Leaves/SadLeaves_LOD1");
-            _meshFilter_LOD2.mesh = Resources.Load<Mesh>("Models/Leaves/SadLeaves_LOD2");
-        }
+        if (gameObject.tag == "Tree")
+            path = "Models/Tree/Leaves/";
+        else if (gameObject.tag == "Bush")
+            path = "Models/Bush/Leaves/";
 
-        else if(_moodType == "neutral")
+        if(_moodType == "stressed" || _moodType == "anxious")
         {
-            _meshFilter_LOD1.mesh = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD1");
-            _meshFilter_LOD2.mesh = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD2");
-        }
-        else if(_moodType == "stressed")
-        {
-            // no meshes to load
             _meshFilter_LOD1.mesh = null;
             _meshFilter_LOD2.mesh = null;
         }
-        else if( _moodType == "calm")
+        else
         {
-            _meshFilter_LOD1.mesh = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD1");
-            _meshFilter_LOD2.mesh = Resources.Load<Mesh>("Models/Leaves/NormalLeaves_LOD2");
+            if (_moodType == "sad")
+            {
+                targetMeshName_LOD1 = "SadLeaves_LOD1";
+                targetMeshName_LOD2 = "SadLeaves_LOD2";
+            }
+
+            else if (_moodType == "neutral" || _moodType == "calm")
+            {
+                targetMeshName_LOD1 = "NormalLeaves_LOD1";
+                targetMeshName_LOD2 = "NormalLeaves_LOD2";
+            }
+
+            _meshFilter_LOD1.mesh = Resources.Load<Mesh>($"{path}{targetMeshName_LOD1}");
+            _meshFilter_LOD2.mesh = Resources.Load<Mesh>($"{path}{targetMeshName_LOD2}");
         }
     }
 

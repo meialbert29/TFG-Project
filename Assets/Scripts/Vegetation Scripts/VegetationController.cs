@@ -8,7 +8,7 @@ using UnityEngine.VFX;
 public class VegetationController : MonoBehaviour
 {
     private Renderer vegetationRenderer;
-    [SerializeField] private ExampleFloatInlet eeg_script;
+    [SerializeField] private ExampleFloatInlet _museController;
     [SerializeField] private LeavesVFXController _vfxController;
     [SerializeField] private LeavesController _leavesController;
     [SerializeField] private GeneralController _generalController;
@@ -53,14 +53,15 @@ public class VegetationController : MonoBehaviour
     public List<VegetationController> neighbourVegetation;
     private string vegetationType;
 
-
     public bool IsMorphing { get { return _isMorphing; } set { _isMorphing = value; } }
 
     void Awake()
     {
 
-        if(eeg_script == null || _generalController == null)
+        if(_museController == null || _generalController == null)
         {
+            Debug.Log(_museController);
+            Debug.Log(_generalController);
             Debug.Log("Error in Vegetation Behaviour");
             return;
         }
@@ -82,8 +83,16 @@ public class VegetationController : MonoBehaviour
         // check if the object is in the Vegetation Layer
         if (gameObject.layer == LayerMask.NameToLayer("Vegetation"))
         {
-            startMesh = Resources.Load<Mesh>("Models/Trunks/Trunk");
-            targetMesh = Resources.Load<Mesh>("Models/Trunks/SadTrunk");
+            if(gameObject.tag == "Tree")
+            {
+                startMesh = Resources.Load<Mesh>("Models/Tree/Trunks/NormalTrunk");
+                targetMesh = Resources.Load<Mesh>("Models/Tree/Trunks/SadTrunk");
+            }
+            else if(gameObject.tag == "Bush")
+            {
+                startMesh = Resources.Load<Mesh>("Models/Bush/Trunks/NormalTrunk");
+                targetMesh = Resources.Load<Mesh>("Models/Bush/Trunks/SadTrunk");
+            }
         }
 
         if (startMesh == null)
@@ -112,47 +121,147 @@ public class VegetationController : MonoBehaviour
 
     public void LoadTargetMesh(string wave)
     {
+        //switch (wave)
+        //{
+        //    case "Delta":
+        //        targetMesh = Resources.Load<Mesh>("Models/Tree/Trunks/SadTrunk");
+        //        _generalController.Mood = "sad";
+        //        break;
+        //    case "Theta":
+        //        targetMesh = Resources.Load<Mesh>("Models/Tree/Trunks/SadTrunk");
+        //        _generalController.Mood = "sad";
+        //        break;
+        //    case "Alpha":
+        //        targetMesh = Resources.Load<Mesh>("Models/Tree/Trunks/Trunk");
+        //        _generalController.Mood = "calm";
+        //        break;
+        //    case "Beta":
+        //        targetMesh = Resources.Load<Mesh>("Models/Tree/Trunks/StressedTrunk");
+        //        _generalController.Mood = "stressed";
+        //        break;
+        //    case "Gamma":
+        //        targetMesh = Resources.Load<Mesh>("Models/Tree/Trunks/AnxiousTrunk");
+        //        _generalController.Mood = "anxious";
+        //        break;
+        //}
+
+        string path = "";
+        string meshName = "";
+
         switch (wave)
         {
             case "Delta":
-                targetMesh = Resources.Load<Mesh>("Models/Trunks/SadTrunk");
-                _generalController.Mood = "sad";
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
+                meshName = "NormalTrunk";
+                //_generalController.Mood = "neutral";
                 break;
+
             case "Theta":
-                targetMesh = Resources.Load<Mesh>("Models/Sad Tree/SadTree");
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
+                meshName = "SadTrunk";
+                //_generalController.Mood = "sad";
                 break;
+
             case "Alpha":
-                targetMesh = Resources.Load<Mesh>("Models/Tree Trunk/SadTree");
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
+                meshName = "NormalTrunk";
+               // _generalController.Mood = "calm";
                 break;
+
             case "Beta":
-                targetMesh = Resources.Load<Mesh>("Models/Meshes/Tree Trunk/SadTree");
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
+                meshName = "StressedTrunk";
+                //_generalController.Mood = "stressed";
                 break;
+
             case "Gamma":
-                targetMesh = Resources.Load<Mesh>("Models/Trunks/StressedTrunk");
-                _generalController.Mood = "stressed";
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
+                meshName = "StressedTrunk";
+                //_generalController.Mood = "anxious";
                 break;
         }
+
+        targetMesh = Resources.Load<Mesh>($"{path}{meshName}");
     }
 
     public void LoadTargetMeshByMood(string mood)
     {
-        string path = "Models/Trunks/";
+        string path = "Models/Tree/Trunks/";
         string meshName = "";
         switch (mood)
         {
             case "sad":
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
                 meshName = "SadTrunk";
                 break;
+
             case "neutral":
-                meshName = "Trunk";
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
+                meshName = "NormalTrunk";
                 break;
+
             case "stressed":
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
                 meshName = "StressedTrunk";
                 break;
+
             case "calm":
-                meshName = "Trunk";
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
+                meshName = "NormalTrunk";
                 break;
+
             case "anxious":
+                if (gameObject.tag == "Tree")
+                    path = "Models/Tree/Trunks/";
+
+                else if (gameObject.tag == "Bush")
+                    path = "Models/Bush/Trunks/";
+
                 meshName = "StressedTrunk";
                 break;
 
@@ -173,15 +282,11 @@ public class VegetationController : MonoBehaviour
         {
             _transitionProgress = 0f;
             startMesh = targetMesh;
-            //_isMorphing = false;
-            //_generalController.MoodChanging = false;
 
             _generalController.cont++;
-            //_vfxController.Fall = false;
             _generalController.CheckTreesCount();
             
             _leavesController.UpdateLeavesStartColors();
-            Debug.Log("Transition finished");
         }
 
         MorphMeshes(startMesh, targetMesh, _transitionProgress);
