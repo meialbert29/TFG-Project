@@ -14,7 +14,7 @@ public class SceneChanger : MonoBehaviour
     public void HomeScreen()
     {
         Time.timeScale = 1f;
-        TransitionManager.Instance.LoadScene("StartScene");
+        SceneManager.LoadScene("StartScene");
     }
     public void StartManualMode()
     {
