@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Assets.LSL4Unity.Scripts.Examples;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.LSL4Unity.Scripts.AbstractInlets;
 
 
 public class GeneralController : MonoBehaviour
@@ -23,8 +24,11 @@ public class GeneralController : MonoBehaviour
     [SerializeField] private CloudsController _cloudsController;
     [SerializeField] private RainController _rainController;
     [SerializeField] private ExampleFloatInlet museController;
+    [SerializeField] private LSLStreamDebugger streamDebugger;
     [SerializeField] private KeyboardInputController keyboardInputController;
     [SerializeField] private WavesReader wavesReader;
+    [SerializeField] private SunController sunController;
+    [SerializeField] private FogController fogController;
     
     [Header("GameObjects")]
     [SerializeField] private GameObject pausedUI;
@@ -51,12 +55,13 @@ public class GeneralController : MonoBehaviour
     public WindData GlobalWind { get { return globalWind; } }
     public int contTrees { get { return cont; } set { cont = value; } }
 
+    private int gameMode;
+
     private void Awake()
     {
         treesList = new List<VegetationController>(FindObjectsByType<VegetationController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None));
 
-        PlayerPrefs.SetInt("GameMode", 0);
-        int gameMode = PlayerPrefs.GetInt("GameMode");
+        gameMode = PlayerPrefs.GetInt("GameMode");
 
         if (gameMode == 0)
         {
@@ -88,6 +93,8 @@ public class GeneralController : MonoBehaviour
         if (moodChanging)
         {
             _rainController.RainChangeSettings(_mood);
+            if(gameMode == 1 )
+                ChangeFogAndSunlight();
             keyboardInputController.KeyDown = false;
 
             if (!windChanging)
@@ -100,14 +107,13 @@ public class GeneralController : MonoBehaviour
         }
     }
 
-    public void CheckTreesCount()
+    public void CheckVegetationCount()
     {
-        if (cont >= treesList.Count)
+        if (cont >= (treesList.Count + bushesList.Count))
         {
             moodChanging = false;
             keyboardInputController.KeyDown = false;
         }
-            
     }
 
     private void ApplyWind()
@@ -122,7 +128,6 @@ public class GeneralController : MonoBehaviour
             var leaves = tree.GetComponentInChildren<LeavesVFXController>();
             leaves.UpdateWind(localDir);
         }
-        
     }
 
     public void ChangeWindParameters()
@@ -145,25 +150,66 @@ public class GeneralController : MonoBehaviour
             {
                 case "neutral":
                     audioManager.ChangeMusicWithMixerFade(audioManager.neutralMusic);
-                    audioManager.ChangeSFXClips(audioManager.neutralWind, null);
+                    audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, null);
+                    fogController.DisableFog();
                     break;
                 case "sad":
                     audioManager.ChangeMusicWithMixerFade(audioManager.sadMusic);
-                    audioManager.ChangeSFXClips(audioManager.neutralWind, audioManager.softRain);
+                    audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, audioManager.softRain);
+                    fogController.ChangeFogSettings(true, ColorsPalette.FogColors.lightGray, 0.03f);
                     break;
                 case "calm":
                     audioManager.ChangeMusicWithMixerFade(audioManager.calmMusic);
-                    audioManager.ChangeSFXClips(audioManager.neutralWind, null);
+                    audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, null);
+                    fogController.DisableFog();
                     break;
                 case "stressed":
                     audioManager.ChangeMusicWithMixerFade(audioManager.stressMusic);
-                    audioManager.ChangeSFXClips(audioManager.neutralWind, audioManager.normalRain);
+                    audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, audioManager.normalRain);
+                    fogController.ChangeFogSettings(true, Color.gray, 0.07f);
                     break;
                 case "anxious":
                     audioManager.ChangeMusicWithMixerFade(audioManager.anxiousMusic);
-                    audioManager.ChangeSFXClips(audioManager.neutralWind, audioManager.normalRain);
+                    audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, audioManager.normalRain);
+                    fogController.ChangeFogSettings(true, ColorsPalette.FogColors.darkGray, 0.10f);
                     break;
             }
+
+            sunController.SetLightState(_mood);
         }
+    }
+
+    private void ChangeFogAndSunlight()
+    {
+        switch (_mood)
+        {
+            case "neutral":
+                audioManager.ChangeMusicWithMixerFade(audioManager.neutralMusic);
+                audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, null);
+                fogController.DisableFog();
+                break;
+            case "sad":
+                audioManager.ChangeMusicWithMixerFade(audioManager.sadMusic);
+                audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, audioManager.softRain);
+                fogController.ChangeFogSettings(true, ColorsPalette.FogColors.lightGray, 0.03f);
+                break;
+            case "calm":
+                audioManager.ChangeMusicWithMixerFade(audioManager.calmMusic);
+                audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, null);
+                fogController.DisableFog();
+                break;
+            case "stressed":
+                audioManager.ChangeMusicWithMixerFade(audioManager.stressMusic);
+                audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, audioManager.normalRain);
+                fogController.ChangeFogSettings(true, Color.gray, 0.07f);
+                break;
+            case "anxious":
+                audioManager.ChangeMusicWithMixerFade(audioManager.anxiousMusic);
+                audioManager.ChangeSFXWithMixerFade(audioManager.neutralWind, audioManager.normalRain);
+                fogController.ChangeFogSettings(true, ColorsPalette.FogColors.darkGray, 0.10f);
+                break;
+        }
+
+        sunController.SetLightState(_mood);
     }
 }

@@ -2,70 +2,100 @@ using UnityEngine;
 
 public class SunController : MonoBehaviour
 {
-    private Color neutral = new Color(0.6918238f, 0.6847792f, 0.6548395f, 0.5843138f);
-    private Color sad = new Color(0.3300502f, 0.4164391f, 0.7044024f, 0.5f);
-    private Color calm = new Color(0.2819204f, 0.5220125f, 0.2084766f, 0.5f);
-    private Color stress = new Color(0.4923722f, 0.3250464f, 0.5974842f, 0.5f);
-    private Color anxiety = new Color(0f, 0.17541f, 0.3522012f, 0.5f);
-
     [SerializeField] private Light sunLight;
-    [SerializeField] private Color sunColor;
-    [Range(0, 5)] // Intensity range
-    public float intensity = 1.0f; //Default intensity
+    [SerializeField] private float sunTemperature;
+    [Range(0, 5)] // intensity range
+    public float intensity = 1.0f; // default intensity
 
-    public float transitionDuration = 2f; // Time to complete inteprolation
+    public float transitionDuration = 2f; // time to complete inteprolation
 
     private float transitionProgress = 0f;
     private bool automaticModeActivated = false;
     private bool isTransitioning = false;
 
+    private float currentTemperature;
+    private float currentIntensity;
+
+    private float targetTemperature;
+    private float targetIntensity;
+
     void Start()
     {
         if (sunLight == null)
         {
-            if (sunLight != null && sunLight.type == LightType.Directional)
-            {
-                sunColor = neutral;
-                sunLight.intensity = intensity;
-            }
-            else
-            {
-                Debug.Log("Directional light not found");
-            }
+            Debug.Log("Sun light is not assigned.");
+            return;
         }
 
-        StartTransition(sunColor, intensity);
+        currentTemperature = sunLight.colorTemperature;
+        currentIntensity = sunLight.intensity;
     }
 
     // Update is called once per frame
     void Update()
     {
-        StartTransition(sunColor, intensity);
+        if (isTransitioning)
+        {
+            transitionProgress += Time.deltaTime / transitionDuration;
+            float t = Mathf.Clamp01(transitionProgress);
+
+            sunLight.colorTemperature = Mathf.Lerp(currentTemperature, targetTemperature, t);
+            sunLight.intensity = Mathf.Lerp(currentIntensity, targetIntensity, t);
+
+            if (t >= 1f)
+            {
+                isTransitioning = false;
+                currentTemperature = targetTemperature;
+                currentIntensity = targetIntensity;
+            }
+        }
     }
 
-    public void StartTransition(Color color, float intensity)
+    public void StartTransition(float temperature, float intensity)
     {
         if (sunLight != null)
         {
-            sunLight.color = color;
+            sunLight.colorTemperature = temperature;
             sunLight.intensity = intensity;
         }
     }
 
-    private void UpdateSunState(Color color, float intensity)
+    private void UpdateSunState(float temperature, float intensity)
     {
         transitionProgress = 0f;
-        sunColor = color;
         this.intensity = intensity;
-        StartTransition(sunColor, intensity);
+        StartTransition(temperature, intensity);
     }
-    public void SetLightState(string state)
+    public void SetLightState(string mood)
     {
-        // Lógica para cambiar el estado de la luz dependiendo del estado recibido
-        if (state == "sad") UpdateSunState(sad, 0.5f);
-        else if (state == "calm") UpdateSunState(calm, 2);
-        else if (state == "neutral") UpdateSunState(neutral, 1.5f);
-        else if (state == "stress") UpdateSunState(stress, 0.2f);
-        else if (state == "anxiety") UpdateSunState(anxiety, 0.2f);
+        switch (mood)
+        {
+            case "sad":
+                targetTemperature = 11047f;
+                targetIntensity = 0.5f;
+                break;
+            case "neutral":
+                targetTemperature = 5000f;
+                targetIntensity = 1f;
+                break;
+            case "calm":
+                targetTemperature = 3458f;
+                targetIntensity = 2f;
+                break;
+            case "stressed":
+                targetTemperature = 15744f;
+                targetIntensity = 0.2f;
+                break;
+            case "anxious":
+                targetTemperature = 20000f;
+                targetIntensity = 0.2f;
+                break;
+        }
+
+        // start transition
+        currentTemperature = sunLight.colorTemperature;
+        currentIntensity = sunLight.intensity;
+        transitionProgress = 0f;
+        isTransitioning = true;
     }
 }

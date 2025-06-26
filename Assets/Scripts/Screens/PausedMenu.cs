@@ -30,6 +30,8 @@ public class PauseMenu : MonoBehaviour
     public Image quitButton;
     public TMP_Text quitText;
 
+    public Image pausedButton;
+
     public Sprite normalResume_Sprite;
     public Sprite hoverResume_Sprite;
     public Sprite normalSettings_Sprite;
@@ -38,6 +40,8 @@ public class PauseMenu : MonoBehaviour
     public Sprite hoverHelp_Sprite;
     public Sprite normalQuit_Sprite;
     public Sprite hoverQuit_Sprite;
+    public Sprite normalPausedButton_Sprite;
+    public Sprite hoverPausedButton_Sprite;
 
     private Color normalColor = ColorsPalette.ButtonsColors.normalColor;
     private Color hoverColor = ColorsPalette.ButtonsColors.hoverColor;
@@ -219,5 +223,19 @@ public class PauseMenu : MonoBehaviour
     public void QuitGame()
     {
         Time.timeScale = 1f;
+    }
+
+    public void OnPausedButtonEnter()
+    {
+        if(pausedButton != null)
+        {
+            pausedButton.sprite = hoverPausedButton_Sprite;
+            audioManager.PlaySFX(audioManager.buttonHover);
+        }
+    }
+    public void OnPausedButtonExit()
+    {
+        if (pausedButton != null)
+            pausedButton.sprite = normalPausedButton_Sprite;
     }
 }

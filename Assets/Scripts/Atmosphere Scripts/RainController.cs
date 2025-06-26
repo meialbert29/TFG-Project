@@ -48,6 +48,9 @@ public class RainController : MonoBehaviour
 
         switch (mood)
         {
+            case "calm":
+                _rain.Stop();
+                break;
             case "normal":
                 _rain.Stop();
                 break;
@@ -59,8 +62,9 @@ public class RainController : MonoBehaviour
                 maxParticles = 30000;
                 rateOverTime = 10000;
                 break;
-            case "calm":
-                _rain.Stop();
+            case "anxious":
+                maxParticles = 50000;
+                rateOverTime = 30000;
                 break;
         }
 
@@ -74,16 +78,16 @@ public class RainController : MonoBehaviour
         forceOverLifetime.enabled = true;
 
         if(direction.x < 0)
-            forceOverLifetime.x = new ParticleSystem.MinMaxCurve(-direction.x * speed);
+            forceOverLifetime.x = new ParticleSystem.MinMaxCurve(-direction.x * speed *2);
         else
-            forceOverLifetime.x = new ParticleSystem.MinMaxCurve(-direction.x * speed);
+            forceOverLifetime.x = new ParticleSystem.MinMaxCurve(direction.x * speed * 2);
 
         forceOverLifetime.y = new ParticleSystem.MinMaxCurve(direction.y * speed);
 
         if(direction.z < 0)
-            forceOverLifetime.z = new ParticleSystem.MinMaxCurve(direction.z * speed);
+            forceOverLifetime.z = new ParticleSystem.MinMaxCurve(-direction.z * speed * 2);
         else
-            forceOverLifetime.z = new ParticleSystem.MinMaxCurve(direction.z * speed);
+            forceOverLifetime.z = new ParticleSystem.MinMaxCurve(direction.z * speed * 2);
     }
 
 }

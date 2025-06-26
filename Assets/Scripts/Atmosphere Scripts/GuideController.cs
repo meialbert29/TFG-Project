@@ -31,7 +31,7 @@ public class GuideController : MonoBehaviour
     "You might be reflecting or daydreaming. That’s okay.",
     "You're in a gentle state. Trust what you feel.",
     "Remember: it's okay to not feel okay.",
-    "You seem a little down. Try naming one thing you're grateful for right now.",
+    "You seem a little down. Try naming things you're grateful",
     "It's okay to feel low. Think of someone who makes you smile.",
     "Melancholy is part of the journey. Place your hand on your heart and just breathe.",
     "Try this: look around and find something that brings you comfort or beauty.",

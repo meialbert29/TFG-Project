@@ -6,10 +6,23 @@ public static class ColorsPalette
     {
         public static readonly Color sad_TopColor = new Color(0.7735849f, 0.4542985f, 0.2262369f, 1f);
         public static readonly Color sad_BottomColor = new Color(0.8805031f, 0.6550949f, 0.3405719f, 1f);
+        public static readonly Color sad_BlendColor = new Color(0.8805031f, 0.6550949f, 0.3405719f, 1f);
+
         public static readonly Color neutral_TopColor = new Color(0.5644949f, 0.8930817f, 0.582952f, 1f);
         public static readonly Color neutral_BottomColor = new Color(0.5430757f, 0.7106918f, 0.2346623f, 1f);
+        public static readonly Color neutral_BlendColor = new Color(1f, 1f, 1f, 1f);
+
+        public static readonly Color calm_TopColor = new Color(0.9150943f, 0.908694f, 0.7294856f, 1f);
+        public static readonly Color calm_BottomColor = new Color(0.9339623f, 0.8929893f, 0.5418743f, 1f);
+        public static readonly Color calm_BlendColor = new Color(0f, 1f, 0.3122611f, 1f);
+
         public static readonly Color stressed_TopColor = new Color(0.06607719f, 0.06925166f, 0.08176088f, 1f);
         public static readonly Color stressed_BottomColor = new Color(0.1509434f, 0.1509434f, 0.1509434f, 1f);
+        public static readonly Color stressed_BlendColor = new Color(0.1509434f, 0.1509434f, 0.1509434f, 1f);
+        
+        public static readonly Color anxious_TopColor = new Color(0.0754717f, 0.03239587f, 0.03471738f, 1f);
+        public static readonly Color anxious_BottomColor = new Color(0.1301365f, 0.1301365f, 0.1328684f, 1f);
+        public static readonly Color anxious_BlendColor = new Color(0.1301365f, 0.1301365f, 0.1328684f, 1f);
     }
 
     public static class TrunkColors
@@ -96,5 +109,20 @@ public static class ColorsPalette
     public static class LotusColors
     {
         public static readonly Color transparent = new Color(0f, 0f, 0f, 0f);
+    }
+
+    public static class FogColors
+    {
+        public static readonly Color darkGray = new Color(0.3584906f, 0.3584906f, 0.3584906f, 1f);
+        public static readonly Color lightGray = new Color(0.4842767f, 0.4842767f, 0.4842767f, 1f);
+    }
+
+    public static class SunColors
+    {
+        public static readonly Color neutral = new Color(0.6918238f, 0.6847792f, 0.6548395f, 0.5843138f);
+        public static readonly Color sad = new Color(0.3300502f, 0.4164391f, 0.7044024f, 0.5f);
+        public static readonly Color calm = new Color(0.2819204f, 0.5220125f, 0.2084766f, 0.5f);
+        public static readonly Color stress = new Color(0.4923722f, 0.3250464f, 0.5974842f, 0.5f);
+        public static readonly Color anxiety = new Color(0f, 0.17541f, 0.3522012f, 0.5f);
     }
 }

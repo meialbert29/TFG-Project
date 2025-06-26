@@ -5,18 +5,16 @@ using UnityEngine;
 public class FogController : MonoBehaviour
 {
 
-    public Color darkGray = new Color(0.3584906f, 0.3584906f, 0.3584906f, 1f);
-    public Color lightGray = new Color(0.4842767f, 0.4842767f, 0.4842767f, 1f);
-
-    public bool enableFog = false; // Controls whether the fog is enabled or disabled.
-    public Color fogColor;
-    public float fogDensity = 0.02f; // Fog density (adjust as needed).
+    private bool enableFog = false; // controls whether the fog is enabled or disabled.
+    private Color fogColor;
+    private float fogDensity = 0.02f; // fog density (adjust as needed).
     private string state = "neutral";
 
+    private Coroutine fogTransitionCoroutine;
 
     void Start()
     {
-        // Initially, set the fog to be disabled.
+        // initially, set the fog to be disabled.
         RenderSettings.fog = false;
     }
 
@@ -41,41 +39,43 @@ public class FogController : MonoBehaviour
         enableFog = false;
     }
 
-    // Method to adjust the fog density.
-    public void SetFogDensity(float density)
+    public void ChangeFogSettings(bool enable, Color newColor, float newDensity)
     {
-        fogDensity = density;
+        if (fogTransitionCoroutine != null)
+            StopCoroutine(fogTransitionCoroutine);
+
+        fogTransitionCoroutine = StartCoroutine(TransitionFog(enable, newColor, newDensity, 2f));
     }
 
-    // Method to adjust the fog color.
-    public void SetFogColor(Color color)
+    private IEnumerator TransitionFog(bool enable, Color targetColor, float targetDensity, float duration)
     {
-        fogColor = color;
-    }
+        float time = 0f;
+        Color startColor = RenderSettings.fogColor;
+        float startDensity = RenderSettings.fogDensity;
 
-    public void ChangeFog(string state)
-    {
-        switch (state)
+        if (enable) RenderSettings.fog = true;
+
+        while (time < duration)
         {
-            case "sad":
-                enableFog = true;
-                fogColor = lightGray;
-                fogDensity = 0.03f;
-                break;
-            case "stressed":
-                enableFog = true;
-                fogColor = Color.gray;
-                fogDensity = 0.07f;
-                break;
-            case "anxiety":
-                enableFog = true;
-                fogColor = darkGray;
-                fogDensity = 0.12f;
-                break;
-            default:
-                RenderSettings.fog = false;
-                enableFog = false;
-                break;
+            float t = time / duration;
+            fogColor = Color.Lerp(startColor, targetColor, t);
+            fogDensity = Mathf.Lerp(startDensity, targetDensity, t);
+
+            RenderSettings.fogColor = fogColor;
+            RenderSettings.fogDensity = fogDensity;
+
+            time += Time.deltaTime;
+            yield return null;
         }
+
+        fogColor = targetColor;
+        fogDensity = targetDensity;
+
+        RenderSettings.fogColor = fogColor;
+        RenderSettings.fogDensity = fogDensity;
+
+        RenderSettings.fog = enable;
+        enableFog = enable;
     }
+
 }

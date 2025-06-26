@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class HerzsController : MonoBehaviour
 {
     [SerializeField] private ExampleFloatInlet museController;
-    public Slider slider;          // Referencia al Slider UI
-    public TMP_Text frequencyText;     // Referencia al texto opcional
-    public float currentFrequency; // Este valor lo actualizarás desde tus datos en tiempo real
+    public Slider slider;        
+    public TMP_Text frequencyText;
+    public float currentFrequency; 
     
     void Start()
     {

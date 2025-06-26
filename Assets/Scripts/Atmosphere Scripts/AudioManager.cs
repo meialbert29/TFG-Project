@@ -39,6 +39,8 @@ public class AudioManager : MonoBehaviour
     private const string volumeMusicParam = "Music";
     private const string volumeSFXParam = "SFX";
 
+    private bool isSFXFading = false;
+
     private void Start()
     {
         string sceneName = SceneManager.GetActiveScene().name;
@@ -76,9 +78,9 @@ public class AudioManager : MonoBehaviour
         float currentTime = 0f;
         audioMixer.GetFloat(volumeMusicParam, out float currentVolume);
         float startVolume = currentVolume;
-        float targetVolume = -80f;  // Silencio
+        float targetVolume = -80f;
 
-        // Fade out música
+        // fade out
         while (currentTime < duration)
         {
             currentTime += Time.deltaTime;
@@ -92,7 +94,7 @@ public class AudioManager : MonoBehaviour
         musicSource.clip = newMusicClip;
         musicSource.Play();
 
-        // Fade in música
+        // fade in
         currentTime = 0f;
         while (currentTime < duration)
         {
@@ -105,31 +107,79 @@ public class AudioManager : MonoBehaviour
         audioMixer.SetFloat(volumeMusicParam, startVolume);
     }
 
-    // Método para cambiar viento y lluvia (sin fade)
-    public void ChangeSFXClips(AudioClip newWindClip, AudioClip newRainClip)
+    public void ChangeSFXWithMixerFade(AudioClip newWindClip, AudioClip newRainClip, float duration = 1.5f)
     {
-        if (newWindClip != null)
+        if (!isSFXFading)
         {
-            SFXSource.clip = newWindClip;
-            SFXSource.loop = true;
-            SFXSource.Play();
-        }
-        else
-        {
-            SFXSource.Stop();
-            SFXSource.clip = null;
-        }
-
-        if (newRainClip != null)
-        {
-            rainSource.clip = newRainClip;
-            rainSource.loop = true;
-            rainSource.Play();
-        }
-        else
-        {
-            rainSource.Stop();
-            rainSource.clip = null;
+            StartCoroutine(FadeOutInSFX(newWindClip, duration));
+            StartCoroutine(FadeOutInSFX(newRainClip, duration));
         }
     }
+
+    private IEnumerator FadeOutInSFX(AudioClip newSFXClip, float duration)
+    {
+        isSFXFading = true;
+
+        float currentTime = 0f;
+        float startVolume = 0f;
+        if (!audioMixer.GetFloat(volumeSFXParam, out startVolume))
+            startVolume = 0f;
+
+        float targetVolume = -80f;
+
+        // Fade Out
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            float newVolume = Mathf.Lerp(startVolume, targetVolume, currentTime / duration);
+            audioMixer.SetFloat(volumeSFXParam, newVolume);
+            yield return null;
+        }
+
+        audioMixer.SetFloat(volumeSFXParam, targetVolume);
+        SFXSource.Stop();
+        SFXSource.clip = newSFXClip;
+        SFXSource.loop = true;
+        SFXSource.Play();
+
+        // Fade In
+        currentTime = 0f;
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            float newVolume = Mathf.Lerp(targetVolume, startVolume, currentTime / duration);
+            audioMixer.SetFloat(volumeSFXParam, newVolume);
+            yield return null;
+        }
+
+        audioMixer.SetFloat(volumeSFXParam, startVolume);
+        isSFXFading = false;
+    }
+
+    //public void ChangeSFXClips(AudioClip newWindClip, AudioClip newRainClip)
+    //{
+    //    if (newWindClip != null)
+    //    {
+    //        SFXSource.clip = newWindClip;
+    //        SFXSource.loop = true;
+    //        SFXSource.Play();
+    //    }
+    //    else
+    //    {
+    //        SFXSource.Stop();
+    //        SFXSource.clip = null;
+    //    }
+
+    //    if (newRainClip != null)
+    //    {
+    //        rainSource.clip = newRainClip;
+    //        rainSource.loop = true;
+    //        rainSource.Play();
+    //    }
+    //    else
+    //    {
+    //        rainSource.Stop();
+    //        rainSource.clip = null;
+    //    }
+    //}
 }

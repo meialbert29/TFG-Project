@@ -3,30 +3,36 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Assets.LSL4Unity.Scripts.AbstractInlets;
 
 public class SceneChanger : MonoBehaviour
 {
-    public void GameScreen()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("GameScene");
-    }
+    [SerializeField] private LSLStreamDebugger LSLStreamDebugger;
+    [SerializeField] private GameObject warningMenu;
+    [SerializeField] private GameObject modeMenu;
+
     public void HomeScreen()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("StartScene", LoadSceneMode.Single);
+        TransitionManager.Instance.LoadScene("StartScene");
     }
     public void StartManualMode()
     {
         Time.timeScale = 1f;
-        //PlayerPrefs.SetInt("GameMode", 0); // 0 = manual
-        SceneManager.LoadScene("GameScene");
+        TransitionManager.Instance.LoadScene("GameScene");
     }
 
     public void StartMuseMode()
     {
-        Time.timeScale = 1f;
-        //PlayerPrefs.SetInt("GameMode", 1); // 1 = muse
-        SceneManager.LoadScene("GameScene");
+        if(LSLStreamDebugger.StreamsCount <= 1)
+        {
+            modeMenu.SetActive(false);
+            warningMenu.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            TransitionManager.Instance.LoadScene("GameScene");
+        }
     }
 }

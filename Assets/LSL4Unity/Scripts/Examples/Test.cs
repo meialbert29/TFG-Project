@@ -31,8 +31,8 @@ namespace Assets.LSL4Unity.Scripts.Examples
         private double actualScore = 0;
 
         private Queue<string> waveBuffer = new Queue<string>(); // Store last 5 waves
-        public string lastWaveType = ""; // Last registered wave
-        private bool waveChanged = false; // Indicates if there was a wave change
+        public string lastWaveType = ""; // last registered wave
+        private bool waveChanged = false; // indicates if there was a wave change
         private float timeSinceLastScore = 0f; // time since last score
         private float scoreInterval = 10f; // interval to add points
         private int points = 0;
@@ -42,7 +42,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
         float averageFrequency = 0f;
 
-        public float AverageFrequency {  get { return averageFrequency; } set { averageFrequency = value; } }
+        public float AverageFrequency { get { return averageFrequency; } set { averageFrequency = value; } }
 
         public void StartMuseController()
         {
@@ -53,10 +53,10 @@ namespace Assets.LSL4Unity.Scripts.Examples
         }
         protected override void Process(float[] newSample, double timeStamp)
         {
-            for(int channel = 0; channel < 5; channel++)
+            for (int channel = 0; channel < 5; channel++)
             {
                 channelBuffers[channel].Enqueue(newSample[channel]);
-                if(channelBuffers[channel].Count > bufferSize)
+                if (channelBuffers[channel].Count > bufferSize)
                 {
                     channelBuffers[channel].Dequeue();
                 }
@@ -64,7 +64,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
             bool allBuffersFull = true;
 
-            for(int channel = 0; channel < numChannels; channel++)
+            for (int channel = 0; channel < numChannels; channel++)
             {
                 if (channelBuffers[channel].Count != bufferSize)
                 {
@@ -73,7 +73,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
                 }
 
             }
-            // Solo analizar si todos los buffers están llenos
+            // only analyze if all buffers are full
             if (allBuffersFull)
             {
                 float[] dominantFrequencies = new float[numChannels];
@@ -93,10 +93,10 @@ namespace Assets.LSL4Unity.Scripts.Examples
                     waveTypes[i] = ClassifyBrainWave(channelBuffers[i].ToArray());
                 }
 
-                // Creamos un diccionario para contar cuántas veces aparece cada onda
+                // create a dictionary to count how many times each wave appears
                 Dictionary<string, int> waveCounts = new Dictionary<string, int>();
 
-                // Contamos las apariciones
+                // count the appearances
                 foreach (string wave in waveTypes)
                 {
                     if (!waveCounts.ContainsKey(wave))
@@ -105,7 +105,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
                         waveCounts[wave]++;
                 }
 
-                // Ahora buscamos cuál es la onda que más veces se repite
+                // find the wave that appears the most
                 string finalWave = "";
                 int maxCount = 0;
 
@@ -118,20 +118,20 @@ namespace Assets.LSL4Unity.Scripts.Examples
                     }
                 }
 
-                // Ahora trabajas con finalWave como la onda dominante para todo el conjunto
+                // finalWave is the dominant wave for the whole set
                 waveType = finalWave;
 
-                // Agregar la onda detectada al buffer para comprobar consistencia
+                // add the detected wave to the buffer to check for consistency
                 waveBuffer.Enqueue(waveType);
                 if (waveBuffer.Count > 5)
                     waveBuffer.Dequeue();
 
-                // Verificar si las últimas ondas son iguales
+                // check if the last waves are the same
                 bool consistent = true;
 
-                foreach(var wave in waveBuffer)
+                foreach (var wave in waveBuffer)
                 {
-                    if(wave != waveType)
+                    if (wave != waveType)
                     {
                         consistent = false;
                         break;
@@ -143,47 +143,50 @@ namespace Assets.LSL4Unity.Scripts.Examples
                     if (waveType != lastWaveType)
                     {
                         scoreSystem.pointsEarnedText.enabled = false;
+                        // if it changes to a new wave after another, add less
                         if (waveChanged)
                         {
-                            points = 2;
-                            actualScore += points; // Si cambia a una nueva onda tras otra, sumar menos
+                            points = 1;
+                            actualScore += points;
 
-                            scoreSystem.PointsEarned = 2;
+                            scoreSystem.PointsEarned = 1;
                             scoreSystem.Score += points;
                         }
+                        // if it changes to a new wave and stays, add more
                         else
                         {
+                            points = 2;
                             scoreSystem.pointsEarnedText.enabled = true;
-                            scoreSystem.PointsEarned = 1;
-                            scoreSystem.Score += points; // Si cambia de onda y se mantiene, sumar más puntos
+                            scoreSystem.PointsEarned = 2;
+                            scoreSystem.Score += points;
 
                         }
                         waveChanged = true;
-                        timeSinceLastScore = 0f; // Reiniciar el contador de tiempo
+                        timeSinceLastScore = 0f; // reset time counter
                     }
                     else
                     {
                         timeSinceLastScore += Time.deltaTime;
+                        // add points if wave stays the same for 10 secs
                         if (timeSinceLastScore >= scoreInterval)
                         {
                             scoreSystem.pointsEarnedText.enabled = true;
-                            scoreSystem.PointsEarned = 20; // add points if the wave stays the same 10 secs
+                            scoreSystem.PointsEarned = 20;
                             scoreSystem.Score += scoreSystem.PointsEarned;
-                            timeSinceLastScore = 0f; // Reiniciar el temporizador
+                            timeSinceLastScore = 0f; // reset timer
                         }
                     }
                 }
                 else
                 {
                     scoreSystem.pointsEarnedText.enabled = false;
-                    waveChanged = false; // Si la onda no es consistente, esperar un cambio estable
-                    timeSinceLastScore = 0f; // Reiniciar el contador si hay inestabilidad
+                    waveChanged = false; // if wave is not consistent, wait for stable change
+                    timeSinceLastScore = 0f; // reset timer if unstable
                 }
 
-                lastWaveType = waveType; // Actualizar última onda detectada
+                lastWaveType = waveType; // update last detected wave
 
-                ChangeObjectColor(waveType);
-                //showState(waveType, dominantFrequency);
+                //ChangeObjectColor(waveType);
                 herzsController.SetFrequency(dominantFrequency);
                 ChangeGeneralMood(waveType);
                 scoreSystem.UpdateScorePoints();
@@ -210,59 +213,58 @@ namespace Assets.LSL4Unity.Scripts.Examples
 
         private string ClassifyBrainWave(float[] samples)
         {
-            // Llamamos a otra función que calcula cuánta energía tiene cada tipo de onda cerebral
+            // call a function that calculates how much energy each wave has
             var waveMagnitudes = GetWaveMagnitudes(samples);
 
-            // Encontramos cuál onda tiene la energía más alta (la que domina)
+            // find the wave with the highest energy (the dominant one)
             string dominantWave = null;
             float highestEnergy = 0f;
 
-            // Revisamos cada tipo de onda y su energía para encontrar la más grande
+            // check each wave and its energy to find the highest
             foreach (var wave in waveMagnitudes)
             {
                 if (wave.Value > highestEnergy)
                 {
-                    highestEnergy = wave.Value;  // Guardamos la energía más alta encontrada
-                    dominantWave = wave.Key;      // Guardamos el nombre de la onda con más energía
+                    highestEnergy = wave.Value;
+                    dominantWave = wave.Key;
                 }
             }
 
-            // Devolvemos el nombre de la onda dominante
+            // return the dominant wave
             return dominantWave;
         }
 
         private Dictionary<string, float> GetWaveMagnitudes(float[] samples)
         {
-            int N = samples.Length; // Número de muestras que tenemos
+            int N = samples.Length; // number of samples
             Complex[] fftInput = new Complex[N];
 
-            // Preparamos los datos para hacer la Transformada Rápida de Fourier (FFT)
+            // prepare data for fft
             for (int i = 0; i < N; i++)
             {
-                // Convertimos cada muestra en un número complejo (parte real es la muestra, parte imaginaria es 0)
                 fftInput[i] = new Complex(samples[i], 0);
             }
 
-            // Aplicamos la FFT para obtener las frecuencias y su intensidad
+            // apply fft
             Fourier.Forward(fftInput, FourierOptions.NoScaling);
 
-            // Sacamos la magnitud (intensidad) de cada frecuencia calculada
+            // get magnitudes
             float[] magnitudes = fftInput.Select(c => (float)c.Magnitude).ToArray();
 
-            // Calculamos cuánto abarca cada "paso" en frecuencias
+            // frequency step size
             float frequencyResolution = (float)samplingRate / N;
 
-            // Aquí vamos a guardar cuánta energía hay en cada banda de ondas cerebrales
+            // store energy per wave band
             Dictionary<string, float> waveMagnitudes = new Dictionary<string, float>();
 
-            // Inicializamos los contadores para cada banda
+            // initialize sums
             float deltaSum = 0f;
             float thetaSum = 0f;
             float alphaSum = 0f;
             float betaSum = 0f;
             float gammaSum = 0f;
 
-            // Recorremos todas las frecuencias calculadas
+            // loop through magnitudes
             for (int i = 0; i < magnitudes.Length; i++)
             {
                 // Calculamos la frecuencia de este índice
@@ -281,14 +283,14 @@ namespace Assets.LSL4Unity.Scripts.Examples
                     gammaSum += magnitudes[i];
             }
 
-            // Guardamos los resultados en el diccionario
+            // store results
             waveMagnitudes["Delta"] = deltaSum;
             waveMagnitudes["Theta"] = thetaSum;
             waveMagnitudes["Alpha"] = alphaSum;
             waveMagnitudes["Beta"] = betaSum;
             waveMagnitudes["Gamma"] = gammaSum;
 
-            // Normalizamos para que la suma de todas las energías sea 1 (100%)
+            // normalize to 1
             float totalEnergy = deltaSum + thetaSum + alphaSum + betaSum + gammaSum;
 
             if (totalEnergy > 0)
@@ -300,31 +302,8 @@ namespace Assets.LSL4Unity.Scripts.Examples
                 waveMagnitudes["Gamma"] /= totalEnergy;
             }
 
-            // Devolvemos el diccionario con la energía normalizada de cada onda cerebral
+            // return energy dictionary
             return waveMagnitudes;
-        }
-
-
-        private void CalculateConcentrationScore(string wave)
-        {
-            switch (wave)
-            {
-                case "Delta":
-                    actualScore += 10;
-                    break;
-                case "Theta":
-                    actualScore += 5;
-                    break;
-                case "Alpha":
-                    actualScore += 3;
-                    break;
-                case "Beta":
-                    actualScore += 2;
-                    break;
-                case "Gamma":
-                    actualScore += 1;
-                    break;
-            }
         }
         private void ChangeObjectColor(string waveType)
         {
@@ -377,6 +356,39 @@ namespace Assets.LSL4Unity.Scripts.Examples
             }
         }
 
+        private void CalculateMoodScore(string mood)
+        {
+            switch (mood)
+            {
+                case "calm":
+                    scoreSystem.PointsEarned = 3;
+                    break;
+                case "neutral":
+                    scoreSystem.PointsEarned = 2;
+                    break;
+                case "sad":
+                    scoreSystem.PointsEarned = 1;
+                    break;
+                case "stressed":
+                    scoreSystem.PointsEarned = 0;
+                    break;
+                case "anxious":
+                    scoreSystem.PointsEarned = 0;
+                    break;
+            }
+
+            if (scoreSystem.PointsEarned > -1)
+            {
+                scoreSystem.Score += scoreSystem.PointsEarned;
+                scoreSystem.pointsEarnedText.enabled = true;
+                timeSinceLastScore = 0f;
+            }
+            else
+            {
+                scoreSystem.pointsEarnedText.enabled = false;
+            }
+        }
+
         public void showScore(double actualPoints)
         {
             scoreText.text = actualPoints.ToString();
@@ -385,5 +397,7 @@ namespace Assets.LSL4Unity.Scripts.Examples
         {
             pointsText.text = "+" + actualPoints.ToString();
         }
+
+        
     }
 }

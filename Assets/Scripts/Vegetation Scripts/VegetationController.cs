@@ -284,7 +284,7 @@ public class VegetationController : MonoBehaviour
             startMesh = targetMesh;
 
             _generalController.cont++;
-            _generalController.CheckTreesCount();
+            _generalController.CheckVegetationCount();
             
             _leavesController.UpdateLeavesStartColors();
         }

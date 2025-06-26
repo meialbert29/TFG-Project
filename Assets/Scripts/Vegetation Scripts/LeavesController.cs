@@ -16,10 +16,23 @@ public class LeavesController : MonoBehaviour
 
     private Color _sad_TopColor          = ColorsPalette.LeavesColors.sad_TopColor;
     private Color _sad_BottomColor       = ColorsPalette.LeavesColors.sad_BottomColor;
+    private Color _sad_BlendColor = ColorsPalette.LeavesColors.sad_BlendColor;
+
     private Color _neutral_TopColor      = ColorsPalette.LeavesColors.neutral_TopColor;
     private Color _neutral_BottomColor   = ColorsPalette.LeavesColors.neutral_BottomColor;
+    private Color _neutral_BlendColor = ColorsPalette.LeavesColors.neutral_BlendColor;
+
     private Color _stressed_TopColor     = ColorsPalette.LeavesColors.stressed_TopColor;
     private Color _stressed_BottomColor  = ColorsPalette.LeavesColors.stressed_BottomColor;
+    private Color _stressed_BlendColor = ColorsPalette.LeavesColors.stressed_BlendColor;
+
+    private Color _calm_TopColor          = ColorsPalette.LeavesColors.calm_TopColor;
+    private Color _calm_BottomColor       = ColorsPalette.LeavesColors.calm_BottomColor;
+    private Color _calm_BlendColor = ColorsPalette.LeavesColors.calm_BlendColor;
+
+    private Color _anxious_TopColor       = ColorsPalette.LeavesColors.anxious_TopColor;
+    private Color _anxious_BottomColor    = ColorsPalette.LeavesColors.anxious_BottomColor;
+    private Color _anxious_BlendColor = ColorsPalette.LeavesColors.anxious_BlendColor;
 
     private Color _trunk_StressedColor   = ColorsPalette.TrunkColors.trunk_StressedColor;
     private Color _trunk_NeutralColor    = ColorsPalette.TrunkColors.trunk_NeutralColor;
@@ -30,10 +43,15 @@ public class LeavesController : MonoBehaviour
 
     private Color _start_TopColor;
     private Color _start_BottomColor;
+    private Color _start_BlendColor;
+
     private Color _target_TopColor;
     private Color _target_BottomColor;
+    private Color _target_BlendColor;
+
     private Color _current_TopColor;
     private Color _current_BottomColor;
+    private Color current_BlendColor;
 
     private string _moodType;
     private string _previousMoodType = "";
@@ -95,8 +113,8 @@ public class LeavesController : MonoBehaviour
         _meshFilter_LOD1.mesh = _startMesh_LOD1;
         _meshFilter_LOD2.mesh = _startMesh_LOD2;
 
-        // Por defecto, aplicamos neutral
-        ApplyLeavesColors(_neutral_TopColor, _neutral_BottomColor);
+        // apply neutral by default
+        ApplyLeavesColors(_neutral_TopColor, _neutral_BottomColor, _neutral_BlendColor);
 
         _trunkMaterial = transform.GetChild(1).GetComponent<Renderer>().material;
     }
@@ -115,36 +133,51 @@ public class LeavesController : MonoBehaviour
                 {
                     _target_TopColor = _sad_TopColor;
                     _target_BottomColor = _sad_BottomColor;
+                    _target_BlendColor = _sad_BlendColor;
+
                     _target_TrunkColor = _trunk_SadColor;
                 }
                 else if (_moodType == "neutral")
                 {
                     _target_TopColor = _neutral_TopColor;
                     _target_BottomColor = _neutral_BottomColor;
+                    _target_BlendColor = _neutral_BlendColor;
+
                     _target_TrunkColor = _trunk_NeutralColor;
                 }
                 else if (_moodType == "stressed")
                 {
                     _target_TopColor = _stressed_TopColor;
                     _target_BottomColor = _stressed_BottomColor;
+                    _target_BlendColor = _stressed_BlendColor;
+
                     _target_TrunkColor = _trunk_StressedColor;
                 }
                 else if(_moodType == "calm")
                 {
-                    _target_TopColor = _neutral_TopColor;
-                    _target_BottomColor = _neutral_BottomColor;
+                    _target_TopColor = _calm_TopColor;
+                    _target_BottomColor = _calm_BottomColor;
+                    _target_BlendColor = _calm_BlendColor;
+
                     _target_TrunkColor = _trunk_CalmColor;
                 }
                 else if(_moodType == "anxious")
                 {
-                    _target_TopColor = _neutral_TopColor;
-                    _target_BottomColor = _neutral_BottomColor;
+                    _target_TopColor = _anxious_TopColor;
+                    _target_BottomColor = _anxious_BottomColor;
+                    _target_BlendColor = _anxious_BlendColor;
+
                     _target_TrunkColor = _trunk_AnxiousColor;
                 }
 
-                // Guardamos el estado actual como punto de partida
+                // save actual state to start
                 _start_TopColor = _lod1_Mat.GetColor("_TopColor");
                 _start_BottomColor = _lod1_Mat.GetColor("_BottomColor");
+                _start_BlendColor = _lod1_Mat.GetColor("_BlendColor");
+
+                _start_TopColor = _lod2_Mat.GetColor("_TopColor");
+                _start_BottomColor = _lod2_Mat.GetColor("_BottomColor");
+                _start_BlendColor = _lod2_Mat.GetColor("_BlendColor");
             }
 
             float _progress = _vb.GetTransitionProgress();
@@ -163,17 +196,20 @@ public class LeavesController : MonoBehaviour
         {
             _current_TopColor = Color.Lerp(_start_TopColor, _target_TopColor, progress);
             _current_BottomColor = Color.Lerp(_start_BottomColor, _target_BottomColor, progress);
+            current_BlendColor = Color.Lerp(_start_BlendColor, _target_BlendColor, progress);
         }
 
-        ApplyLeavesColors(_current_TopColor, _current_BottomColor);
+        ApplyLeavesColors(_current_TopColor, _current_BottomColor, current_BlendColor);
     }
 
-    void ApplyLeavesColors(Color top, Color bottom)
+    void ApplyLeavesColors(Color top, Color bottom, Color blend)
     {
         _lod1_Mat.SetColor("_TopColor", top);
         _lod1_Mat.SetColor("_BottomColor", bottom);
+        _lod1_Mat.SetColor("_BlendColor", blend);
         _lod2_Mat.SetColor("_TopColor", top);
         _lod2_Mat.SetColor("_BottomColor", bottom);
+        _lod2_Mat.SetColor("_BlendColor", blend);
     }
     void ChangeLeavesLODMeshes()
     {
@@ -214,9 +250,11 @@ public class LeavesController : MonoBehaviour
     {
         _current_TopColor = _target_TopColor;
         _current_BottomColor = _target_BottomColor;
+        current_BlendColor = _target_BlendColor;
 
         _start_TopColor = _target_TopColor;
         _start_BottomColor = _target_BottomColor;
+        _start_BlendColor = _target_BlendColor;
     }
 
     public void UpdateTrunkColor(float progress, Color targetColor)

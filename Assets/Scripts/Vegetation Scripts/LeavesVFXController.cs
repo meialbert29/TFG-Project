@@ -163,8 +163,6 @@ public class LeavesVFXController : MonoBehaviour
                 targetKeyBlend0 = _sad_Key0;
                 targetKeyBlend1 = _sad_KeyBlend1;
                 targetKeyBlend2 = _sad_KeyBlend2;
-
-                //target_windSpeed = 0.74f;
             }
             else if (moodType == "neutral")
             {
@@ -175,8 +173,6 @@ public class LeavesVFXController : MonoBehaviour
                 targetKeyBlend0 = _neutral_KeyBlend0;
                 targetKeyBlend1 = _neutral_KeyBlend1;
                 targetKeyBlend2 = _neutral_KeyBlend2;
-
-                //target_windSpeed = 0.5f;
             }
             else if (moodType == "stressed")
             {
@@ -187,8 +183,6 @@ public class LeavesVFXController : MonoBehaviour
                 targetKeyBlend0 = _stressed_KeyBlend0;
                 targetKeyBlend1 = _stressed_KeyBlend1;
                 targetKeyBlend2 = _stressed_KeyBlend2;
-
-                //target_windDirection.y = _generalController.WindDirection.y * -2;
             }
             else if(moodType == "calm")
             {
@@ -199,8 +193,6 @@ public class LeavesVFXController : MonoBehaviour
                 targetKeyBlend0 = calm_KeyBlend0;
                 targetKeyBlend1 = calm_KeyBlend1;
                 targetKeyBlend2 = calm_KeyBlend2;
-
-                //target_windSpeed = 0.5f;
             }
             else if(moodType == "anxious")
             {
@@ -211,8 +203,6 @@ public class LeavesVFXController : MonoBehaviour
                 targetKeyBlend0 = anxious_KeyBlend0;
                 targetKeyBlend1 = anxious_KeyBlend1;
                 targetKeyBlend2 = anxious_KeyBlend2;
-
-               // target_windDirection.y = _generalController.WindDirection.y * 2;
             }
 
             BlendColorGradientTransition(keysBlend, t);
