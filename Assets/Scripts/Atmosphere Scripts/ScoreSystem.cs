@@ -42,7 +42,7 @@ public class ScoreSystem : MonoBehaviour
 
     void Update()
     {
-        HandleInputPoints();
+        //HandleInputPoints();
         UpdateMoodPoints();
         UpdatePointsEarned();
         UpdateScorePoints();
