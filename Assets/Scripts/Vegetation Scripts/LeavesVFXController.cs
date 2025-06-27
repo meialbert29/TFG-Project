@@ -271,6 +271,6 @@ public class LeavesVFXController : MonoBehaviour
     }
     public void UpdateWind(Vector3 direction)
     {
-        _vfx.SetVector3("WindDirection", direction);
+        _vfx.SetVector3("WindDirection", direction * 1.5f);
     }
 }

@@ -9,6 +9,8 @@ using TMPro;
 public class TransitionManager : MonoBehaviour
 {
     private static TransitionManager instance;
+    [SerializeField] private GameObject transitionCanvas;
+    private bool transitionFinished = false;
 
     private Animator m_Anim;
     private int HashShowAnim = Animator.StringToHash("Show");
@@ -20,14 +22,26 @@ public class TransitionManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI progressLabel;
     [SerializeField] private TextMeshProUGUI transitionInformationLabel;
     [Multiline]
-    private readonly string[] gameInformation =
+    private readonly string[] quotesStart =
     {
         "Hello, it's nice to see you again!",
-        "The fears we don't face become our limits. -Robin Sharma",
-        "Tal a little nice to yourself today",
-        "Find the courage to keep trying, even when it seems like no progress is being made",
-        "Progress not perfection",
-        "The calmer you are, the clearer you think"
+        "'The fears we don't face become our limits.' -Robin Sharma.",
+        "Talk a little nice to yourself today.",
+        "Find the courage to keep trying, even when it seems like no progress is being made.",
+        "Progress, not perfection.",
+        "The calmer you are, the clearer you think.",
+        "1% better everyday."
+    };
+
+    private readonly string[] quotesAfterGame =
+    {
+        "Do what scares you. Until it doesn't.",
+        "Action cures anxiety",
+        "Satify your soul, not the society.",
+        "Give your best in everything.",
+        "If it comes; let it. If it goes; let it.",
+        "Invest in yourself.",
+        "A negative mind will never give you a positive life."
     };
 
 
@@ -58,6 +72,7 @@ public class TransitionManager : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
+        SetObject(true);
         StartCoroutine(LoadCoroutine(sceneName));
     }
 
@@ -65,8 +80,16 @@ public class TransitionManager : MonoBehaviour
     {
         m_Anim.SetBool(HashShowAnim, true);
 
-        if(transitionInformationLabel != null)
-            transitionInformationLabel.text = gameInformation[Random.Range(0, gameInformation.Length - 1)];
+        if(sceneName == "GameScene")
+        {
+            if (transitionInformationLabel != null)
+                transitionInformationLabel.text = quotesStart[Random.Range(0, quotesStart.Length - 1)];
+        }
+        else if(sceneName == "StartScene")
+        {
+            if (transitionInformationLabel != null)
+                transitionInformationLabel.text = quotesAfterGame[Random.Range(0, quotesStart.Length - 1)];
+        }
 
         UpdateProgressValue(0);
 
@@ -83,7 +106,8 @@ public class TransitionManager : MonoBehaviour
 
         UpdateProgressValue(1);
         m_Anim.SetBool(HashShowAnim, false);
-        gameObject.SetActive(false);
+
+        SetObject(false);
     }
 
     private void Initialise()
@@ -99,5 +123,10 @@ public class TransitionManager : MonoBehaviour
             progressSlider.value = progressValue;
         if(progressLabel != null)
             progressLabel.text = $"{progressValue * 100}%";
+    }
+
+    void SetObject(bool transitionFinished)
+    {
+        gameObject.SetActive(transitionFinished);
     }
 }

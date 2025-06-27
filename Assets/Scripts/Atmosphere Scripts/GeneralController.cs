@@ -29,7 +29,8 @@ public class GeneralController : MonoBehaviour
     [SerializeField] private WavesReader wavesReader;
     [SerializeField] private SunController sunController;
     [SerializeField] private FogController fogController;
-    
+    [SerializeField] private GameObject herzsUI;
+
     [Header("GameObjects")]
     [SerializeField] private GameObject pausedUI;
 
@@ -67,7 +68,7 @@ public class GeneralController : MonoBehaviour
         {
             // Manual mode
             keyboardInputController.gameObject.SetActive(true);
-
+            herzsUI.gameObject.SetActive(false);
             wavesReader.gameObject.SetActive(false);
         }
         else

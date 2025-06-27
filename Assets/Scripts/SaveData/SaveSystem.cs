@@ -160,6 +160,8 @@ public class SaveSystem : MonoBehaviour
         string json = JsonUtility.ToJson(emptyList);
         PlayerPrefs.SetString("latestScoreTable", json);
         PlayerPrefs.Save();
+
+        RefreshScoreTable();
     }
 
     private void ShowPage(int pageNumber)
