@@ -40,6 +40,7 @@ public class SceneChanger : MonoBehaviour
         else
         {
             Time.timeScale = 1f;
+            transitionManager.SetActive(true);
             TransitionManager.Instance.LoadScene("GameScene");
         }
     }

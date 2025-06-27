@@ -68,7 +68,7 @@ public class ScoreSystem : MonoBehaviour
 
     public void UpdatePointsEarned()
     {
-        pointsEarnedText.text = points.ToString();
+        pointsEarnedText.text = "+" + score.ToString() + " points";
     }
 
     private void HandleInputPoints()

@@ -12,16 +12,27 @@ public class MainButtonsController : MonoBehaviour
     [SerializeField] private Image settingsButton;
     [SerializeField] private Image stadisticsButton;
     [SerializeField] private Image helpButton;
+    [SerializeField] private Image exitButton;
 
-    [SerializeField] private Sprite hoverMain_Sprite;
-    [SerializeField] private Sprite normalMain_Sprite;
+    [SerializeField] private Sprite hoverStart_Sprite;
+    [SerializeField] private Sprite normalStart_Sprite;
+
+    [SerializeField] private Sprite hoverSettings_Sprite;
+    [SerializeField] private Sprite normalSettings_Sprite;
+
+    [SerializeField] private Sprite hoverHistory_Sprite;
+    [SerializeField] private Sprite normalHistory_Sprite;
+
     [SerializeField] private Sprite helpNormal_Sprite;
     [SerializeField] private Sprite helpHover_Sprite;
-
+    [SerializeField] private Sprite exitNormal_Sprite;
+    [SerializeField] private Sprite exitHover_Sprite;
+    
     [SerializeField] private TMP_Text startText;
     [SerializeField] private TMP_Text settingsText;
     [SerializeField] private TMP_Text stadisticsText;
     [SerializeField] private TMP_Text helpText;
+    [SerializeField] private TMP_Text exitText;
 
     private Color normalColor = ColorsPalette.ButtonsColors.normalColor;
     private Color hoverColor = ColorsPalette.ButtonsColors.hoverColor;
@@ -39,19 +50,19 @@ public class MainButtonsController : MonoBehaviour
     {
         if (startButton != null)
         {
-            startButton.sprite = normalMain_Sprite;
+            startButton.sprite = normalStart_Sprite;
             startText.color = normalColor;
         }
 
         if (settingsButton != null)
         {
-            settingsButton.sprite = normalMain_Sprite;
+            settingsButton.sprite = normalStart_Sprite;
             settingsText.color = normalColor;
         }
 
         if (stadisticsButton != null)
         {
-            stadisticsButton.sprite = normalMain_Sprite;
+            stadisticsButton.sprite = normalStart_Sprite;
             stadisticsText.color = normalColor;
         }
 
@@ -60,13 +71,18 @@ public class MainButtonsController : MonoBehaviour
             helpButton.sprite = helpNormal_Sprite;
             helpText.color = normalColor;
         }
+        if(exitButton != null)
+        {
+            exitButton.sprite = normalStart_Sprite;
+            exitText.color = normalColor;
+        }
     }
 
     public void OnStartButtonEnter()
     {
         if (startButton != null)
         {
-            startButton.sprite = hoverMain_Sprite;
+            startButton.sprite = hoverStart_Sprite;
             audioManager.PlaySFX(audioManager.buttonHover);
         }
             
@@ -76,7 +92,7 @@ public class MainButtonsController : MonoBehaviour
     public void OnStartButtonExit()
     {
         if (startButton != null)
-            startButton.sprite = normalMain_Sprite;
+            startButton.sprite = normalStart_Sprite;
         if (startButton != null)
             startText.color = normalColor;
     }
@@ -85,7 +101,7 @@ public class MainButtonsController : MonoBehaviour
     {
         if (settingsButton != null)
         {
-            settingsButton.sprite = hoverMain_Sprite;
+            settingsButton.sprite = hoverSettings_Sprite;
             audioManager.PlaySFX(audioManager.buttonHover);
         }
             
@@ -95,7 +111,7 @@ public class MainButtonsController : MonoBehaviour
     public void OnSettingsButtonExit()
     {
         if (settingsButton != null)
-            settingsButton.sprite = normalMain_Sprite;
+            settingsButton.sprite = normalSettings_Sprite;
         if (settingsText != null)
             settingsText.color = normalColor;
     }
@@ -104,7 +120,7 @@ public class MainButtonsController : MonoBehaviour
     {
         if (stadisticsButton != null)
         {
-            stadisticsButton.sprite = hoverMain_Sprite;
+            stadisticsButton.sprite = hoverHistory_Sprite;
             audioManager.PlaySFX(audioManager.buttonHover);
         }
             
@@ -114,7 +130,7 @@ public class MainButtonsController : MonoBehaviour
     public void OnStadisticsButtonExit()
     {
         if (stadisticsButton != null)
-            stadisticsButton.sprite = normalMain_Sprite;
+            stadisticsButton.sprite = normalHistory_Sprite;
         if (stadisticsText != null)
             stadisticsText.color = normalColor;
     }
@@ -136,5 +152,33 @@ public class MainButtonsController : MonoBehaviour
             helpButton.sprite = helpNormal_Sprite;
         if(helpText != null)
             helpText.color = normalColor;
+    }
+
+    public void OnClickExitButton()
+    {
+        #if UNITY_EDITOR
+              UnityEditor.EditorApplication.isPlaying = false;
+        #else
+              Application.Quit();
+        #endif
+    }
+
+    public void OnExitButtonEnter()
+    {
+        if (exitButton != null)
+        {
+            exitButton.sprite = exitHover_Sprite;
+            audioManager.PlaySFX(audioManager.buttonHover);
+        }
+        if (exitText != null)
+            exitText.color = hoverColor;
+    }
+
+    public void OnExitButtonExit()
+    {
+        if (exitButton != null)
+            exitButton.sprite = exitNormal_Sprite;
+        if (exitText != null)
+            exitText.color = normalColor;
     }
 }
